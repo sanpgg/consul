@@ -6,6 +6,9 @@
 
 ![CONSUL logo](https://raw.githubusercontent.com/consul/consul/master/public/consul_logo.png)
 
+Este repositorio no constituye el proyecto CONSUL. El repositorio central de CONSUL lo pueden encontrar en [https://github.com/consul/consul](https://github.com/consul/consul)
+
+
 # CONSUL
 
 Citizen Participation and Open Government Application
