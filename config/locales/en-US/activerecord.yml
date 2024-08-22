@@ -1,7 +1,24 @@
 en-US:
   activerecord:
-    attributes:
+    models:
+      milestone:
+        one: "Meilenstein"
+        other: "Meilensteine"
+      milestone/status:
+        one: "Investitionsstatus, Anlagenstatus"
+        other: "Investitionsstatus, Anlagenstatus"
+      comment:
+        one: "Kommentar"
+        other: "Kommentare"
+      debate:
+        one: "Debatte"
+        other: "Debatten"
       user:
-        email: "Email"
-      link:
-        url: Link
+        one: "Benutzer"
+        other: "Benutzer"
+      moderator:
+        one: "Moderator,Gesprächsleiter"
+        other: "Moderatoren,Gesprächsleiter"
+      administrator:
+        one: "Administrator(in),Verwaltungsleiter(in)"
+        other: "Administrator(in),Verwaltungsleiter(in)"

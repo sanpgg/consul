@@ -13,7 +13,7 @@
       </h3>
     <% end %>
   </li>
-  <li class="tabs-title">
+  <li class="tabs-title <%= @investment.budget_id < 11 ? '' : 'd-none' %>">
     <%= link_to "#tab-milestones" do %>
       <h3>
         <%= t("budgets.investments.show.milestones_tab") %>

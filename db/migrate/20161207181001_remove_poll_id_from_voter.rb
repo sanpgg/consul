@@ -1,4 +1,4 @@
-class RemovePollIdFromVoter < ActiveRecord::Migration[4.2]
+class RemovePollIdFromVoter < ActiveRecord::Migration
   def change
     remove_column :poll_voters, :poll_id, :integer
   end

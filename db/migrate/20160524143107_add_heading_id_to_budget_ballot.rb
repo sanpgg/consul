@@ -1,4 +1,4 @@
-class AddHeadingIdToBudgetBallot < ActiveRecord::Migration[4.2]
+class AddHeadingIdToBudgetBallot < ActiveRecord::Migration
   def change
     add_column :budget_ballots, :heading_id, :integer
     add_index :budget_ballots, :heading_id

@@ -1,7 +1,10 @@
-<li id="<%= dom_id(document) %>">
+<li id="<%= dom_id(document)%>">
   <%= link_to t("documents.buttons.download_document"),
-              document.attachment.url, target: "_blank",
-              rel: "nofollow", class: "button hollow medium float-right" %>
+      document.attachment.url,
+      download: document.attachment.original_filename,
+      rel: "nofollow",
+      target: "_blank",
+      class: "button hollow medium float-right"  %>
 
   <strong><%= document.title %></strong>
   <br>
@@ -13,8 +16,7 @@
   <% if can?(:destroy, document) %>
     <br>
     <%= link_to t("documents.buttons.destroy_document"),
-                  document,
-                  method: :delete,
+                  document_path(document, from: request.url), method: :delete,
                   data: { confirm: t("documents.actions.destroy.confirm") },
                   class: "delete" %>
   <% end %>

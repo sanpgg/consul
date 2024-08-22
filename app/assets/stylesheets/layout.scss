@@ -24,7 +24,6 @@
 // 22. Images
 // 23. Maps
 // 24. Homepage
-// 25. LocalCensusRecords
 //
 
 // 01. Global styles
@@ -86,7 +85,7 @@ a {
 }
 
 .button {
-  background: $brand;
+  background: #6C6E72;
   font-size: $base-font-size;
 
   &:hover {
@@ -198,10 +197,6 @@ a {
   padding-top: $line-height;
 }
 
-.padding-top {
-  padding-top: $line-height;
-}
-
 .light {
   background: $light;
 }
@@ -214,7 +209,7 @@ a {
   color: $check;
 }
 
-.wrapper {
+/*.wrapper {
   min-height: 100%;
   margin: 0 auto (-$line-height) * 12;
   height: auto !important;
@@ -225,7 +220,7 @@ a {
 .push {
   clear: both;
   min-height: $line-height * 12;
-}
+}*/
 
 .ie-callout {
   position: absolute;
@@ -346,7 +341,6 @@ a {
   clear: both;
   color: $text-medium;
   display: inline-block;
-  padding-right: $line-height / 2;
 }
 
 .back:not([class^="icon-"]) {
@@ -378,7 +372,7 @@ a {
       text-decoration: none;
     }
 
-    &[aria-selected="true"],
+    &[aria-selected='true'],
     &.is-active {
       border-bottom: 0;
       color: $brand;
@@ -388,7 +382,7 @@ a {
         background: $brand;
         border-bottom: 2px solid $brand;
         bottom: 0;
-        content: "";
+        content: '';
         left: 0;
         position: absolute;
         width: 100%;
@@ -408,10 +402,6 @@ a {
 
 .pagination .current {
   background: $brand;
-}
-
-.pagination li {
-  display: inline-block;
 }
 
 .truncate-horizontal-text {
@@ -436,6 +426,10 @@ a {
   display: table-cell;
 }
 
+.off-canvas-content {
+  box-shadow: none;
+}
+
 .uppercase {
   text-transform: uppercase;
 }
@@ -445,66 +439,6 @@ a {
   margin-top: 0;
 }
 
-.menu-and-content {
-  $side-menu-min-width: rem-calc(240);
-
-  @include breakpoint(medium) {
-    display: flex;
-
-    > nav {
-      flex: 20%;
-      min-width: $side-menu-min-width;
-
-      + * {
-        flex: 80%;
-        padding: $line-height;
-      }
-    }
-
-    [for="show_menu"] {
-      display: none;
-    }
-  }
-
-  @include breakpoint(small only) {
-    > nav {
-      height: 100%;
-      left: -$side-menu-min-width;
-      overflow-y: auto;
-      position: fixed;
-      top: 0;
-      transition: left 0.5s ease;
-      width: $side-menu-min-width;
-      z-index: 12;
-
-      + * {
-        padding: $line-height;
-      }
-    }
-
-    [name="show_menu"]:checked + nav,
-    > nav:focus-within {
-      left: 0;
-
-      + * {
-        overflow-x: hidden;
-
-        [for="show_menu"]::after {
-          @include reveal-overlay;
-          content: "";
-          cursor: pointer;
-          display: block;
-          z-index: 11;
-        }
-      }
-    }
-  }
-
-  [name="show_menu"] {
-    display: none;
-  }
-}
-
 // 02. Header
 // ----------
 
@@ -512,11 +446,6 @@ header {
   background: $brand;
   border-bottom: 1px solid $border;
   margin-bottom: $line-height;
-
-  @include breakpoint(small down) {
-    position: relative;
-    z-index: 10;
-  }
 
   .selected {
     border-bottom: 1px solid #fff;
@@ -530,33 +459,13 @@ header {
 
     &::after {
       color: #808080;
-      content: "\61";
+      content: '\61';
       font-family: "icons" !important;
       font-size: $small-font-size;
       pointer-events: none;
       position: absolute;
       right: 2px;
       top: 9px;
-    }
-  }
-
-  .remote-translations-button {
-
-    &.callout {
-      margin: 0;
-      padding: rem-calc(6);
-
-      [type="submit"] {
-        background: none;
-        border: 0;
-        cursor: pointer;
-        font-weight: bold;
-        color: $brand;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
     }
   }
 
@@ -573,7 +482,7 @@ header {
 
 .top-bar {
   background: $brand !important;
-  color: #fff;
+  color: #6C6E72;
   padding-bottom: 0;
   padding-top: 0;
 
@@ -590,9 +499,9 @@ header {
     padding: 0;
 
     a {
-      color: #fff;
+      color: #6C6E72;
       display: inline-block;
-      font-family: "Lato" !important;
+      font-family: 'Lato' !important;
       font-size: rem-calc(24);
       font-weight: lighter;
       line-height: $line-height * 2;
@@ -622,7 +531,7 @@ header {
     }
 
     a {
-      color: #fff;
+      color: #6C6E72;
       padding-left: 0;
 
       @include breakpoint(medium) {
@@ -706,14 +615,6 @@ header {
 
 .dropdown.menu > li {
 
-  a {
-    background: none;
-  }
-
-  &.is-active > a {
-    color: #fff;
-  }
-
   &.is-dropdown-submenu-parent > a::after {
     border-color: #fff transparent transparent;
   }
@@ -745,7 +646,7 @@ header {
       display: inline-block;
 
       &::after {
-        content: "|";
+        content: '|';
       }
 
       &:last-child::after {
@@ -756,10 +657,12 @@ header {
 }
 
 .subnavigation {
+  color: white !important;
 
   @include breakpoint(medium) {
-    background: #fff;
+    background: #6C6E72;
     padding-bottom: 0;
+    color: white !important;
   }
 
   ul {
@@ -775,7 +678,7 @@ header {
   }
 
   a {
-    color: #fff;
+    color: white !important;
     display: inline-block;
     line-height: $line-height * 2;
     position: relative;
@@ -893,7 +796,7 @@ footer {
   color: $text;
 
   .logo a {
-    font-family: "Lato" !important;
+    font-family: 'Lato' !important;
     text-decoration: none;
 
     &:hover {
@@ -950,6 +853,7 @@ footer {
 .categories a,
 .geozone a,
 .sidebar-links a,
+.sidebar-map a,
 .tags span {
   background: #ececec;
   border-radius: rem-calc(6);
@@ -980,7 +884,7 @@ footer {
 .sidebar-map {
 
   .map {
-    z-index: 0;
+    z-index: -1;
   }
 }
 
@@ -1005,7 +909,7 @@ footer {
 }
 
 .auth-image {
-  background: $brand image-url("auth_bg.jpg");
+  background: $brand image-url('auth_bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
 
@@ -1038,7 +942,7 @@ footer {
   p,
   a,
   .checkbox {
-    font-size: $small-font-size;
+    font-size: $base-font-size;
   }
 }
 
@@ -1079,7 +983,7 @@ footer {
   }
 
   .locale-switcher {
-    background: #001d33;
+    background: #1a1a1a;
     border: 0;
     border-radius: rem-calc(4);
     color: #fff;
@@ -1130,10 +1034,6 @@ form {
     &.error {
       margin-bottom: rem-calc(1);
     }
-
-    &:disabled {
-      background-color: $input-background-disabled;
-    }
   }
 
   [type="checkbox"] + label,
@@ -1145,17 +1045,8 @@ form {
     margin: $line-height / 2 0 $line-height / 2 $line-height / 4;
   }
 
-  .cke {
-    margin-bottom: $line-height;
-  }
-
-  .html-area:not(.form-error) {
-    height: 272px;
-    margin-bottom: $line-height;
-
-    &.admin {
-      height: 572px;
-    }
+  .ckeditor {
+    min-height: $line-height * 13;
   }
 
   .checkbox,
@@ -1165,19 +1056,6 @@ form {
     line-height: $line-height;
     vertical-align: middle;
   }
-}
-
-.translatable-fields {
-
-  &.highlight {
-    display: inline-block;
-    padding-top: $line-height;
-    width: 100%;
-  }
-}
-
-.translation-locale {
-  padding-top: $line-height;
 }
 
 // 07. Callout
@@ -1202,16 +1080,11 @@ form {
 
 .notice-container {
   min-width: $line-height * 12;
+  position: absolute;
   right: 24px;
-  top: 24px;
-
-  @include breakpoint(medium) {
-    position: absolute;
-  }
+  top: 8%;
 
   .notice {
-    height: $line-height * 4;
-
     .notice-text {
       width: 95%;
     }
@@ -1229,9 +1102,9 @@ form {
 
   &.success,
   &.notice {
-    background-color: $success-bg;
-    border-color: $success-border;
-    color: $color-success;
+    border-radius: 14px;
+    background-color: rgba(182,241,200,0.93);
+    border: none;
   }
 
   &.primary {
@@ -1252,9 +1125,11 @@ form {
 
   &.alert,
   &.error {
-    background-color: $alert-bg;
-    border-color: $alert-border;
-    color: $color-alert;
+    margin-top: 10px;
+    border-radius: 14px;
+    background-color: transparent;
+    border-color: #fc96a6;
+    color: #e10052;
   }
 
   .close {
@@ -1272,8 +1147,8 @@ form {
 }
 
 .error {
-  background: $alert-bg;
-  color: $color-alert;
+  background: transparent;
+  color: #e10052;
   display: inline-block;
   margin: 0 $line-height / 4;
 
@@ -1347,7 +1222,7 @@ form {
   p {
     span {
       color: $text-medium;
-      font-size: rem-calc(12);
+      font-size: $base-font-size;
     }
   }
 
@@ -1358,7 +1233,7 @@ form {
   }
 
   li {
-    font-size: $small-font-size;
+    font-size: $base-font-size;
     margin-bottom: $line-height / 2;
 
     span {
@@ -1389,7 +1264,7 @@ form {
   }
 
   .icon-circle {
-    color: #ecf00b;
+    color: #44c1c6;
     font-size: rem-calc(10);
     position: absolute;
     left: 12px;
@@ -1407,7 +1282,7 @@ form {
 
   &::before {
     background: $border;
-    content: "";
+    content: '';
     height: 100%;
     left: 7px;
     position: absolute;
@@ -1429,7 +1304,10 @@ form {
     .mark-notification {
       position: absolute;
       right: 12px;
-      top: 12px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      height: 40px;
     }
   }
 
@@ -1453,14 +1331,14 @@ form {
     }
 
     &::before {
-      content: "\43";
+      content: '\43';
     }
   }
 
   &::before {
     background: #fff;
     color: $brand;
-    content: "\4d";
+    content: '\4d';
     font-family: "icons" !important;
     font-size: $small-font-size;
     height: rem-calc(20);
@@ -1599,7 +1477,6 @@ table {
 .button.button-twitter,
 .button.button-facebook,
 .button.button-google,
-.button.button-wordpress,
 .button.button-telegram {
   background: #fff;
   color: $text;
@@ -1608,16 +1485,6 @@ table {
   line-height: $line-height * 2;
   padding: 0;
   position: relative;
-
-  &::before {
-    font-family: "icons" !important;
-    font-size: rem-calc(24);
-    left: 0;
-    line-height: $line-height * 2;
-    padding: 0 rem-calc(20);
-    position: absolute;
-    top: 0;
-  }
 }
 
 .button.button-twitter {
@@ -1626,7 +1493,14 @@ table {
 
   &::before {
     color: #45b0e3;
-    content: "f";
+    content: 'f';
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 0;
+    line-height: $line-height * 2;
+    padding: 0 rem-calc(20);
+    position: absolute;
+    top: 0;
   }
 }
 
@@ -1639,7 +1513,7 @@ table {
   width: $line-height * 2 !important;
 
   &::before {
-    content: "f";
+    content: 'f';
     font-family: "icons" !important;
     font-size: rem-calc(24);
     left: 50%;
@@ -1662,7 +1536,14 @@ table {
 
   &::before {
     color: #3b5998;
-    content: "A";
+    content: 'A';
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 0;
+    line-height: $line-height * 2;
+    padding: 0 rem-calc(20);
+    position: absolute;
+    top: 0;
   }
 }
 
@@ -1675,7 +1556,7 @@ table {
   width: rem-calc(48) !important;
 
   &::before {
-    content: "A";
+    content: 'A';
     font-family: "icons" !important;
     font-size: rem-calc(24);
     left: 50%;
@@ -1698,17 +1579,40 @@ table {
 
   &::before {
     color: #de4c34;
-    content: "B";
+    content: 'B';
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 0;
+    line-height: $line-height * 2;
+    padding: 0 rem-calc(20);
+    position: absolute;
+    top: 0;
   }
 }
 
-.button.button-wordpress {
-  background: #dcdde3;
-  border-left: 3px solid #2f2f33;
+[class^="ssb-icon ssb-google"] {
+  background: #de4c34;
+  background-image: none !important;
+  color: #fff;
+  height: $line-height * 2 !important;
+  position: relative;
+  width: $line-height * 2 !important;
 
   &::before {
-    color: #2f2f33;
-    content: "J";
+    content: 'B';
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 50%;
+    line-height: $line-height * 2;
+    margin-left: rem-calc(-11);
+    position: absolute;
+    top: 0;
+  }
+
+  &:hover,
+  &:focus {
+    background: #fff;
+    color: #ce3e26;
   }
 }
 
@@ -1718,7 +1622,14 @@ table {
 
   &::before {
     color: #08c;
-    content: "1";
+    content: '1';
+    font-family: "icons" !important;
+    font-size: rem-calc(24);
+    left: 0;
+    line-height: $line-height * 2;
+    padding: 0 rem-calc(20);
+    position: absolute;
+    top: 0;
   }
 }
 
@@ -1731,7 +1642,7 @@ table {
   width: $line-height * 2 !important;
 
   &::before {
-    content: "1";
+    content: '1';
     font-family: "icons" !important;
     font-size: rem-calc(24);
     left: 50%;
@@ -1784,7 +1695,7 @@ table {
     width: $line-height * 2;
 
     &::before {
-      content: "f";
+      content: 'f';
       font-family: "icons" !important;
       font-size: rem-calc(24);
       left: 50%;
@@ -1809,7 +1720,7 @@ table {
     width: rem-calc(48);
 
     &::before {
-      content: "A";
+      content: 'A';
       font-family: "icons" !important;
       font-size: rem-calc(24);
       left: 50%;
@@ -1826,6 +1737,31 @@ table {
     }
   }
 
+  [class^="ssb-icon ssb-google"] {
+    background: #de4c34;
+    color: #fff;
+    height: rem-calc(24);
+    position: relative;
+    width: rem-calc(48);
+
+    &::before {
+      content: 'B';
+      font-family: "icons" !important;
+      font-size: rem-calc(24);
+      left: 50%;
+      line-height: $line-height * 2;
+      margin-left: rem-calc(-11);
+      position: absolute;
+      top: 0;
+    }
+
+    &:hover,
+    &:focus {
+      background: #fff;
+      color: #ce3e26;
+    }
+  }
+
   .ssb-telegram {
     background: #08c;
     color: #fff;
@@ -1834,7 +1770,7 @@ table {
     width: $line-height * 2;
 
     &::before {
-      content: "1";
+      content: '1';
       font-family: "icons" !important;
       font-size: rem-calc(24);
       left: 50%;
@@ -1878,7 +1814,7 @@ table {
       top: 24px;
 
       @include breakpoint(medium) {
-        content: "c";
+        content: 'c';
       }
     }
   }
@@ -1939,6 +1875,7 @@ table {
     padding-top: $line-height / 4;
     text-transform: uppercase;
     vertical-align: top;
+    margin-bottom: 1rem;
 
     @include breakpoint(medium) {
       line-height: $line-height * 2;
@@ -2068,7 +2005,6 @@ table {
   }
 
   .comment {
-    line-height: $list-lineheight;
     margin: $line-height / 4 0;
     position: relative;
 
@@ -2101,6 +2037,19 @@ table {
     padding: $line-height / 4;
     position: relative;
 
+    .relative,
+    [class^="icon-arrow"] {
+      padding-left: $line-height / 2;
+    }
+
+    [class^="icon-arrow"] {
+      font-size: $base-font-size;
+      left: -20px;
+      position: absolute;
+      text-decoration: none;
+      top: -1px;
+    }
+
     .divider {
       color: $text-light;
       display: inline-block;
@@ -2108,34 +2057,6 @@ table {
 
     form {
       margin-top: $line-height / 2;
-    }
-  }
-
-  .responses-count {
-    .show-children {
-      @include has-fa-icon(plus-square, r);
-      display: none;
-    }
-
-    .collapse-children {
-      @include has-fa-icon(minus-square, r);
-    }
-
-    .show-children::before,
-    .collapse-children::before {
-      margin-right: rem-calc(6);
-      transform: translateY(1px);
-    }
-
-    &.collapsed {
-
-      .collapse-children {
-        display: none;
-      }
-
-      .show-children {
-        display: inline;
-      }
     }
   }
 
@@ -2172,24 +2093,12 @@ table {
   }
 }
 
-.comment-list {
-  margin: $line-height / 4 0;
-
-  .comment-list {
-    border-left: 1px dashed $border;
-    display: inline-block;
-    padding-left: rem-calc(8);
-    width: 100%;
-
-  }
-
-  .comment-form {
-    display: none;
-  }
-
-  &:empty {
-    display: none;
-  }
+.comment-children {
+  border-left: 1px dashed $border;
+  display: inline-block;
+  margin-left: rem-calc(16);
+  padding-left: rem-calc(8);
+  width: 100%;
 }
 
 .comment-info {
@@ -2269,6 +2178,7 @@ table {
 .flag-disable,
 .flag-active {
   line-height: 0;
+  vertical-align: sub;
 }
 
 .flag-disable {
@@ -2342,20 +2252,74 @@ table {
 // 18. Banners
 // -----------
 
+.banner-style-one {
+  background-color: $brand;
+}
+
+.banner-style-two {
+  background-color: $budget;
+}
+
+.banner-style-three {
+  background-color: #33dadf;
+}
+
+@include breakpoint(large) {
+
+  .banner-img-one {
+    background-image: image-url('banners/banner1.png');
+  }
+
+  .banner-img-two {
+    background-image: image-url('banners/banner2.png');
+  }
+
+  .banner-img-three {
+    background-image: image-url('banners/banner3.png');
+  }
+}
+
+.banner-img-one,
+.banner-img-two,
+.banner-img-three {
+  background-position: bottom right;
+  background-repeat: no-repeat;
+}
+
+.banner-style-one,
+.banner-style-two,
+.banner-style-three,
 .banner {
+  margin: 0;
+  margin-bottom: $line-height;
 
-  a > * {
-    @include grid-row;
-    padding: 0 rem-calc(16);
+  @include breakpoint(large) {
 
-    &:empty {
-      display: none;
+    h3 {
+      width: 80%;
     }
   }
 
-  + .budget.expanded,
-  + .jumbo {
-    margin-top: 0;
+  h2,
+  h3,
+  a {
+    color: #eaeaf2;
+  }
+
+  h2 {
+    padding: $line-height / 2;
+    padding-bottom: 0;
+  }
+
+  h3 {
+    padding: $line-height / 2;
+    padding-top: 0;
+  }
+
+  a:hover h2,
+  a:hover h3 {
+    color: #eaeaf2 !important;
+    text-decoration: none;
   }
 }
 
@@ -2428,7 +2392,7 @@ table {
   }
 
   .card .orbit .orbit-wrapper .truncate {
-    background: image-url("truncate.png");
+    background: image-url('truncate.png');
     background-repeat: repeat-x;
     bottom: 0;
     height: rem-calc(20);
@@ -2711,7 +2675,7 @@ table {
 
     &.score-positive::before,
     &.score-negative::before {
-      font-family: "icons";
+      font-family: 'icons';
       left: 0;
       position: absolute;
     }
@@ -2721,7 +2685,7 @@ table {
 
       &::before {
         color: $color-success;
-        content: "\6c";
+        content: '\6c';
       }
     }
 
@@ -2730,7 +2694,7 @@ table {
 
       &::before {
         color: $color-alert;
-        content: "\76";
+        content: '\76';
       }
     }
   }
@@ -2768,28 +2732,10 @@ table {
   }
 }
 
-.leaflet-container {
-
-  .leaflet-control-attribution {
-    background: rgba(255, 255, 255, 0.9) !important;
-  }
-
-  a {
-    color: $link !important;
-  }
-}
-
-.leaflet-bottom,
-.leaflet-pane,
-.leaflet-top {
-  z-index: 4 !important;
-}
-
 // 24. Homepage
 // ------------
 
-.home-page,
-.custom-page {
+.home-page {
 
   a {
 
@@ -2797,7 +2743,6 @@ table {
 
       &.description {
         color: $text;
-        word-wrap: break-word;
       }
     }
   }
@@ -2816,18 +2761,11 @@ table {
     margin-top: rem-calc(-48);
   }
 
-  .cards-container {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
   .card {
     border: 0;
-    flex-grow: 0;
     overflow: visible;
 
     a {
-      height: 100%;
 
       img {
         transition-duration: 0.3s;
@@ -2836,11 +2774,8 @@ table {
     }
 
     a:hover {
+      box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
       text-decoration: none;
-
-      &:not(.see-all) {
-        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
-      }
 
       img {
         transform: scale(1.1);
@@ -2907,15 +2842,15 @@ table {
   display: inline-block;
   height: rem-calc(120);
   overflow: hidden;
-  width: 100%;
 
   @include breakpoint(medium) {
     height: rem-calc(96);
   }
 
   img {
+    margin-left: rem-calc(-15);
     max-width: none;
-    width: 100%;
+    width: rem-calc(120);
   }
 }
 
@@ -2940,19 +2875,11 @@ table {
 .figure-card {
   display: flex;
   margin: 0 0 $line-height;
-  overflow: hidden;
   position: relative;
-
-  @include breakpoint(medium down) {
-    min-height: $line-height * 4;
-  }
 
   @include breakpoint(medium) {
     max-height: rem-calc(185);
-  }
-
-  @include breakpoint(large) {
-    min-height: rem-calc(185);
+    overflow: hidden;
   }
 
   a {
@@ -2984,16 +2911,8 @@ table {
 
     h3,
     .title {
-      font-size: $base-font-size;
-
-      @include breakpoint(medium) {
-        font-size: rem-calc(20);
-      }
-
-      @include breakpoint(large) {
-        font-size: rem-calc(24);
-        line-height: rem-calc(24);
-      }
+      font-size: rem-calc(24);
+      line-height: rem-calc(24);
     }
 
     span {
@@ -3009,17 +2928,6 @@ table {
   }
 }
 
-// 25. Local Census Records
-// ------------------------
-
-.local-census-record-new,
-.local-census-record-edit {
-
-  .date-of-birth {
-    select {
-      float: left;
-      width: 30%;
-      margin-right: $line-height / 4;
-    }
-  }
+.warning {
+  color: red !important;
 }

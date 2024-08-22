@@ -1,4 +1,4 @@
-class AddResponsibleToProposals < ActiveRecord::Migration[4.2]
+class AddResponsibleToProposals < ActiveRecord::Migration
   def change
     add_column :proposals, :responsible_name, :string, limit: 60
   end

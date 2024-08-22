@@ -1,9 +1,22 @@
-class User < ApplicationRecord
+class User < ActiveRecord::Base
+  extend Enumerize
+
+  include Curp
   include Verification
 
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
-         :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
+         :trackable, :validatable, :omniauthable, :async, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
+
+  GENDER = [{ label: 'Mujer', value: 'M' }, { label: 'Hombre', value: 'H' }].freeze
+
+  enumerize :sector, in: { K1: 1,
+                           K2: 2,
+                           K3: 3,
+                           K4: 4,
+                           K5: 5,
+                           K6: 6,
+                           MANUAL: 7 }, scope: true
 
   acts_as_voter
   acts_as_paranoid column: :hidden_at
@@ -18,71 +31,69 @@ class User < ApplicationRecord
   has_one :poll_officer, class_name: "Poll::Officer"
   has_one :organization
   has_one :lock
+  has_one :survey
+  has_one :address_user
+  has_one :electoral_roll
   has_many :flags
+  has_many :likes
   has_many :identities, dependent: :destroy
-  has_many :debates, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
-  has_many :proposals, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
-  has_many :activities
-  has_many :budget_investments, -> { with_hidden },
-    class_name:  "Budget::Investment",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :comments, -> { with_hidden }, inverse_of: :user
+  has_many :debates, -> { with_hidden }, foreign_key: :author_id
+  has_many :proposals, -> { with_hidden }, foreign_key: :author_id
+  has_many :budget_investments, -> { with_hidden }, foreign_key: :author_id, class_name: 'Budget::Investment'
+  has_many :comments, -> { with_hidden }
+  has_many :spending_proposals, foreign_key: :author_id
   has_many :failed_census_calls
   has_many :notifications
-  has_many :direct_messages_sent,
-    class_name:  "DirectMessage",
-    foreign_key: :sender_id,
-    inverse_of:  :sender
-  has_many :direct_messages_received,
-    class_name:  "DirectMessage",
-    foreign_key: :receiver_id,
-    inverse_of:  :receiver
-  has_many :legislation_answers, class_name: "Legislation::Answer", dependent: :destroy, inverse_of: :user
+  has_many :direct_messages_sent,     class_name: 'DirectMessage', foreign_key: :sender_id
+  has_many :direct_messages_received, class_name: 'DirectMessage', foreign_key: :receiver_id
+  has_many :legislation_answers, class_name: 'Legislation::Answer', dependent: :destroy, inverse_of: :user
   has_many :follows
-  has_many :legislation_annotations,
-    class_name:  "Legislation::Annotation",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :legislation_proposals,
-    class_name:  "Legislation::Proposal",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :legislation_questions,
-    class_name:  "Legislation::Question",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :polls, foreign_key: :author_id, inverse_of: :author
-  has_many :poll_answers,
-    class_name:  "Poll::Answer",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :poll_pair_answers,
-    class_name:  "Poll::PairAnswer",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :poll_partial_results,
-    class_name:  "Poll::PartialResult",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :poll_questions,
-    class_name:  "Poll::Question",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :poll_recounts,
-    class_name:  "Poll::Recount",
-    foreign_key: :author_id,
-    inverse_of:  :author
-  has_many :topics, foreign_key: :author_id, inverse_of: :author
+  has_many :ballots, class_name: 'Budget::Ballot'
+  #has_many :images, as: :imageable, dependent: :destroy
+  has_and_belongs_to_many :colonium
   belongs_to :geozone
+  has_attached_file :ife, default_url: "/images/:style/missing.png"
+  do_not_validate_attachment_file_type :ife
 
   validates :username, presence: true, if: :username_required?
   validates :username, uniqueness: { scope: :registering_with_oauth }, if: :username_required?
-  validates :document_number, uniqueness: { scope: :document_type }, allow_nil: true
+  validates :document_number, uniqueness: false, allow_nil: true
+  validates :phone_number, presence: true, if: -> { username_required? && !changing_password? }
+  validates :gender, presence: true, if: -> { username_required? && !changing_password? }
+  validates :born_names, presence: true, if: -> { username_required? && !changing_password? }
+  validates :paternal_last_name, presence: true, if: -> { username_required? && !changing_password? }
+  validates :maternal_last_name, presence: true, if: -> { username_required? && !changing_password? }
+  validates :birthplace, presence: true, if: -> { username_required? && !changing_password? }
+  #validates :curp, uniqueness: true, allow_nil: true
+  validate :check_curp_uniqueness, if: -> { curp.present? }
+
+  def changing_password?
+    encrypted_password_changed?
+  end
+
+  def check_curp_uniqueness
+    if User.where.not(id: self.id).exists?(curp: curp)
+      conflicting_user = User.find_by(curp: curp)
+      censored_email = conflicting_user.email.gsub(/(?<=.)[^@]*(?=@)/) { |s| '*' * (s.size/2) }
+      errors.add(:curp, "Los datos que están ingresando ya corresponden a un usuario identificado con el correo: #{censored_email} (por seguridad no mostramos el correo completo). Si tienes alguna duda, llamanos al 81 1212 1212 o escríbenos a decide@sanpedro.gob.mx")
+    end
+  end
+
+  validates :date_of_birth, timeliness: { on_or_before: lambda { Date.current }, type: :date }, if: -> { username_required? && !changing_password? }
+
+  #validates_presence_of :tutor, if: :is_minor?
+
+  validate :allowed_age?
+
+  def allowed_age?
+    if date_of_birth.present? && age < 18
+      errors.add(:date_of_birth, "debes tener al menos 18 años para registrarte")
+    end
+  end
 
   validate :validate_username_length
 
-  validates :official_level, inclusion: { in: 0..5 }
+  validates :official_level, inclusion: {in: 0..5}
   validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
 
   validates_associated :organization, message: false
@@ -94,11 +105,9 @@ class User < ApplicationRecord
   attr_accessor :login
 
   scope :administrators, -> { joins(:administrator) }
-  scope :moderators,     -> { joins(:moderator) }
+  scope :moderators,     -> { joins(:moderator) } 
   scope :organizations,  -> { joins(:organization) }
-  scope :officials,      -> { where("official_level > 0") }
-  scope :male,           -> { where(gender: "male") }
-  scope :female,         -> { where(gender: "female") }
+  scope :officials,      -> { where("official_level > 0") } 
   scope :newsletter,     -> { where(newsletter: true) }
   scope :for_render,     -> { includes(:organization) }
   scope :by_document,    ->(document_type, document_number) do
@@ -108,23 +117,18 @@ class User < ApplicationRecord
   scope :active,         -> { where(erased_at: nil) }
   scope :erased,         -> { where.not(erased_at: nil) }
   scope :public_for_api, -> { all }
-  scope :by_authors,     ->(author_ids) { where(id: author_ids) }
-  scope :by_comments,    ->(commentables) do
-    joins(:comments).where("comments.commentable": commentables).distinct
-  end
+  scope :by_comments,    ->(query, topics_ids) { joins(:comments).where(query, topics_ids).uniq }
+  scope :by_authors,     ->(author_ids) { where("users.id IN (?)", author_ids) }
   scope :by_username_email_or_document_number, ->(search_string) do
     string = "%#{search_string}%"
-    where("username ILIKE ? OR email ILIKE ? OR document_number ILIKE ?", string, string, string)
-  end
-  scope :between_ages, ->(from, to) do
-    where(
-      "date_of_birth > ? AND date_of_birth < ?",
-      to.years.ago.beginning_of_year,
-      from.years.ago.end_of_year
-    )
+    where("username ILIKE ? OR email ILIKE ? OR document_number ILIKE ? OR curp ILIKE ?", string, string, string, string).active
   end
 
   before_validation :clean_document_number
+  after_validation :assign_sector, on: [:update, :create]
+  after_validation :assign_geozone, on: [:update, :create]
+  after_create :assign_curp
+  after_update :assign_curp
 
   # Get the existing user by email if the provider gives us a verified email.
   def self.first_or_initialize_for_oauth(auth)
@@ -137,13 +141,22 @@ class User < ApplicationRecord
       email: oauth_email,
       oauth_email: oauth_email,
       password: Devise.friendly_token[0, 20],
-      terms_of_service: "1",
+      terms_of_service: '1',
       confirmed_at: oauth_email_confirmed ? DateTime.current : nil
     )
   end
 
+  def is_minor?
+    return false if age.nil?
+    age < 18
+  end
+
   def name
     organization? ? organization.name : username
+  end
+
+  def likes?(investment)
+    investment.likes.where(user_id: id).any?
   end
 
   def debate_votes(debates)
@@ -161,6 +174,11 @@ class User < ApplicationRecord
     voted.each_with_object({}) { |v, h| h[v.votable_id] = v.value }
   end
 
+  def spending_proposal_votes(spending_proposals)
+    voted = votes.for_spending_proposals(spending_proposals)
+    voted.each_with_object({}) { |v, h| h[v.votable_id] = v.value }
+  end
+
   def budget_investment_votes(budget_investments)
     voted = votes.for_budget_investments(budget_investments)
     voted.each_with_object({}) { |v, h| h[v.votable_id] = v.value }
@@ -168,19 +186,11 @@ class User < ApplicationRecord
 
   def comment_flags(comments)
     comment_flags = flags.for_comments(comments)
-    comment_flags.each_with_object({}) { |f, h| h[f.flaggable_id] = true }
+    comment_flags.each_with_object({}){ |f, h| h[f.flaggable_id] = true }
   end
 
   def voted_in_group?(group)
     votes.for_budget_investments(Budget::Investment.where(group: group)).exists?
-  end
-
-  def headings_voted_within_group(group)
-    Budget::Heading.where(id: voted_investments.by_group(group).pluck(:heading_id))
-  end
-
-  def voted_investments
-    Budget::Investment.where(id: votes.for_budget_investments.pluck(:votable_id))
   end
 
   def administrator?
@@ -208,7 +218,7 @@ class User < ApplicationRecord
   end
 
   def verified_organization?
-    organization&.verified?
+    organization && organization.verified?
   end
 
   def official?
@@ -217,22 +227,20 @@ class User < ApplicationRecord
 
   def add_official_position!(position, level)
     return if position.blank? || level.blank?
-
-    update! official_position: position, official_level: level.to_i
+    update official_position: position, official_level: level.to_i
   end
 
   def remove_official_position!
-    update! official_position: nil, official_level: 0
+    update official_position: nil, official_level: 0
   end
 
   def has_official_email?
-    domain = Setting["email_domain_for_officials"]
+    domain = Setting['email_domain_for_officials']
     email.present? && ((email.end_with? "@#{domain}") || (email.end_with? ".#{domain}"))
   end
 
   def display_official_position_badge?
     return true if official_level > 1
-
     official_position_badge? && official_level == 1
   end
 
@@ -253,7 +261,12 @@ class User < ApplicationRecord
   end
 
   def erase(erase_reason = nil)
-    update!(
+
+    self.ballots.each do |ballot|
+      ballot.remove
+    end
+
+    update(
       erased_at: Time.current,
       erase_reason: erase_reason,
       username: nil,
@@ -265,36 +278,239 @@ class User < ApplicationRecord
       reset_password_token: nil,
       email_verification_token: nil,
       confirmed_phone: nil,
-      unconfirmed_phone: nil
+      unconfirmed_phone: nil,
+      curp: nil
     )
     identities.destroy_all
+  end
+
+  def erase_from_admin(erase_reason = nil)
+    
+    # remove_ballots
+
+    self.ballots.each do |ballot|
+      ballot.remove
+    end
+    
+    update(
+      erased_at: Time.current,
+      erase_reason: erase_reason,
+      username: nil,
+      email: nil,
+      unconfirmed_email: nil,
+      phone_number: nil,
+      encrypted_password: "",
+      confirmation_token: nil,
+      reset_password_token: nil,
+      email_verification_token: nil,
+      confirmed_phone: nil,
+      unconfirmed_phone: nil,
+      curp: nil
+    )
   end
 
   def erased?
     erased_at.present?
   end
 
+  def self.to_csv
+
+    attributes = %w{id
+                    name
+                    username
+                    born_names
+                    paternal_last_name
+                    maternal_last_name
+                    email
+                    junta_vecinal
+                    sector
+                    document_number
+                    created_at
+                    user_type
+                    ine
+                    curp
+                    roles_category
+                    real_date_of_birth
+                    gender
+                    phone_number
+                    }
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      all.find_each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def latitud
+    return "" if !level_three_verified?
+    Catastral.where(exped: document_number).first.latitude
+  end
+
+  def ine
+    return "" if !level_three_verified?
+    url = self.ife.url
+    "https:#{url}"
+  end
+
+  def longitud
+    return "" if !level_three_verified?
+    Catastral.where(exped: document_number).first.longitude
+  end
+
+  def calle
+    return "" if !level_three_verified?
+    Catastral.where(exped: document_number).first.ubic
+  end
+
+  def numero
+    return "" if !level_three_verified?
+    Catastral.where(exped: document_number).first.numextubi
+  end
+
+  def colonia
+    return "" if !level_three_verified?
+    Catastral.where(exped: document_number).first.colubi
+  end
+
+  def roles_category
+    roles = []
+    roles << :admin if self.administrator?
+    roles << :moderator if self.moderator?
+    roles << :valuator if self.valuator?
+    roles << :manager if self.manager?
+    roles << :poll_officer if self.poll_officer?
+    roles << :official if self.official?
+    roles << :organization if self.organization?
+    roles
+  end
+
+  def real_date_of_birth
+    if self.curp.present?
+      edad = self.curp
+      regresar = edad[4,6].chars
+      anio = regresar[0]+regresar[1]
+      mes = regresar[2]+regresar[3]
+      dia = regresar[4]+regresar[5]
+      mandar = anio+"-"+mes+"-"+dia
+    else
+      "N/A"
+    end
+  end
+
+  def genero
+    if self.survey.present?
+      self.survey.genre
+    else
+      "N/A"
+    end
+  end
+
+  def ultimo_proceso_legislativo
+    if self.survey.present?
+      self.survey.participate_last_year
+    else
+      "N/A"
+    end
+  end
+
+  def como_descubrio
+    if self.survey.present?
+      self.survey.how_discover
+    else
+      "N/A"
+    end
+  end
+
+  def otro_medio
+    if self.survey.present?
+      self.survey.other_text
+    else
+      "N/A"
+    end
+  end
+
+  def promocion_espacion_publicos
+    if self.survey.present?
+      self.survey.promotion_text
+    else
+      "N/A"
+    end
+  end
+
+  def ocupacion
+    if self.survey.present?
+      self.survey.job
+    else
+      "N/A"
+    end
+  end
+
+  def ingreso_mensual
+    if self.survey.present?
+      self.survey.salary
+    else
+      "N/A"
+    end
+  end
+
+  def voto_ultimas_elecciones
+    if self.survey.present?
+      self.survey.recently_vote
+    else
+      "N/A"
+    end
+  end
+
+  def voluntario_doce_meses
+    if self.survey.present?
+      self.survey.social_work
+    else
+      "N/A"
+    end
+  end
+
+  def evento_doce_meses
+    if self.survey.present?
+      self.survey.attend_event
+    else
+      "N/A"
+    end
+  end
+
+  def nivel_estudios
+    if self.survey.present?
+      self.survey.school_grade
+    else
+      "N/A"
+    end
+  end
+
+  def junta_vecinal
+    return "" if !level_three_verified?
+    colonium.first.junta_nom
+  end
+
   def take_votes_if_erased_document(document_number, document_type)
-    erased_user = User.erased.find_by(document_number: document_number,
-                                      document_type: document_type)
+    erased_user = User.erased.where(document_number: document_number)
+                             .where(document_type: document_type).first
     if erased_user.present?
       take_votes_from(erased_user)
-      erased_user.update!(document_number: nil, document_type: nil)
+      erased_user.update(document_number: nil, document_type: nil)
     end
   end
 
   def take_votes_from(other_user)
     return if other_user.blank?
-
     Poll::Voter.where(user_id: other_user.id).update_all(user_id: id)
     Budget::Ballot.where(user_id: other_user.id).update_all(user_id: id)
     Vote.where("voter_id = ? AND voter_type = ?", other_user.id, "User").update_all(voter_id: id)
-    data_log = "id: #{other_user.id} - #{Time.current.strftime("%Y-%m-%d %H:%M:%S")}"
-    update!(former_users_data_log: "#{former_users_data_log} | #{data_log}")
+    data_log = "id: #{other_user.id} - #{Time.current.strftime('%Y-%m-%d %H:%M:%S')}"
+    update(former_users_data_log: "#{former_users_data_log} | #{data_log}")
   end
 
   def locked?
-    Lock.find_or_create_by!(user: self).locked?
+    Lock.find_or_create_by(user: self).locked?
   end
 
   def self.search(term)
@@ -302,11 +518,11 @@ class User < ApplicationRecord
   end
 
   def self.username_max_length
-    @username_max_length ||= columns.find { |c| c.name == "username" }.limit || 60
+    @@username_max_length ||= columns.find { |c| c.name == 'username' }.limit || 60
   end
 
   def self.minimum_required_age
-    (Setting["min_age_to_participate"] || 16).to_i
+    (Setting['min_age_to_participate'] || 16).to_i
   end
 
   def show_welcome_screen?
@@ -316,7 +532,6 @@ class User < ApplicationRecord
 
   def password_required?
     return false if skip_password_validation
-
     super
   end
 
@@ -355,11 +570,11 @@ class User < ApplicationRecord
   def save_requiring_finish_signup
     begin
       self.registering_with_oauth = true
-      save!(validate: false)
+      save(validate: false)
     # Devise puts unique constraints for the email the db, so we must detect & handle that
     rescue ActiveRecord::RecordNotUnique
       self.email = nil
-      save!(validate: false)
+      save(validate: false)
     end
     true
   end
@@ -385,8 +600,8 @@ class User < ApplicationRecord
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     login = conditions.delete(:login)
-    where(conditions.to_hash).find_by(["lower(email) = ?", login.downcase]) ||
-    where(conditions.to_hash).find_by(["username = ?", login])
+    where(conditions.to_hash).where(["lower(email) = ?", login.downcase]).first ||
+    where(conditions.to_hash).where(["username = ?", login]).first
   end
 
   def self.find_by_manager_login(manager_login)
@@ -398,16 +613,22 @@ class User < ApplicationRecord
     followables.compact.map { |followable| followable.tags.map(&:name) }.flatten.compact.uniq
   end
 
-  def send_devise_notification(notification, *args)
-    devise_mailer.send(notification, self, *args).deliver_later
-  end
-
   private
 
     def clean_document_number
       return unless document_number.present?
-
       self.document_number = document_number.gsub(/[^a-z0-9]+/i, "").upcase
+    end
+
+    def assign_sector
+      return if colonium.blank? || sector == colonium.first.sector
+      self.sector = self.colonium.first.sector
+    end
+
+    def assign_geozone
+      expected_geozone = Geozone.find_by(census_code: sector)
+      return if sector.blank? || geozone == expected_geozone || expected_geozone.blank?
+      self.geozone = expected_geozone
     end
 
     def validate_username_length
@@ -415,5 +636,12 @@ class User < ApplicationRecord
         attributes: :username,
         maximum: User.username_max_length)
       validator.validate(self)
+    end
+
+    def assign_curp
+      if born_names.present? && paternal_last_name.present? && maternal_last_name.present? && birthplace.present? && date_of_birth.present? && gender.present? && curp.blank?
+        generated_curp = Curp::Generator.new(name: born_names, paternal_last_name: paternal_last_name, maternal_last_name: maternal_last_name, birthplace: birthplace, date_of_birth: date_of_birth, gender: gender)
+        self.update!(curp: generated_curp.curp)
+      end
     end
 end

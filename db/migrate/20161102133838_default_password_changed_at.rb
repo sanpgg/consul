@@ -1,5 +1,5 @@
-class DefaultPasswordChangedAt < ActiveRecord::Migration[4.2]
+class DefaultPasswordChangedAt < ActiveRecord::Migration
   def change
-    change_column :users, :password_changed_at, :datetime, null: false, default: Time.zone.now
+    change_column :users, :password_changed_at, :datetime, null: false, default: Time.now
   end
 end

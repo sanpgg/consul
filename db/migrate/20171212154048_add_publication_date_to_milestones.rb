@@ -1,4 +1,4 @@
-class AddPublicationDateToMilestones < ActiveRecord::Migration[4.2]
+class AddPublicationDateToMilestones < ActiveRecord::Migration
   def up
     change_table :budget_investment_milestones do |t|
       t.datetime :publication_date

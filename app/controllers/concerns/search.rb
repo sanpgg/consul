@@ -18,7 +18,6 @@ module Search
 
   def parse_search_date
     return unless search_by_date?
-
     params[:advanced_search][:date_range] = search_date_range
   end
 
@@ -28,13 +27,13 @@ module Search
 
   def search_start_date
     case params[:advanced_search][:date_min]
-    when "1"
+    when '1'
       24.hours.ago
-    when "2"
+    when '2'
       1.week.ago
-    when "3"
+    when '3'
       1.month.ago
-    when "4"
+    when '4'
       1.year.ago
     else
       Date.parse(params[:advanced_search][:date_min]) rescue 100.years.ago
@@ -51,7 +50,8 @@ module Search
 
   def set_search_order
     if params[:search].present? && params[:order].blank?
-      params[:order] = "relevance"
+      params[:order] = 'relevance'
     end
   end
+
 end

@@ -1,4 +1,5 @@
 shared_examples "image validations" do |imageable_factory|
+  include ImagesHelper
   include ImageablesHelper
 
   let!(:image)                  { build(:image, imageable_factory.to_sym) }
@@ -40,8 +41,7 @@ shared_examples "image validations" do |imageable_factory|
   end
 
   it "is not valid for attachments larger than imageable max_file_size definition" do
-    larger_size = Setting["uploads.images.max_size"].to_i.megabytes + 1.byte
-    allow(image).to receive(:attachment_file_size).and_return(larger_size)
+    allow(image).to receive(:attachment_file_size).and_return(Image::MAX_IMAGE_SIZE + 1.byte)
 
     expect(image).not_to be_valid
     expect(image.errors[:attachment]).to include "must be in between 0 Bytes and 1 MB"
@@ -54,16 +54,17 @@ shared_examples "image validations" do |imageable_factory|
   end
 
   it "is not valid without a imageable_id" do
-    image.save!
+    image.save
     image.imageable_id = nil
 
     expect(image).not_to be_valid
   end
 
   it "is not valid without a imageable_type" do
-    image.save!
+    image.save
     image.imageable_type = nil
 
     expect(image).not_to be_valid
   end
+
 end

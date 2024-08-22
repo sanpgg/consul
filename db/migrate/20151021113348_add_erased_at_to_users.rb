@@ -1,4 +1,4 @@
-class AddErasedAtToUsers < ActiveRecord::Migration[4.2]
+class AddErasedAtToUsers < ActiveRecord::Migration
   def change
     add_column :users, :erased_at, :datetime
   end

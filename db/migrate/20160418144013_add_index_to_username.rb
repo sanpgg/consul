@@ -1,4 +1,4 @@
-class AddIndexToUsername < ActiveRecord::Migration[4.2]
+class AddIndexToUsername < ActiveRecord::Migration
   def change
     add_index :users, :username
   end

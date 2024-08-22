@@ -1,54 +1,116 @@
-<% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
-<h2><%= t("devise_views.users.registrations.new.title") %></h2>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
 
-<%= render "devise/omniauth_form", action: "sign_up" %>
+<div class="content-form my-5 pb-5">
+  <h2>Regístrate</h2>
+  <% provide :title do %><%= t("devise_views.users.registrations.new.title") %><% end %>
+  <p class="text-description mb-3">*Todos los campos son obligatorios.</p>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= render 'shared/errors', resource: resource %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "shared/errors", resource: resource %>
+    <div class="w-64">
 
-  <p>
-    <%= sanitize(t("devise_views.users.registrations.new.organization_signup",
-        signup_link: link_to(t("devise_views.users.registrations.new.organization_signup_link"), new_organization_registration_path))) %>
-  </p>
+        <%= f.hidden_field :use_redeemable_code %>
+        <%= f.hidden_field :locale, value: I18n.locale %>
+        <div class="mb-3">
+          <%= f.text_field :born_names, autofocus: true, maxlength: User.username_max_length, placeholder: "Introduce tu nombre", label: true, required: true%>
+        </div>                            
+        <div class="mb-3">
+          <%= f.text_field :paternal_last_name,  autofocus: true, maxlength: User.username_max_length, placeholder: "Introduce tu apellido paterno", label: true, required: true %>
+        </div>
+        <div class="mb-3">                           
+          <%= f.text_field :maternal_last_name,  autofocus: true, maxlength: User.username_max_length, placeholder: "Introduce tu apellido materno", label: true, required: true %>
+        </div>
+        <div class="mb-3"> 
+          <%= f.select :gender, User::GENDER.collect {|e| [ e[:label], e[:value] ] }, { label: true } %>
+        </div>
+        <div class="mb-3"> 
+          <%= f.select :birthplace, AddressUser::STATES.collect {|e| [ e[:name], e[:code] ] }, { label: true, required: true } %>
+        </div>
+        <div class="mb-3"> 
+          <%= f.select :colonium_ids, get_coloniums, include_blank: "Seleccionar colonia", :label => "Colonia o residencia actual", required: true %>
+        </div>
+        <div class="mb-3"> 
+          <%= f.text_field :date_of_birth, data: { mask: '9999-09-09', placeholder: 'yyyy-mm-dd' }, placeholder: 'Día / Mes / Año ', required: true %>
+        </div>
+        <!-- <div class="mb-3"> 
+          <%# f.text_field :tutor, autofocus: true, placeholder: "Introduce el nombre y apellido de tu tutor", label: true %>
+        </div> -->
+        <%= f.invisible_captcha :address %>
+        <div class="mb-3">
+          <%= f.email_field :email, placeholder: t("devise_views.users.registrations.new.email_label"), required: true %>
+        </div>
+        <div class="mb-3">
+          <%= f.password_field :password, autocomplete: "off", placeholder: t("devise_views.users.registrations.new.password_label"), required: true %>
+        </div>
+        <div class="mb-3">
+          <%= f.password_field :password_confirmation, autocomplete: "off", label: t("devise_views.users.registrations.new.password_confirmation_label"), placeholder: t("devise_views.users.registrations.new.password_confirmation_label"), required: true %>
+        </div>  
+        <div class="mb-3">               
+          <%= f.text_field :phone_number, label: true, placeholder: 'Ingresa tu número telefónico', required: true %>
+        </div>
+        <% if resource.use_redeemable_code %>
+          <div class="mb-3"> 
+            <%= f.text_field :redeemable_code, placeholder: t("devise_views.users.registrations.new.redeemable_code") %>
+          </div>
+        <% end %>
 
-  <div class="row">
-    <div class="small-12 column">
-
-      <%= f.hidden_field :use_redeemable_code %>
-      <%= f.hidden_field :locale, value: I18n.locale %>
-
-      <%= f.text_field :username,  autofocus: true, maxlength: User.username_max_length,
-                                   placeholder: t("devise_views.users.registrations.new.username_label"),
-                                   hint: t("devise_views.users.registrations.new.username_note") %>
-
-      <%= f.invisible_captcha :address %>
-
-      <%= f.email_field :email,     placeholder: t("devise_views.users.registrations.new.email_label") %>
-
-      <%= f.password_field :password, autocomplete: "off",
-                           placeholder: t("devise_views.users.registrations.new.password_label") %>
-
-      <%= f.password_field :password_confirmation, autocomplete: "off",
-                           label: t("devise_views.users.registrations.new.password_confirmation_label"),
-                           placeholder: t("devise_views.users.registrations.new.password_confirmation_label") %>
-
-      <% if resource.use_redeemable_code %>
-        <%= f.text_field :redeemable_code, placeholder: t("devise_views.users.registrations.new.redeemable_code") %>
-      <% end %>
-
-      <%= f.check_box :terms_of_service,
-        title: t("devise_views.users.registrations.new.terms_title"),
-        label: t("devise_views.users.registrations.new.terms",
-                 terms: link_to(t("devise_views.users.registrations.new.terms_link"), "/conditions",
-                                title: t("shared.target_blank"),
-                                target: "_blank")
-                ) %>
-
-      <div class="small-12 medium-6 small-centered">
-        <%= f.submit t("devise_views.users.registrations.new.submit"), class: "button expanded" %>
-      </div>
+        <%= f.label :terms_of_service do %>
+          <span class="checkbox text-center pt-4 pb-5">
+            <%= f.check_box :terms_of_service, title: t('devise_views.users.registrations.new.terms_title'), label: false, checked: true %>
+            <%= t("devise_views.users.registrations.new.terms",
+                terms: link_to(t("devise_views.users.registrations.new.terms_link"), "https://transparencia.sanpedro.gob.mx/documentosAvisosPrivacidad/ 5309/_2022328_80_Presupuesto Participativo Decide San Pedro.pdf",
+                title: t('shared.target_blank_html'),
+                target: "_blank")).html_safe %>
+          </span>
+        <% end %>
+        
+        <%= f.submit t("devise_views.users.registrations.new.submit"), class: "signin-b mt-2 mb-2" %>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
+  <script>
+    $(document).ready(function() {
 
-<%= render "devise/shared/links" %>
+      $('input[data-mask]').mask('09/09/9999');
+
+      // var tutorField = $('#user_tutor');
+      // var tutorLabel = $('label[for="user_tutor"]');
+      // tutorField.hide();
+      // tutorLabel.hide();
+
+      function isValidDate(dateObject) {
+        return new Date(dateObject).toString() !== 'Invalid Date';
+      }
+
+      $('#user_date_of_birth').change(function() {
+
+        var dob = $(this).val().split('/');
+        var dobDate = new Date(dob[2], dob[1] - 1, dob[0]);
+        var today = new Date();
+        var age = today.getFullYear() - dobDate.getFullYear();
+
+        if(!isValidDate(dobDate) || $(this).val().length != 10)
+        {
+          alert('La fecha no es válida.');
+          return;
+        }
+
+        // var m = today.getMonth() - dobDate.getMonth();
+
+        // if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+        //   age--;
+        // }
+
+        // if (age < 18) {
+        //   tutorField.show();
+        //   tutorField.attr('required', 'required');
+        //   tutorLabel.show();
+        // } else {
+        //   tutorField.hide();
+        //   tutorField.removeAttr('required');
+        //   tutorLabel.hide();
+        // }
+      });
+
+    });
+  </script>

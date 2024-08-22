@@ -1,4 +1,5 @@
 class Legislation::Process::Publication
+
   def initialize(publication_date, enabled)
     @publication_date = publication_date
     @enabled = enabled
@@ -15,4 +16,5 @@ class Legislation::Process::Publication
   def open?
     started?
   end
+
 end

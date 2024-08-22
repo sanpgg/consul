@@ -1,131 +1,522 @@
-<% provide :social_media_meta_tags do %>
-<%= render "shared/social_media_meta_tags",
-            social_url: budget_investments_path(investment),
-            social_title: investment.title,
-            social_description: investment.description,
-            twitter_image_url: (investment.image.present? ? investment.image_url(:thumb) : nil),
-            og_image_url: (investment.image.present? ? investment.image_url(:thumb) : nil) %>
-<% end %>
+<script>
+    $(document).ready(function(){
+        var html="";
+        var array = $('#tag-list').text().split(" -");
+        $.each(array, function(index, value){
+            html+='<span>'+value+'</span>';
+        });
+        $('#tag-list').html(html);
 
-<% cache [locale_and_user_status(investment),
-          investment,
-          investment.image,
-          investment.author,
-          Flag.flagged?(current_user, investment),
-          @investment_votes] do %>
-  <section class="budget-investment-show" id="<%= dom_id(investment) %>">
 
-    <div class="row">
-      <div class="small-12 medium-9 column">
-        <%= back_link_to budget_investments_path(investment.budget, heading_id: investment.heading) %>
+        var url = "https://api.sanpedro.gob.mx/api/Decide/Proyecto/"+<%= @investment.id %>; 
+        var html="";
+        html+="<h4 class='title-edca mb-3'>";
+            html+="Proceso de contratación abierta";
+        html+="</h4>";
+        html+="<div class='d-flex align-items-center align-self-center pb-3'>";
+            html+="<span class='check-pendiente'>Pendiente</span>";
+            html+="<span class='check-terminado'>Terminado</span>";
+            //html+="<span class='check-proceso'>Pendiente</span>";
+        html+="</div>";
+        $.ajaxSettings.async = false;        
+        $.getJSON( url, function( data ) {
+            $.each(data, function(index, value){
+                html+="<h4 class='title-producto'>"+value.nom_producto+"</h4>";
 
-        <%= render "/budgets/investments/investment_detail", investment: investment %>
-      </div>
+                html+="<div class='border-bottom datos-abiertos'>";
+                        html+="<ul>";
+                            if(value.url_json != null){
+                                html+="<li>";
+                                   html+="<a target='_blank' href='"+value.url_json+"'><i class='fa-solid fa-file-code'></i> Descargar en json</a>"; 
+                                html+="</li>";
+                            }
+                            html+="<li><a onClick='convertirJsonACsv("+JSON.stringify(data[index])+")'><i class='fa-solid fa-file-csv'></i> Descargar en csv</a></li>";
+                        html+="</ul>";
+                    html+="</div>";
+               
+                html+='<div class="accordion accordion-step position-relative" id="accordionStep'+index+'">';
+                    html+="<div class='step-line position-absolute'></div>";
 
-      <aside class="small-12 medium-3 column">
-        <%= render "/budgets/investments/author_actions", investment: investment %>
+                $.each(value.decideEtapas, function(index2, value){
+                    html+="<div class='mb-4'>";
+                        html+="<h2 id='flush-headingOne'>";
+                            html+="<button class='collapsed d-flex align-items-center' type='button' data-bs-toggle='collapse' data-bs-target='#stepCollapse"+index+"-"+index2+"' aria-expanded='true' aria-controls='stepCollapse"+index+"-"+index2+"'>";
+                                if(value.estatus == "Terminado"){
+                                    html+="<span class='check-complete'><i class='fa-solid fa-check "+value.estatus+"'></i></span>"+value.nomActividad;
+                                }else{
+                                    html+="<span><i class='fa-solid fa-circle "+value.estatus+"'></i></span>"+value.nomActividad;
+                                } 
+                            html+="</button>";
+                        html+="</h2>";
+                        html+="<div id='stepCollapse"+index+"-"+index2+"' class='accordion-collapse collapse show position-relative' aria-labelledby='stepCollapse"+index2+"' data-bs-parent='#accordionStep"+index+"'>";    
+                            html+="<div class='accordion-body'>";
+                                html+="<ul class='position-relative item-step'>";
+                                    html+="<div class='step-line position-absolute'></div>";
+                                    $.each(value.actividades, function(index3, value){
+                                    html+="<li class='"+value.estatus+"'>";
+                                        if(value.anexos.length > 0){
+                                            html+="<a data-bs-toggle='collapse' href='#collapse-anexo"+index2+"-"+index3+"' role='button' aria-expanded='false' aria-controls='#collapse-anexo"+index3+"'>";
+                                                html+=value.anexo;
+                                            html+="</a>";
+                                            html+="<ul class='collapse' id='collapse-anexo"+index2+"-"+index3+"'>";
+                                                $.each(value.anexos, function(index4, value){
+                                                    html+="<li>";
+                                                        html+="<a target='_blank' href='"+value.url+"'>";
+                                                            html+=value.nombreArchivo;
+                                                        html+="</a>";
+                                                    html+="</li>"; 
+                                                });
+                                            html+="</ul>";
+                                        }else{
+                                            html+="<a>"+value.anexo+"</a>";
+                                        }
+                                    html+="</li>"; 
+                                });
+                                html+="</ul>";
+                            html+="</div>";
+                        html+="</div>";
+                    html+="</div>";
+                });
+                html+='</div>';
+            });
+        }).done(function() { 
+            console.log('Datos cargados correctamente!'); 
+        }).fail(function(jqXHR, textStatus, errorThrown) { 
+            $('#edca').remove(); 
+        });
+        
+        $("#edca").html(html);
+    });
+</script>
 
-        <% if investment.should_show_aside? %>
-          <% if investment.should_show_votes? %>
-            <div class="sidebar-divider"></div>
-            <h2><%= t("budgets.investments.show.supports") %></h2>
-            <div class="text-center">
-              <div id="<%= dom_id(investment) %>_votes">
-                <%= render "/budgets/investments/votes",
-                  investment: investment,
-                  investment_votes: investment_votes,
-                  vote_url: vote_budget_investment_path(investment.budget, investment, value: "yes")
-                %>
-              </div>
+<script>
+    function limpiarCadena(cadena) {
+        // Eliminar espacios al inicio y al final
+        cadena = cadena.trim();
+
+        // Eliminar acentos
+        const acentos = { 'á':'a', 'é':'e', 'í':'i', 'ó':'o', 'ú':'u', 'Á':'A', 'É':'E', 'Í':'I', 'Ó':'O', 'Ú':'U', 'ñ':'n', 'Ñ':'N' };
+        cadena = cadena.split('').map(letra => acentos[letra] || letra).join('');
+
+        // Eliminar comas
+        cadena = cadena.replace(/,/g, '');
+
+        // Reemplazar espacios por guiones bajos
+        cadena = cadena.replace(/\s+/g, '_');
+
+        return cadena;
+    }
+
+    function convertirJsonACsv(dataProyecto) {
+        const nombre_archivo = limpiarCadena(dataProyecto.nom_producto);
+
+        // Extraer los valores de la propiedad 'decideEtapas'
+        const actividades = dataProyecto.decideEtapas;
+
+        // Crear encabezado del CSV
+        let csvContent = "data:text/csv;charset=utf-8,Actividad,Anexo,Estatus,Nombre de Archivo,URL\n";
+
+        // Recorrer cada etapa y actividad para construir el contenido del CSV
+        actividades.forEach(etapa => {
+            etapa.actividades.forEach(actividad => {
+                // Si 'anexos' está vacío, se agrega una fila con los datos disponibles
+                if (actividad.anexos.length === 0) {
+                    const fila = [
+                        etapa.nomActividad || '', // Si el valor es undefined, usar ''
+                        actividad.anexo || '',
+                        actividad.estatus || '',
+                        '', // nombreArchivo está vacío
+                        ''  // URL está vacío
+                    ].join(",");
+                    csvContent += fila + "\n";
+                } else {
+                    actividad.anexos.forEach(anexo => {
+                        const fila = [
+                            etapa.nomActividad || '',
+                            actividad.anexo || '',
+                            actividad.estatus || '',
+                            anexo.nombreArchivo || '',
+                            anexo.url || ''
+                        ].join(",");
+                        csvContent += fila + "\n";
+                    });
+                }
+            });
+        });
+
+        // Crear enlace para descargar el archivo CSV
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `${nombre_archivo}.csv`);
+        document.body.appendChild(link); 
+
+        // Simular clic para descargar el archivo
+        link.click();
+        
+        // Remover el enlace después de usarlo
+        document.body.removeChild(link);
+    }
+</script>
+
+<div class="content-single container mb-5">
+    <div class="row mt-5 justify-content-md-center">
+        <div class="col-md-11 margin-bottom">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <div class="d-flex align-items-center flex-wrap">               
+                                <div id="tag-list"><%= @investment.tag_list.present? ? @investment.tag_list.first : "Sin categoría" %></div>
+
+                                <% sectors = [{ short_name: "K1", large_name: "Poniente" }, { short_name: "K2", large_name: "Casco" }, { short_name: "K3", large_name: "Bosque, Lomas y Tampiquito" }, { short_name: "K4", large_name: "Valle" }, { short_name: "K5", large_name: "Montaña" }, { short_name: "K6", large_name: "Valle Oriente" }] %>
+                                        
+                                <% sector = sectors.select {|e| e[:short_name] == investment.author.colonium.first.sector}.first %>
+
+                                <span class="text-gray font-bold font-20 pt-1 d-inline-block"><strong><%= sector[:short_name] %> - <%= sector[:large_name] %></strong></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <ul class="d-flex justify-content-start justify-content-lg-end">
+                                <li>
+                                    <div class="position-relative">
+                                        <a class="btn-black font-12 py-1 px-3 px-md-2 px-lg-3 d-block" data-bs-toggle="collapse" href="#collapseShare" role="button" aria-expanded="false" aria-controls="collapseShare">
+                                        Compartir  <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                        </a>
+                                        <div class="collapse position-absolute content-social" id="collapseShare">
+                                            <ul class="d-flex btn-share justify-content-center">
+                                              <li>
+                                                <a href="javascript: void(0);" onclick="window.open('http://www.facebook.com/sharer.php?u=<%= url_for(only_path: false) %>','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                                    <i class="fa-brands fa-facebook"></i>
+                                                </a>
+                                              </li>
+                                              <li>
+                                                <a href="javascript: void(0);" onclick="window.open('https://twitter.com/intent/tweet?text=<%= url_for(only_path: false) %>','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                                    <i class="fa-brands fa-twitter"></i>
+                                                </a>
+                                              </li>
+                                              <li>
+                                                <a href="javascript: void(0);" onclick="window.open('whatsapp://send?text=<%= url_for(only_path: false) %>');">
+                                                    <i class="fa-brands fa-whatsapp"></i>
+                                                </a>
+                                              </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="js-flag-actions">
+                                        <%= render 'budgets/investments/flag_actions', investment: @investment %>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="budget-investment-show budget<%= dom_id(current_budget) %>" id="<%= dom_id(investment) %>">
+
+                                <div class="position-relative">
+                                    <%= render_image(investment.image, :large, true) if investment.image.present? %>
+                                    <% if investment.new_voted_in_v2?(current_budget, current_user) %>
+                                        <div class="content-triangle">
+                                            <div class="triangle-<%= investment.size == 'large' ? "large" : "medium" %>"></div>
+                                            <span>Proyecto votado</span>
+                                        </div>
+                                    <% end %>
+                                </div>
+
+                                <div class="social-content">
+                                    <% provide :social_media_meta_tags do %>
+                                        <%= render "shared/social_media_meta_tags",
+                                        social_url: budget_investments_path(investment),
+                                        social_title: investment.title,
+                                        social_description: investment.description,
+                                        twitter_image_url: (investment.image.present? ? investment.image_url(:thumb) : nil),
+                                        og_image_url: (investment.image.present? ? investment.image_url(:thumb) : nil) %>
+                                    <% end %>
+                                </div>
+                                <div class="mt-3">
+                                    <h1 class="mb-2"><%= investment.title %></h1>
+                                    <div class="budget-investment-info mb-2">
+                                        <span id="investment_code mb-2">
+                                            <%= t("budgets.investments.show.code_html", code: investment.id) %>
+                                        </span>
+                                        <span class="bullet">&nbsp;&bull;&nbsp;</span>
+                                        <%= render '/shared/author_info', resource: investment %>
+                                        <br>
+                                        <span class="text-gray font-16">
+                                            <%= l investment.created_at.to_date %> | 
+                                            <% if investment.size.present? %>
+                                                <%= investment.size == 'large' ? "Proyecto sectorial 12.5 mdp" : "Proyecto comunitario 1 mdp" %>
+                                            <% else %>
+
+                                            <% end %>
+                                        </span>
+                                        <span class="text-gray">
+                                            <% unless investment.budget.is_new? %>
+                                                <span class="bullet text-gray font-16">&nbsp;&bull;&nbsp;</span>
+                                                <%= investment.heading&.name %>
+                                                <span class="bullet text-gray font-16">&nbsp;&bull;&nbsp;</span>
+                                            <% end %>
+                                        </span>
+                                        
+                                    </div>
+                                    
+                                    <%= safe_html_with_links investment.description.html_safe %>
+
+                                    <% if @investment.additional_images.present? %>
+                                        <div id="slider" class="text-center image-preview">
+                                            <hr>
+                                            <h2 class="inline-block mb-3">
+                                                Imágenes Adicionales
+                                            </h2>
+                                            <div class="flexslider">
+                                                <ul class="slides">
+                                                    <% @investment.additional_images.each do |image| %>
+                                                        <li class="item">
+                                                            <figure>
+                                                                <%= image_tag image.photo.url(:medium) %>
+                                                            </figure>
+                                                        </li>
+                                                    <% end %>
+                                                </ul>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    <% end %>
+
+                                    <% if feature?(:map) && map_location_available?(@investment.map_location) %>
+                                        <div class="margin">
+                                            <%= render_map(@investment.map_location, "budget_investment", false, nil) %>
+                                        </div>
+                                    <% end %>
+
+                                    <% if investment.location.present? %>
+                                        <p>
+                                            <%= t("budgets.investments.show.location_html", location: investment.location) %>
+                                        </p>
+                                    <% end %>
+
+                                    <% if investment.organization_name.present? %>
+                                        <p>
+                                            <%= t("budgets.investments.show.organization_name_html", name: investment.organization_name) %>
+                                        </p>
+                                    <% end %>
+
+                                    <% if feature?(:allow_attached_documents) %>
+                                        <%= render 'documents/documents',
+                                                documents: investment.documents,
+                                                max_documents_allowed: Budget::Investment.max_documents_allowed %>
+                                    <% end %>
+
+                                    <%= render 'shared/tags', taggable: investment %>
+
+                                    <% if investment.external_url.present? %>
+                                        <div class="document-link">
+                                        <%= text_with_links investment.external_url %>
+                                        </div>
+                                    <% end %>
+
+                                    <%= render 'relationable/related_content', relationable: @investment %>
+                                    <div class="js-moderator-investment-actions margin">
+                                        <%= render "budgets/investments/actions", investment: @investment %>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <!--Comentarios-->
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-12">
+                            <%= render "budgets/investments/filter_subnav" %>
+                            <div class="tabs-content" data-tabs-content="investments_tabs">
+                                <div class="tabs-panel is-active" id="tab-comments">
+                                    <%= render partial: '/comments/comment_tree', locals: { comment_tree: @comment_tree, comment_flags: @comment_flags, display_comments_count: false } %>
+                                </div>
+                                <%= render "milestones/milestones", milestoneable: @investment %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                    <div class="container-info-investment">
+                        <h3 class="bg-img-si mb-3">
+                            Información relevante sobre esta propuesta
+                        </h3>
+                        
+                        <aside>
+                                                     
+                            <% if investment.unfeasible? %>
+                                <div class="callout warning">
+                                <%= t("budgets.investments.show.project_unfeasible_html") %>
+                                </div>
+                            <% elsif investment.winner? %>
+                                <div class="callout success">
+                                <strong><%= t("budgets.investments.show.project_winner") %></strong>
+                                </div>
+                            <% elsif investment.draw? %>
+                                <div class="callout warning">
+                                <strong>Propuesta con empate - En deliberación</strong>
+                                </div>
+                            <% elsif investment.selected? %>
+                                <% if investment.winner? %>            
+                                    <div class="callout success">
+                                        <%= t("budgets.investments.show.project_selected_html") %>
+                                    </div>
+                                <% else %>
+                                    <% if @budget.finished? %>
+                                        <div class="callout warning">
+                                            No ganadora
+                                        </div>
+                                    <% end %>
+                                <% end %>
+                            <% elsif @budget.balloting_or_later? %>
+                                <div class="callout warning">
+                                <%= t("budgets.investments.show.project_not_selected_html") %>
+                                </div>
+                            <% else %>
+                                <div class="">
+                                    <p style="font-size: 1rem !important;">Aquí pondremos si la propuesta es factible, bajo qué consideraciones o lineamientos, y en caso de no ser factible, la justificación técnica, jurídica y/ó presupuestal, del 1 de Mayo al 11 de Julio. 
+                                    </br>¡La persona autora de esta propuesta tiene hasta el 30 de Abril para adjuntar fotos, archivos o editar el contenido!</p>
+                                </div>   
+                            <% end %>
+                                
+                            <% if investment.should_show_price? && !investment.unfeasible? %>
+                                <!--<h2><%= t("budgets.investments.show.price") %></h2>
+                                <p style="font-size: 1rem !important;">El costo final lo sabremos en caso de resultar ganador, con un anexo técnico y cotización detallada y actualizada.</p>-->
+                                
+                                <% if investment.should_show_price_explanation? %>
+                                      
+                                        <p class="pwrap"><%= safe_html_with_links investment.price_explanation.html_safe %></p>
+                                    <% end %>
+                            <% end %>
+                        </aside>
+                        <% if investment.should_show_unfeasibility_explanation? %>
+                            <div class="card card-style">
+                                <!--<div class="card-header d-flex justify-content-between">
+                                    <div class="content-icon"> 
+                                        <svg width="60px" height="58px" viewBox="0 0 60 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <g id="Explora---Perfil-de-proyecto" transform="translate(-996.000000, -196.000000)">
+                                                    <g id="Group-5" transform="translate(997.445501, 197.000000)">
+                                                        <path d="M50.5496723,0 L6.59261183,0 C2.95105352,0 0,2.25066782 0,5.02667579 L0,39.1589666 C0,41.9347441 2.95105352,44.1856423 6.59261183,44.1856423 L45.4697695,44.1856423 L57.1398645,54 L57.1410743,5.02667579 C57.1410743,2.25066782 54.1900208,0 50.5496723,0 Z" id="Stroke-1" stroke="#071110" stroke-width="2"></path>
+                                                        <g id="Group-29" transform="translate(8.554499, 7.000000)" fill="#071110" fill-rule="nonzero">
+                                                            <path d="M5.29607712,10.0055518 L1.47205754,10.0055518 L1.47235655,10.0055518 C1.19395862,10.0079703 0.917352011,10.0472721 0.649112574,10.1225491 C0.321973758,10.1914782 0.0719767461,10.4599429 0.0232358644,10.7943106 C-0.067371498,11.1577012 0.113544673,11.534396 0.452051512,11.6870567 C0.863818952,11.8817504 1.30637575,12.0020757 1.75941256,12.0425918 C2.95102645,12.0988236 3.4313159,12.6275862 3.25126477,13.8670909 C2.91694534,16.185909 2.46690938,18.4871586 2.08085588,20.8017974 C1.8194985,22.3620715 1.60061236,23.9266023 1.34792836,25.4868764 C1.00912297,27.5889124 2.94687731,29.5610029 4.48596232,29.8209712 C5.39770082,29.9500653 6.31755387,30.0096204 7.23824899,29.9987388 C9.21069686,29.9963202 11.0951861,29.1715458 12.4467944,27.7189275 C12.6922978,27.4903737 12.8765057,27.2025588 12.9826608,26.8823698 C13.0343934,26.6027201 12.9692045,26.3139997 12.8026403,26.084819 C12.6010933,25.9575436 12.3531938,25.9303317 12.1295155,26.0113545 C11.7778493,26.1283519 11.4650641,26.3711154 11.1220866,26.5228861 L11.1220866,26.5225838 C10.7213809,26.7118367 10.3015219,26.8569514 9.87030253,26.9561171 C9.5225252,27.0422804 9.15471412,26.9700241 8.86402188,26.7580954 C8.57365882,26.5461659 8.3897571,26.2160317 8.36134853,25.8553654 C8.28898282,25.4520701 8.2761228,25.0400138 8.32277303,24.6330732 C8.46839857,23.6275632 8.67443922,22.6307988 8.85445207,21.6337248 C9.34307042,18.9149317 9.83883875,16.1946681 10.3418642,13.4724696 C10.4791226,12.7269433 10.710571,11.9943884 10.5562721,11.2102269 L10.5562721,11.2099246 C10.5320501,10.8616491 10.3705714,10.5375594 10.1077212,10.3108321 C9.84487108,10.0840893 9.50278159,9.97404196 9.15862518,10.0051855 L5.29602322,10.0051855 L5.29607712,10.0055518 Z" id="Path"></path>
+                                                            <path d="M8.17491905,0.00384738106 C7.11027822,-0.0428606868 6.07080806,0.33725842 5.28729218,1.06002005 C4.50409094,1.78307274 4.04165847,2.78855289 4.00264393,3.8539295 C3.96392907,4.91899145 4.35169038,5.95581222 5.08018473,6.73382113 C5.80869482,7.51187725 6.81743316,7.96699279 7.8830179,7.99830195 C8.948288,8.02933813 9.98193744,7.63385709 10.7546771,6.89972819 C11.5274325,6.16530823 11.9751402,5.15310212 11.998423,4.08741084 C12.0279199,3.04107145 11.6426198,2.02517589 10.9263883,1.26187756 C10.2101647,0.498264571 9.22107518,0.049316456 8.17491905,0.012421999 L8.17491905,0.00384738106 Z" id="Path"></path>
+                                                        </g>
+                                                        <line x1="29.5544986" y1="18.4" x2="47.5544986" y2="18.4" id="Path" stroke="#071110" stroke-width="3" stroke-linecap="round"></line>
+                                                        <line x1="29.5544986" y1="26" x2="47.5544986" y2="26" id="Path-Copy" stroke="#071110" stroke-width="3" stroke-linecap="round"></line>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <h2>
+                                        <%= t('budgets.investments.show.unfeasibility_explanation') %>
+                                    </h2>
+                                </div>-->
+                                <div class="card-body">
+                                    <p class="pwrap"><%= safe_html_with_links investment.unfeasibility_explanation.html_safe %></p>
+                                </div>
+                            </div>
+                        <% else %>
+                        <% end %>
+
+                        <!--/EDCA/-->
+                        <% if @investment.budget_id >= 11 %>
+                            <div class="px-2 mt-3">
+                                <aside id="edca">
+                                </aside>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
             </div>
-          <% elsif investment.should_show_vote_count? %>
-            <div class="sidebar-divider"></div>
-            <h2><%= t("budgets.investments.show.supports") %></h2>
-            <div class="text-center">
-              <span class="total-supports">
-                <strong>
-                  <%= t("budgets.investments.investment.supports",
-                      count: investment.total_votes) %>
-                </strong>
-              </span>
-            </div>
-          <% elsif investment.should_show_ballots? %>
-            <div class="sidebar-divider"></div>
-            <h2><%= t("budgets.investments.show.votes") %></h2>
-            <div class="text-center">
-              <div id="<%= dom_id(investment) %>_ballot">
-                <%= render "ballot",
-                  investment: investment,
-                  investment_ids: investment_ids,
-                  ballot: ballot %>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
-
-        <% if investment.unfeasible? && investment.valuation_finished? %>
-          <div class="callout warning">
-            <%= sanitize(t("budgets.investments.show.project_unfeasible")) %>
-          </div>
-        <% elsif investment.winner? && @budget.finished? %>
-          <div class="callout success">
-            <strong><%= t("budgets.investments.show.project_winner") %></strong>
-          </div>
-        <% elsif investment.selected? %>
-          <div class="callout success">
-            <%= sanitize(t("budgets.investments.show.project_selected")) %>
-          </div>
-        <% elsif @budget.balloting_or_later? %>
-          <div class="callout warning">
-            <%= sanitize(t("budgets.investments.show.project_not_selected")) %>
-          </div>
-        <% else %>
-          <br>
-          <div class="float-right">
-            <span class="label-budget-investment float-left">
-              <%= t("budgets.investments.show.title") %>
-            </span>
-            <span class="icon-budget"></span>
-          </div>
-        <% end %>
-        <% if investment.should_show_price? %>
-          <div class="sidebar-divider"></div>
-          <h2><%= t("budgets.investments.show.price") %></h2>
-          <div class="supports text-center">
-            <p class="investment-project-amount">
-              <%= investment.formatted_price %>
-            </p>
-          </div>
-          <% if investment.should_show_price_explanation? %>
-            <div class="text-center" data-magellan>
-              <%= link_to t("budgets.investments.show.see_price_explanation"),
-                            "#price_explanation", class: "small" %>
-            </div>
-          <% end %>
-        <% end %>
-
-        <%= render "shared/social_share",
-          share_title: t("budgets.investments.show.share"),
-          title: investment.title,
-          image_url: image_absolute_url(investment.image, :thumb),
-          url: budget_investment_url(investment.budget, investment),
-          description: t("budgets.investments.share.message",
-                          title: investment.title,
-                          handle: setting["org_name"]),
-          mobile: t("budgets.investments.share.message",
-                     title: investment.title,
-                     handle: setting["twitter_handle"]) %>
-
-        <% if current_user %>
-          <div class="sidebar-divider"></div>
-          <p class="sidebar-title"><%= t("shared.follow") %></p>
-
-          <%= render "follows/follow_button", follow: find_or_build_follow(current_user, investment) %>
-        <% end %>
-
-        <%= render "communities/access_button", community: investment.community %>
-
-       </aside>
+        </div>
     </div>
-  </section>
+</div>
+<% if investment.should_show_ballots? %>
+    <% if investment.new_voted_in_v2?(current_budget, current_user) %>
+        <div class="content-fixed-vote fixed-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="btn-return" href="/presupuestos/<%= investment.budget_id %>/vota"><span><i class="fa-solid fa-arrow-left"></i></span>  Ver más proyecto</a>
+                            <%= link_to t('budgets.ballots.show.remove'), budget_ballot_line_path(id: investment.id, budget_id: investment.budget_id,investments_ids: investment_ids), class: "btn-black font-normal font-18 py-2 px-3 px-md-5", title: t("Quitar voto"), method: :delete, remote: false %>
+                            <!--<a class="btn-black font-normal font-18 py-2 px-5" href="#">Eliminar Voto</a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% else %>
+        <% if investment.to_vote?(current_budget, current_user) %>
+            <div class="content-fixed-vote fixed-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a class="btn-return" href="/presupuestos/<%= investment.budget_id %>/vota"><span><i class="fa-solid fa-arrow-left"></i></span>  Ver más proyecto</a>
+                                <!--<a class="btn-black font-normal font-18 py-2 px-5" href="#">Votar</a>-->
+                                <%= link_to t("budgets.investments.investment.add"), budget_ballot_lines_url(investment_id: investment.id, budget_id: investment.budget_id, investments_ids: investment_ids).gsub("http://127.0.0.1:3000", ""), class: "btn-black font-normal font-18 py-2 px-5", title: t('budgets.investments.investment.support_title'), method: :post, remote: false %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% else %>
+            <div class="content-fixed-vote fixed-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a class="btn-return" href="/presupuestos/<%= investment.budget_id %>/vota"><span><i class="fa-solid fa-arrow-left"></i></span>  Ver más proyecto</a>
+                                
+                                <% first_error = false %>
+
+                                <% if current_user.nil? %>
+                                    <% first_error = true %>
+                                    <p style="color: #ff0072; font-weight: bold;">Debes <a href="/users/sign_in">Iniciar sesión</a> para votar.</p>
+                                <% end %>
+
+                                <% if !current_user&.level_three_verified? && !first_error %>
+                                    <% first_error = true %>
+                                    <p style="color: #ff0072; font-weight: bold;">Debes <%= link_to "completar tu perfil", account_path %> para votar.</p>
+                                <% end %>
+
+                                <% if !investment.feasible? && !first_error %>
+                                    <% first_error = true %>
+                                    <p style="color: #ff0072; font-weight: bold;">No puedes votar por esta propuesta porque no es factible.</p>
+                                <% end %>
+
+                                <% if current_user&.sector != investment.author.colonium.first.sector && !first_error %>
+                                    <% first_error = true %>
+                                    <p style="color: #ff0072; font-weight: bold;">No puedes votar por esta propuesta porque no es de tu sector.</p>
+                                <% end %>
+
+                                <% if current_user&.is_minor? && !first_error %>
+                                    <% first_error = true %>
+                                    <p style="color: #ff0072; font-weight: bold;">No puedes votar por esta propuesta porque eres menor de edad.</p>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+    <% end %>
 <% end %>
+
+<script type="text/javascript">
+    $('.flexslider').flexslider({
+     animation: "slide",
+     animationLoop: false,
+     itemWidth: 460,
+     itemMargin: 5,
+     minItems: 2,
+     maxItems: 4
+    });
+</script>

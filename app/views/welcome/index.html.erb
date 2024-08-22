@@ -1,40 +1,894 @@
-<% content_for :body_class, "home-page" %>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-641aa40101a0007e"></script>
+  <script>
+    $("document").ready(function(){
+      var myAlert = document.getElementById('alert-policy')
+      myAlert.addEventListener('close.bs.alert', function(){
+        $.cookie('alert_policy', 'ready', { expires: 1 });
+      });
+    
 
-<% content_for :canonical do %>
-  <%= render "shared/canonical", href: root_url %>
-<% end %>
+      var collapseShare = document.getElementById('collapseShare')
+      collapseShare.addEventListener('shown.bs.collapse', function(){
+        addthis.toolbox();
+      });
+    });
+  </script>
 
-<%= render "shared/banner" %>
+  <style>
+  .proyecto-status a {
+    float:right;
+  }
+  .proyecto-status a:hover span{
+    color: black !important;
+  }
+  .bg-slider img{
+    border-radius: 40px;
+  }
+  .bg-slider .img-slider-h{
+    width: 100%;
+  }
+  .btn-share{
+    padding: 0;
+    margin: 0;
+  }
+  .btn-share li{
+    margin: 0 10px;
+    list-style: none;
+  }
+  .btn-share a i{
+    color: #000;
+  }
+  </style>
+  <!-- header is _new_user_header.html.erb on layouts -->
+  <section class="content-proyectos">
+    <div class="wrapper-bg bg-green-color pb-5">
+      <div class="container">
+        <div id="slider" class="carousel slide carousel-fade position-relative" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="3000">
+              <div class="bg-slider">
+                <div class="row">
+                  <div class="col-md-7">
+                    <img class="img-slider-h" src="images/img-slider-1.jpg">
+                  </div>
+                  <div class="col-md-5">
+                    <div class="p-5 p-md-4 p-lg-5 h-100 d-inline-block">
+                      <div class="content-cat-share d-flex justify-content-between">
+                        <span>
+                          <svg width="27px" height="35px" viewBox="0 0 27 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                  <g id="Home" transform="translate(-917.000000, -177.000000)" fill="#FFA700" fill-rule="nonzero">
+                                      <g id="noun-security-1121209" transform="translate(917.000000, 177.000000)">
+                                          <path d="M11.1689353,34.1796572 L12.8685755,34.9035459 C13.0143237,34.9517729 13.1113813,35 13.2571295,35 C13.4028777,35 13.4999353,34.9517729 13.6456835,34.9035459 L15.5881295,34.0832192 C22.5323741,31.1876646 27,24.527889 27,17.0477063 L27,7.68541316 C27,7.3476628 26.805723,7.00974354 26.4658678,6.81666635 L13.7914074,0.108631556 C13.5000728,-0.0362105188 13.1600315,-0.0362105188 12.868705,0.108631556 L0.485611511,6.8649256 C0.194276978,7.05799474 0,7.34751803 0,7.7336724 L0,17.2890025 C0,24.5761483 4.3705036,31.2359238 11.1690647,34.1797376 L11.1689353,34.1796572 Z M1.94231655,8.26444365 L13.3541871,2.03900128 L25.0574245,8.26444365 L25.0574245,17.0476259 C25.0574245,23.7556607 21.026768,29.7398068 14.8595827,32.2975467 L13.3057068,32.9732163 L11.9946367,32.3941859 C5.92449281,29.7881465 1.99103957,23.8040406 1.99103957,17.2407835 L1.99103957,8.26456429 L1.94231655,8.26444365 Z" id="Shape"></path>
+                                          <polygon id="Path" points="10.6666667 23 11.4035088 22.3709012 20 15.5000874 18.7719298 14 10.9122807 20.2901817 7.52292982 16.370955 6 17.628951 10.028152 22.2740082"></polygon>
+                                      </g>
+                                  </g>
+                              </g>
+                          </svg>  
+                          Seguridad
+                        </span>
+                        <div class="position-relative">
+                          <a class="btn-black font-12 py-1 px-3 px-md-2 px-lg-3 d-block" data-bs-toggle="collapse" href="#collapseShare" role="button" aria-expanded="false" aria-controls="collapseShare">
+                            Compartir  <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                          </a>
+                          <div class="collapse position-absolute content-social" id="collapseShare">
+                            <ul class="d-flex btn-share">
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('http://www.facebook.com/sharer.php?u=https://decide.sanpedro.gob.mx/presupuestos/5/investments/960/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-facebook"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('https://twitter.com/intent/tweet?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/5/investments/960/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-twitter"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('whatsapp://send?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/5/investments/960/');">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <h2 class="mt-5 mt-md-3 mt-lg-5">Estación de bomberos</h2>
+                      <p>“Este proyecto es un logro de la democracia, el proyecto fue propuesto por el pueblo, votado favorablemente por el pueblo y es para beneficio del pueblo”</p>
+                      <p>José Manuel, vecino de Olinalá</p>
+                      <p>MONTO DE INVERSIÓN: <strong>7 MDP.</strong></p> 
+                      <p>SECTOR K5: <strong>MONTAÑA</strong></p>
+                      <a class="mt-4 btn-style-4" href="/presupuestos/5/investments/960">
+                        Ver Proyecto
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="6000">
+              <div class="bg-slider">
+                <div class="row">
+                  <div class="col-md-7">
+                    <img class="img-slider-h" src="images/img-slider-2.jpg">
+                  </div>
+                  <div class="col-md-5">
+                    <div class="p-5 p-md-4 p-lg-5 h-100 d-inline-block">
+                      <div class="content-cat-share d-flex justify-content-between">
+                        <span>
+                          <i class="fa-solid fa-recycle"></i>
+                          Medio Ambiente
+                        </span>
+                        <div class="position-relative">
+                          <a class="btn-black font-12 py-1 px-3 px-md-2 px-lg-3 d-block" data-bs-toggle="collapse" href="#collapseShare" role="button" aria-expanded="false" aria-controls="collapseShare">
+                            Compartir  <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                          </a>
+                          <div class="collapse position-absolute content-social" id="collapseShare">
+                            <ul class="d-flex btn-share">
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('http://www.facebook.com/sharer.php?u=https://decide.sanpedro.gob.mx/presupuestos/9/investments/1341/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-facebook"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('https://twitter.com/intent/tweet?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/9/investments/1341/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-twitter"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('whatsapp://send?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/9/investments/1341/');">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <h2 class="mt-5 mt-md-3 mt-lg-5">Ruta de reciclaje </h2>
+                      <p>“Gracias a las vecinas de Valle de San Ángel, hicimos el primer piloto de ruta de reciclaje a domicilio en 15 colonias, con encuestas, grupos de enfoque, talleres y análisis de datos.”</p>
+                      <p>MONTO DE INVERSIÓN: <strong>2.5 MDP.</strong></p> 
+                      <p>SECTOR K5: <strong>MONTAÑA</strong></p>
+                      <a class="mt-4 btn-style-4" href="/presupuestos/9/investments/1341">
+                        Ver Proyecto
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="9000">
+              <div class="bg-slider">
+                <div class="row">
+                  <div class="col-md-7">
+                    <img class="img-slider-h" src="images/img-slider-3.jpg">
+                  </div>
+                  <div class="col-md-5">
+                    <div class="p-5 p-md-4 p-lg-5 h-100 d-inline-block">
+                      <div class="content-cat-share d-flex justify-content-between">
+                        <span>
+                          <i class="fa-solid fa-recycle"></i>
+                          Medio Ambiente
+                        </span>
+                        <div class="position-relative">
+                          <a class="btn-black font-12 py-1 px-3 px-md-2 px-lg-3 d-block" data-bs-toggle="collapse" href="#collapseShare" role="button" aria-expanded="false" aria-controls="collapseShare">
+                            Compartir  <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                          </a>
+                          <div class="collapse position-absolute content-social" id="collapseShare">
+                            <ul class="d-flex btn-share">
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('http://www.facebook.com/sharer.php?u=https://decide.sanpedro.gob.mx/presupuestos/5/investments/396/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-facebook"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('https://twitter.com/intent/tweet?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/5/investments/396/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-twitter"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('whatsapp://send?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/5/investments/396/');">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <h2 class="mt-5 mt-md-3 mt-lg-5">Monitoreo de calidad del aire</h2>
+                      <p>“Me parece súper buena iniciativa que están empoderando a los ciudadanos para proponer ideas que puedan llevarse a la realidad”</p>
+                      <p>Luis, vecino de La Muralla</p> 
+                      <p>MONTO DE INVERSIÓN: <strong>300 mil</strong></p> 
+                      <p>SECTOR K6: <strong>Valle Oriente</strong></p>
+                      <a class="mt-4 btn-style-4" href="/presupuestos/5/investments/396">
+                        Ver Proyecto
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="12000">
+              <div class="bg-slider">
+                <div class="row">
+                  <div class="col-md-7">
+                    <img class="img-slider-h" src="images/img-slider-4.jpg">
+                  </div>
+                  <div class="col-md-5">
+                    <div class="p-5 p-md-4 p-lg-5 h-100 d-inline-block">
+                      <div class="content-cat-share d-flex justify-content-between">
+                        <span>
+                          <i class="fa-solid fa-seedling"></i>
+                          Cultura y Deporte
+                        </span>
+                        <div class="position-relative">
+                          <a class="btn-black font-12 py-1 px-3 px-md-2 px-lg-3 d-block" data-bs-toggle="collapse" href="#collapseShare" role="button" aria-expanded="false" aria-controls="collapseShare">
+                            Compartir  <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                          </a>
+                          <div class="collapse position-absolute content-social" id="collapseShare">
+                            <ul class="d-flex btn-share">
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('http://www.facebook.com/sharer.php?u=https://decide.sanpedro.gob.mx/presupuestos/10/investments/2159/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-facebook"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('https://twitter.com/intent/tweet?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/10/investments/2159/','ventanacompartir', 'toolbar=0, status=0, width=650, height=450');">
+                                    <i class="fa-brands fa-twitter"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="javascript: void(0);" onclick="window.open('whatsapp://send?text=Estación de bomberos - https://decide.sanpedro.gob.mx/presupuestos/10/investments/2159/');">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <h2 class="mt-5 mt-md-3 mt-lg-5">Huertos comunitarios</h2>
+                      <p>“Gracias a Flora, Tita, Naomi y Viola hay 4 huertos comunitarios en Ampliación Valle Mirador, Jardines del Valle, Villas del Obispo y Fuentes del Valle.”</p>
+                      <p>MONTO DE INVERSIÓN: <strong>1 MDP entre 5 proyectos</strong></p> 
+                      <a class="mt-4 btn-style-4" href="/presupuestos/10/investments/2159">
+                        Ver Proyecto
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="controls-slider animated">
+            <button class="btn-control" type="button" data-bs-target="#slider" data-bs-slide="prev">
+              <i class="fa-solid fa-arrow-left-long"></i>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="btn-control" type="button" data-bs-target="#slider" data-bs-slide="next">
+              <i class="fa-solid fa-arrow-right-long"></i>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div><!--end #slider-->
 
-<% provide :social_media_meta_tags do %>
-  <%= render "shared/social_media_meta_tags",
-              social_url: root_url %>
-<% end %>
+        <div class="content-hagamos-historia mt-md-4">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="pt-5 pb-1 p-md-3 p-lg-5">
+                <img src="images/img-hagamos.png" alt="hagamos historia">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="py-2 px-4 p-md-3 p-lg-5">
+                <h5 class="pt-3">
+                  Cada año, todos los ciudadanos de San Pedro tenemos la oportunidad de decidir cómo invertir una parte de nuestro presupuesto municipal.
+                </h5>
+                <hr/>
+                <p>
+                  Tenemos 150 millones de pesos dispuestos a financiar proyectos que mejoran nuestra comunidad y resuelvan problemas públicos.
+                </p>
+                <p>
+                  ¡Y todos podemos ayudar a elegir!
+                </p>
+                <a class="btn-black font-16 py-3 px-5 mt-4 d-inline-block" href="/docs/CATALOGO_PROYECTOS_PP2023_DIGITAL.pdf" target="_blank">Ver Catálogo de Proyectos PP2023</a>
+              </div>
+            </div>
+          </div>  
+        </div><!--end .content-hagamos-historia-->
 
-<%= render "header", header: @header %>
+        <div class="owl-carousel mt-4">
+          
+          <div class="item-pasos">
+            <h5>PARTICIPA</h5>
+            <h3 class="mt-3">Regístrate</h3>
+            <p>
+              ¡Intégrate a nuestra comunidad digital y prepárate para hacer de tu participación la diferencia!
+            </p>
+            <div class="content-img">
+              <img class="mx-auto" src="images/img-registrate.png" alt="regístrate">
+            </div>
+            <a class="btn-black font-16 font-bold py-2 px-45 mt-3 d-inline-block" href="/users/sign_up">
+              Regístrate
+            </a>
+          </div>
 
-<main>
-  <%= render "feeds" %>
+          <div class="item-pasos zoom-currentfase">
+            <h5>FASE ACTUAL</h5>
+            <h3 class="mt-3"><%= t("budgets.phase.#{current_budget.phase}") %></h3>
+            <p><%= t("budgets.phase.descriptions.#{current_budget.phase}") %></p>
+            <div class="content-img">
+              <img class="mx-auto" src="images/c-<%= current_budget.phase %>.png" alt="<%= current_budget.phase %>">
+            </div>
 
-  <div class="row">
-    <% if @cards.any? %>
-      <div class="small-12 column <%= "large-8" if feed_processes_enabled? %>">
-        <h3 class="title"><%= t("welcome.cards.title") %></h3>
+            <% if current_budget.accepting? %>
+              <%= link_to "Participa", investment_create_step_path(current_budget), class: "btn-black font-16 font-bold py-2 px-45 mt-3 d-inline-block" %>
+            <% elsif current_budget.balloting? %>
+              <%= link_to "Votar", vota_path(current_budget), class: "btn-black font-16 font-bold py-2 px-45 mt-3 d-inline-block" %>
+            <% elsif current_budget.valuating? %>
+              <%= link_to "Ver mis propuestas", user_path(current_user), class: "btn-black font-16 font-bold py-2 px-45 mt-3 d-inline-block" if user_signed_in? %>
+            <% end %>
 
-        <%= render "shared/cards" %>
+          </div>
+          
+          <% unless current_budget.finished? %>
+            <div class="item-pasos">
+              <h5>PRÓXIMA FASE</h5>
+              <h3 class="mt-3"><%= t("budgets.phase.#{current_budget.next_phase.kind}") %></h3>
+              <p><%= t("budgets.phase.descriptions.#{current_budget.next_phase.kind}") %></p>
+              <div class="content-img">
+                <img class="mx-auto" src="images/c-<%= current_budget.next_phase.kind %>.png" alt="<%= current_budget.next_phase.kind %>">
+              </div>
+
+              <% if current_budget.next_phase.kind == 'valuating' %>
+                  <%= link_to "Ver mis propuestas", user_path(current_user), class: "btn-black font-16 font-bold py-2 px-45 mt-3 d-inline-block" if user_signed_in? %>
+              <% end %>
+            </div>
+          <% end %>
+
+        </div><!--end .owl-carrousel-->
+      </div>
+    </div><!--End .wrapper-bg-->
+
+    <div class="container pb-5">
+      <div class="proyectos mt-110">
+        <div class="row title-proyectos mb-5 equal">
+          <div class="col-md-9">
+            <p>Conoce el avance <br>de cada proyecto</p>
+            <%= link_to "Ver seguimiento", budgets_path, class: "mt-2 px-5 py-3 btn-black d-inline-block font-18 rounded-pill" %>
+          </div>
+          <div class="col-md-3">
+            <img class="w-250" src="images/img-hagamos-ciudad.png" alt="Hagamos Ciudad">
+          </div>
+        </div>
+        <div class="row">
+          <% Budget::Investment.winners.joins(:milestones).includes(:milestones).includes(:heading).includes(:group).order('budget_groups.name').where("budget_groups.name ILIKE '%sector%'").order('RANDOM()').take(3).each do |p| %>
+
+          <% if p.milestone_info&.status&.name == 'Entrega' %>
+            <% percent = 100 %>
+          <% elsif p.milestone_info&.status&.name == 'Cotización' %>
+            <% percent = 25 %>
+          <% else %>
+            <% percent = 50 %>
+          <% end %>
+
+          <div class="col-md-4 mt-4">
+            <div class="item-proyecto">
+              <% if p.image.present? %>
+                <% image_source = p.image_url(:large) %>
+              <% else %>
+                <% image_source = 'assets/budget_execution_no_image.jpg' %>
+              <% end %>
+              <div class="content-img">
+                <img class="w-100" src="<%= image_source %>" alt="<%= p.title %>">
+              </div>
+              <div class="proyecto-status">
+                <h4><%= p.tag_list.present? ? p.tag_list.first : "Sin categoría" %></h4>
+                <h3>
+                  <%= p.title %>
+                  <%= link_to budget_investment_path(p.budget_id, p.id)  do %>
+                    <span>Ver más</span>
+                  <% end %>
+                </h3>
+                <span><%= p.milestone_info&.status&.name %></span>
+                <div class="progress">
+                  <div class="progress-bar w-<%= percent %>" role="progressbar" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content-sectores-proyectos bg-gradiente p-3 p-md-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <h3>Sectores</h3>
+          <span class="desc font-medium font-18 mb-4 d-inline-block">Conoce tu sector y explora los proyectos de los sectores:</span>
+        </div>
+        <div class="offset-md-1 col-md-6">
+          <ul class="project-cant d-flex flex-wrap justify-content-between">
+            <li>
+              <div class="data-project doce_m">
+                <h5>Proyectos sectoriales</h5>
+                <span>grandes (12.5 mdp)</span>
+              </div>
+            </li>
+            <li>
+              <div class="data-project un_m">
+                <h5>Proyectos comunitarios</h5>
+                <span>medianos (1 mdp)</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="box-k d-flex flex-wrap align-self-center align-self-start">
+            <% new_sectors.each do |s| %>
+              <li>
+                <%= link_to budgets_path(s: s[:short_name]) do %>
+                  <div class="box-content">
+                    <h4><%= s[:short_name] %></h4>
+                    <span><%= s[:large_name] %></span>
+                  </div>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content-mapa mt-5">
+      <div class="container">
+        <div class="box-shadow brd-radius-44">
+          <div class="row">
+            <div class="col-md-6 pl-5">
+              <div class="box-left">
+                <img src="images/logo-decide-black.png">
+                <div class="content-search mt-4 pt-2">
+                  
+                  <%= form_tag budgets_path, method: :get, id: "search-form" do %>
+                    <%= text_field_tag :query, nil, placeholder: "Busca proyectos" %>
+                  <% end %>
+
+                  <h4>Búsquedas recientes</h4>
+                  <ul>
+                    <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Parques y Jardínes</a></li>
+                    <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Resultados 2022</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <img class="w-100 img-responsive brd-radius-res-44" src="images/img-mapa.png" alt="Mapa">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!--.content-mapa-->
+    <div class="content-reglas mt-5">
+      <div class="container">
+        <div class="box-shadow brd-radius-45 p-4 p-md-3 p-lg-5">
+          <div class="row">
+            <div class="col-md-5">
+              <h3 class="bg-img-si mb-3">
+                Que <span>SÍ</span><br> se puede hacer
+              </h3>
+              <ul>
+                <li>
+                  <p>
+                    <strong>Infraestructura urbana, por ejemplo:</strong>
+                    Banquetas, andadores, pluviales, áreas verdes, parques, plazas, introducción de servicios básicos, señalética.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Seguridad pública, por ejemplo:</strong>
+                    Construcción y adquisición de edificios (incluye costos operativos), mantenimiento, equipamiento, vehículos, mobiliario.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Desarrollo comunitario, por ejemplo:</strong>
+                    Espacios educativos, culturales, deportivos, recreativos, y comunitarios.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Desarrollo social y humano, por ejemplo:</strong>
+                    Servicios de arte, educación, deporte, cultura, civismo, valores, salud, asistencia social, y medio ambiente.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Escuelas públicas, por ejemplo:</strong>
+                    Equipamiento, mobiliario, servicios de educación.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Desarrollo municipal, por ejemplo:</strong>
+                    Mobiliario, inmuebles, mantenimiento.
+                  </p>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-1 offset-md-1 bdr-left"></div>
+            <div class="col-md-5">
+              <h3 class="bg-img-no mb-3">
+                Que <span>NO</span><br> se puede hacer
+              </h3>
+              <ul>
+                <li>
+                  <p>
+                    <strong>Proyectos que no solucionan un problema público, incluye:</strong>
+                    - Cuando la necesidad que busca resolver este proyecto, ya está cubierta de otra forma
+                    - Cuando ya está en planes de hacerse fuera del Presupuesto Participativo
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Asuntos que atiende Sam (Atención Ciudadana), por ejemplo:</strong>
+                    Baches, luminarias, mantenimiento a señalética actual, limpieza general.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Asuntos que cubre el programa de subvenciones, por ejemplo:</strong>
+                    Insumos para el mantenimiento (escobas, bolsas, pintura, etc.), obra civil menor (bebederos, pintura para luminarias, bancas), equipamiento (botes, señalética, mallas, rejas), infraestructura (mangueras, sanitario, sistemas de riego), herramientas (palas, podadoras, picos, etc.)
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Mejoras en espacios con control de acceso.</strong> Los recursos públicos solo se pueden utilizar en espacios públicos de libre acceso. En otras palabras, no se pueden utilizar en colonias privadas que no permiten el paso de personas que no están visitando un predio en particular de la colonia.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>Temas que no le competen al municipio, por ejemplo:</strong>
+                    Transporte público, tuberías de drenaje, lotes de estacionamiento.
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!--.content-reglas-->
+    <div class="content-fases mt-110">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5 col-lg-4">
+            <div class="title-fases">
+              <h4>Fases</h4>
+            <h5>del Presupuesto Participativo <br> <%= current_budget.short_name %></h5>
+            </div>
+          </div>
+         
+          <div class="col-md-7 col-lg-8">
+            <ul class="no-bullet budget-timeline">
+
+              <% current_budget.published_phases.each do |phase| %>
+              
+                <li class="phase <%= current_budget.phase == phase.kind ? 'is-active' : '' %>">
+                  <h3><%= t("budgets.phase.#{phase.kind}") %></h3>
+                  <span>
+                    <%= "#{phase.starts_at.strftime("%d/%m/%Y")} - #{phase.ends_at.strftime("%d/%m/%Y")}" %>
+                  </span>
+                  <p></p>
+                </li>
+               
+
+              <% end %>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div><!--.content-fases-->
+  </section>
+  <section>
+    <% Budget.finished.each do |b| %>
+      <div class="content-banners mt-4">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-7 mb-3">
+              <img class="w-100 img-responsive box-shadow item-banner" src="images/pp-<%= b.short_name %>.jpg">
+            </div>
+            <div class="col-md-5">
+              <div class="banner-custom">
+                <p>
+                  Conoce los resultados de proyectos que ganaron en el <strong><%= b.short_name %></strong>
+                </p>
+                <%= link_to "Ver resultados", budget_results_path(b), class: "btn-black font-16 d-inline-block px-3 py-2 py-md-1 py-lg-2" %>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     <% end %>
+  </section>
+  <section>
+    <div class="content-faq mt-5 pt-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="title-faq">
+              <img width="w-50" src="images/icon-faq.png">
+              <h4>Preguntas</h4>
+              <h5>Frecuentes</h5>
+            </div>
+          </div>
+          <div class="col-md-7">
 
-    <% if feed_processes_enabled? %>
-      <div class="small-12 large-4 column">
-        <%= render "processes" %>
+            <div class="card mb-2">
+              <div class="card-header py-1" id="heading-faq-1">
+                <h2 class="mb-0">
+                  <button class="btn btn-block text-left text-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-1" aria-expanded="false" aria-controls="collapse-faq-1">
+                  De los requisitos para participar
+                  <div class="div-block-8"></div>
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse-faq-1" class="collapse" aria-labelledby="heading-faq-1">
+                <div class="card-body">
+                  <h6><b>¿Por qué tengo que subir foto de mi INE / licencia de manejo? </b></h6>
+                  <p>Para acreditar tu identidad</p>
+
+                  <h6><b>¿Por qué necesito un correo electrónico?</b></h6>  
+                  <p>Porque es la única forma de crear un usuario en la plataforma y registrar ideas y votar. Con el correo electrónico podemos comunicarnos contigo si necesitamos aclaraciones de tu idea, o para anunciarte los siguientes pasos en caso de que resulte ganadora. </p>
+
+                  <h6><b>¿Por qué no puedo proponer en más de un sector si tengo propiedades en más de un sector?</b></h6> 
+                  <p>El derecho de participación es de la persona (que solo puede votar una vez).  La persona propone y vota para mejorar la comunidad donde reside la mayor parte del tiempo.</p>
+                </div>
+              </div><!--#collapse-faq-1-->
+            </div>
+
+            <div class="card mb-2">
+              <div class="card-header py-1" id="headingOne">
+                <h2 class="mb-0">
+                  <button class="btn btn-block text-left text-dark collapsed w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-2" aria-expanded="false" aria-controls="collapse-faq-2">
+                    De los presupuestos
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse-faq-2" class="collapse" aria-labelledby="heading-faq-2">
+                <div class="card-body">
+                  <h6><b>¿Cuál es el presupuesto para cada proyecto?</b></h6>
+                  <p>Hay dos tipos de proyectos:</p>
+                  <ul>
+                    <li>Sectoriales o proyectos grandes, que tienen $12.5 MDP como presupuesto</li>
+                    <li>Comunitarios o proyectos medianos, que tienen $1 MDP como presupuesto</li>
+                  </ul>
+                  <p>En San Pedro tenemos 6 sectores, también les llamamos “Ks”. </p>
+
+                  <p>En cada edición de Decide San Pedro, en cada sector pueden ganar 11 proyectos:</p>
+                  <ul>
+                    <li>1 proyecto sectorial, el que tenga más votos</li>
+                    <li>10 proyectos comunitarios, los 10 que más votos tengan en el sector</li>
+                  </ul>
+                </div>
+              </div><!--#collapse-faq-2-->
+            </div>
+
+            <div class="card mb-2">
+              <div class="card-header py-1" id="heading-faq-3">
+                <h2 class="mb-0">
+                  <button class="btn btn-block text-left text-dark collapsed w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-3" aria-expanded="false" aria-controls="collapse-faq-3">
+                    De la selección de propuestas
+                  <div class="div-block-8"></div>
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse-faq-3" class="collapse" aria-labelledby="heading-faq-3">
+                <div class="card-body">
+                  <h6><b>¿Cómo y dónde propongo?</b></h6>
+                  <ul>
+                    <li>
+                      Ingresa o crea tu cuenta <a href="/users/sign_in">aquí</a>, vas a necesitar tu INE o licencia de manejo aunque ya tengas cuenta, ya que es indispensable que actualices tu identificación.
+                    </li>
+                    <li>
+                      Sube tus propuestas <a href="/users/sign_in">aquí</a>, te recordamos que puedes subir una propuesta de sector, o proyecto grande, con un presupuesto de $12.5 MDP y otra propuesta comunitaria, o proyecto mediano, con un presupuesto de $1MDP.
+                    </li>
+                  </ul>
+
+                  <h6><b>¿Puedo proponer en algún lugar, aparte de la página?</b></h6>
+                  <p>Únicamente puedes hacerlo en la página. </p>
+
+                  <h6><b>¿Qué puedo proponer? ¿Qué no puedo proponer?</b></h6>
+                  <p>Para que una propuesta sea factible debe cumplir con las siguientes:</p>
+                  
+                  <ul class="mb-3">
+                    <li>
+                      factibilidad económica: que la propuesta se ajuste al presupuesto. 
+                    </li>
+                    <li>
+                      factibilidad técnica: que la propuesta pueda implementarse en el lugar propuesto, sea pertinente, costo efectiva y solucione un problema diagnosticado.
+                    </li>
+                    <li>
+                      factibilidad jurídica: que la propuesta no contravenga disposiciones legales.
+                    </li>
+                  </ul>
+                  
+                  <h6><b>¿Puedo proponer cosas fuera de este catálogo?</b></h6> 
+                  <p>
+                    Sí, durante la etapa de factibilidad evaluaremos si es viable o no someterla a votación.
+                  </p>
+
+                  <h6><b>¿Cuántos proyectos puedo proponer? </b></h6> 
+                  <p>Solamente podrás subir una propuesta de proyecto comunitario o mediano, y una para proyecto de sector o grande. Si tienes más ideas, promociona el programa con tus vecinos(as) y busca que la suban.</p>
+
+                  <h6><b>¿Puedo proponer proyectos en mi colonia si es régimen de condominio?</b></h6> 
+                  <p>No, sólo es viable proponer proyectos en espacios públicos municipales, como las calles o parques fuera de tu colonia.</p>
+
+                  <h6><b>Puedo proponer proyectos en mi colonia si es de acceso controlado? </b></h6>
+                  <p>Los proyectos que estén en una calle o parque municipales pero que estén en colonias con control de acceso serán factibles sólo si las personas pueden acceder a estos parques sin ningún impedimento. El Municipio hará visitas aleatorias y sin previo aviso para constatar cumplimiento. En caso de incumplimiento, en el siguiente ejercicio de presupuesto participativo será inviable invertir en estos espacios.</p>
+
+                </div>
+              </div><!--#collapse-faq-3-->
+            </div>
+
+            <div class="card mb-2 d-none">
+              <div class="card-header py-1" id="heading-faq-4">
+                <h2 class="mb-0">
+                  <button class="btn btn-block text-left text-dark collapsed w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-4" aria-expanded="false" aria-controls="collapse-faq-4">
+                    Del registro de propuestas
+                  <div class="div-block-8"></div>
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse-faq-4" class="collapse" aria-labelledby="heading-faq-4">
+                <div class="card-body">
+                  <h6><b>¿Puedo proponer cosas fuera de este catálogo?</b></h6>
+                  <p>
+                    Sí, durante la etapa de factibilidad evaluaremos si es viable o no someterla a votación.
+                  </p>
+                  <h6><b>¿Puedo proponer proyectos por etapas?</b></h6>
+                  <p>
+                    Depende de si la etapa es funcional por sí misma. No podemos hacer proyectos que queden incompletos.
+                  </p>
+                  <h6><b>¿Cuántas propuestas puedo hacer? </b></h6>
+                  <p>Solamente podrás subir una propuesta para colonia, y una para sector. Si tienes más ideas, promociona el programa con tus vecinos(as) y busca que la suban. </p>
+
+                  <h6><b>¿Cuál es el rol de la mesa directiva en el presupuesto participativo? </b></h6>
+                  <p>Las mesas directivas de las juntas de vecinos tienen un rol muy importante en este programa. Pueden convocar asambleas para que entre varias personas dialoguen sobre las necesidades principales de su entorno, definan prioridades y organicen recorridos para definir proyectos en conjunto entre varias colonias.</p>
+
+                  <h6><b>¿Qué pasa si nadie sube una propuesta en mi junta o sector? </b></h6>
+                  <p>En caso de que ningún proyecto se proponga en la junta o sector, el monto asignado se reintegra al presupuesto Municipal.</p>
+
+                  <h6><b>¿Qué pasa con los recursos remanentes una vez que se entrega el proyecto?  </b></h6>
+                  <p>Los Consejos Sectoriales, compuestos por las y los presidentes de las colonias de un sector, definen en qué proyectos de los registrados en la plataforma pueden invertir los remanentes.</p>
+
+                  <h6><b>¿Puedo proponer proyectos en mi colonia si es régimen de condominio?</b></h6>
+                  <p>No, sólo es viable proponer proyectos en espacios públicos municipales, como las calles o parques fuera de tu colonia.</p>
+
+                  <h6><b>¿Puedo proponer proyectos en mi colonia si es de acceso controlado?</b></h6>
+                  <p>Los proyectos que estén en una calle o parque municipales pero que estén en colonias con control de acceso serán factibles sólo si las personas pueden acceder a estos espacios sin ningún impedimento. El Municipio hará visitas aleatorias y sin previo aviso para constatar cumplimiento. En caso de incumplimiento, en el siguiente ejercicio de presupuesto participativo será inviable invertir en estos espacios.</p>
+
+                </div>
+              </div><!--#collapse-faq-4-->
+            </div>
+
+            <div class="card mb-2">
+              <div class="card-header py-1" id="heading-faq-5">
+                <h2 class="mb-0">
+                  <button class="btn btn-block text-left text-dark collapsed w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-5" aria-expanded="false" aria-controls="collapse-faq-5">
+                    Sobre la votación
+                  <div class="div-block-8"></div>
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse-faq-5" class="collapse" aria-labelledby="heading-faq-5">
+                <div class="card-body">
+                  <h6><b>¿Cómo y dónde voto?</b></h6>
+                  <ul>
+                    <li>Ingresa a tu cuenta o regístrate <a href="/users/sign_up">aquí</a>, si es tu primera vez necesitarás tu INE.</li>
+                    <li><a href="/presupuestos">Explora</a> los proyectos que han sido propuestos para tu sector</li>
+                    <li>Vota por el proyecto de sector, o grande, que más te guste y por el proyecto comunitario, o mediano, que prefieras</li>
+                  </ul>
+                  <h6><b>¿Puedo votar presencialmente?</b></h6>
+                  <p>Sí, en los eventos del DecideFest. Cuando se acerquen las fechas, te comunicaremos los puntos a través de redes sociales. </p>
+
+                  <h6><b>¿Cuántas veces puedo votar?</b></h6>
+                  <p>Dos. Una para un proyecto con presupuesto de $12.5 MDP en tu sector, y otra para un proyecto con presupuesto de $1 MDP en tu sector también.</p>
+
+                  <h6><b>Subí un proyecto y resultó no ser factible, ¿qué hago ahora? </b></h6>
+                  <p>Explora aquí los proyectos que tus vecin@s han propuesto para tu sector, hay muy buenas ideas que podrás apoyar.</p>
+
+                  <h6><b>¿Puedo conocer la votación en tiempo real? </b></h6>
+                  <p>No, la votación se dará a conocer al final de la etapa de votaciones para no sesgar la participación.</p>
+
+                </div>
+              </div><!--#collapse-faq-5-->
+            </div>
+
+            <div class="card mb-2">
+              <div class="card-header py-1" id="heading-faq-5">
+                <h2 class="mb-0">
+                  <button class="btn btn-block text-left text-dark collapsed w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-faq-6" aria-expanded="false" aria-controls="collapse-faq-6">
+                    Sobre los  proyectos ganadores
+                  <div class="div-block-8"></div>
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse-faq-6" class="collapse" aria-labelledby="heading-faq-6">
+                <div class="card-body">
+                  <h6><b>¿Cómo se define qué proyectos ganan?</b></h6>
+                  <p>Los proyectos factibles que pasaron a la etapa de votaciones y que obtuvieron la mayor cantidad de votos son pronunciados ganadores. </p>
+
+                  <h6>Gana:</h6>
+                  <ul>
+                    <li>El proyecto sectorial o grande, con presupuesto de $12.5 MDP, con más votos de ese sector (1 por sector)</li>
+                    <li>Los 10 proyectos comunitarios o medianos, con presupuesto de $1 MDP, con más votos de ese sector (10 por sector)</li>
+                  </ul>
+                  
+                  <h6><b>¿Cuándo anuncian qué proyectos ganaron?</b></h6>
+                  <p>Anunciaremos la noche del lunes 4 de septiembre.</p>
+
+                  <h6><b>¿Qué pasa si hay un empate?</b></h6>
+                  <p>En caso de empate de proyecto, organizaremos un Consejo Sectorial con todas las y los presidentes de colonia para decidir.</p>
+
+                  <h6><b>¿Cómo se ejecutan los proyectos? </b></h6>
+                  <p>Hay 5 fases principales por las que pasa cualquier proyecto:</p>
+                  <ul>
+                    <li>Elaboración de anexo técnico o proyecto ejecutivo (definir el alcance detallado)</li>
+                    <li>Cotización (calcular costos y estudio de mercado)</li>
+                    <li>Contratación de proveedor que ejecutará el proyecto </li>
+                    <li>Ejecución </li>
+                    <li>Entrega </li>
+                  </ul>
+                  
+                  <p>En cada uno de estos 5 pasos nos comunicamos con la persona que subió el proyecto y con la mesa directiva de la Junta de Vecinos para obtener retroalimentación y resolver dudas de su parte. </p>
+
+
+                  <h6><b>Si yo subo la propuesta y resulta ganadora, ¿puede el municipio contratarme para llevarla a cabo? </b></h6> 
+                  <p>No, si tú propones no puedes ejecutar la propuesta. </p>
+                </div>
+              </div><!--#collapse-faq-6-->
+            </div>
+          </div>
+        </div>
       </div>
-    <% end %>
-  </div>
+    </div>
+  </section>
+  <section class="my-5 py-3">
+    <div id="ayuda" class="content-problemas-tecnicos">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-5">
+            <div class="sidebar-card">
+              <img class="pb-4" src="images/img-soporte.png">
+              <h2>¿Problemas técnicos?</h2>
+              <p>
+                Te apoyamos con mucho gusto, puedes marcarnos o escribirnos por <strong>WhatsApp al <a href="tel:8112121212" target="_blank">81 1212 1212</a></strong> de Lunes a Domingo de 8am a 8pm, o escríbenos a <strong><a href="mailto:decide@sanpedro.gob.mx" target="_blank">decide@sanpedro.gob.mx</a></strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% if cookies[:alert_policy].blank? %>
+    <div class="message-float">
+      <div id="alert-policy" class="alert alert-success alert-dismissible fade show" role="alert">
+        <p>Utilizamos cookies para darte la mejor experiencia de usuario. Para obtener más información, lea nuestro <a class="font-medium text-decoration-underline" target="_blank" href="https://transparencia.sanpedro.gob.mx/documentosAvisosPrivacidad/%205309/_2024520_95_AP-Presupuesto%20Participativo%20Decide%20San%20Pedro.pdf">Aviso de Privacidad.</a></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  <% end %>  
+  <!-- End proyectos anteriores -->
+  <%= render 'layouts/footer' %>
 
-  <% if feature?("user.recommendations") && (@recommended_debates.present? || @recommended_proposals.present?) %>
-    <%= render "recommended",
-                recommended_debates: @recommended_debates,
-                recommended_proposals: @recommended_proposals %>
-  <% end %>
-</main>
+  <script>
+    $(document).ready(function() {
+      $('#search-form').on('keypress', function(event) {
+      if (event.keyCode === 13) { // 13 es el código de tecla para "Enter"
+        event.preventDefault(); // Evita el comportamiento predeterminado de "Enter"
+        this.submit(); // Envía el formulario
+      }
+    });
+  });
+  </script>

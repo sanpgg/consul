@@ -47,19 +47,20 @@ class DirectUpload
 
   private
 
-    def parent_resource_attachment_validations
-      @relation.valid?
+  def parent_resource_attachment_validations
+    @relation.valid?
 
-      if @relation.errors.key? :attachment
-        errors.add(:attachment, @relation.errors.full_messages_for(:attachment))
-      end
+    if @relation.errors.key? :attachment
+      errors[:attachment] = @relation.errors[:attachment]
     end
+  end
 
-    def relation_attributtes
-      {
-        attachment: @attachment,
-        cached_attachment: @cached_attachment,
-        user: @user
-      }
-    end
+  def relation_attributtes
+    {
+      attachment: @attachment,
+      cached_attachment: @cached_attachment,
+      user: @user
+    }
+  end
+
 end

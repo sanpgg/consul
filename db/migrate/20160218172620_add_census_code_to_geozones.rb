@@ -1,4 +1,4 @@
-class AddCensusCodeToGeozones < ActiveRecord::Migration[4.2]
+class AddCensusCodeToGeozones < ActiveRecord::Migration
   def change
     add_column :geozones, :census_code, :string
   end

@@ -1,5 +1,5 @@
-class RemovePollQuestionValidAnswers < ActiveRecord::Migration[4.2]
+class RemovePollQuestionValidAnswers < ActiveRecord::Migration
   def change
-    remove_column :poll_questions, :valid_answers, :string
+    remove_column :poll_questions, :valid_answers
   end
 end

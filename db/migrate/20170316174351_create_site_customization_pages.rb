@@ -1,4 +1,4 @@
-class CreateSiteCustomizationPages < ActiveRecord::Migration[4.2]
+class CreateSiteCustomizationPages < ActiveRecord::Migration
   def change
     create_table :site_customization_pages do |t|
       t.string :slug, null: false
@@ -7,7 +7,7 @@ class CreateSiteCustomizationPages < ActiveRecord::Migration[4.2]
       t.text :content
       t.boolean :more_info_flag
       t.boolean :print_content_flag
-      t.string :status, default: "draft"
+      t.string :status, default: 'draft'
 
       t.timestamps null: false
     end

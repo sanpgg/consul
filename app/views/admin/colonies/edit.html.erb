@@ -1,0 +1,13 @@
+<h1>Editar colonia - <%= @colony.junta_nom %></h1>
+
+<%= form_tag admin_colony_path, method: :put do %>
+
+    <label>Nombre</label>
+    <%= text_field_tag :junta_nom, @colony.junta_nom, placeholder: "Nombre", label: false %>
+
+    <label>Sector</label>
+    <%= select_tag(:sector, options_for_select(select_sector_options, @colony.sector)) %>
+
+    <%= submit_tag("Editar", class: "button") %>
+
+<% end %>

@@ -1,4 +1,5 @@
 module ManagementHelper
+
   def menu_users?
     ["users", "email_verifications", "document_verifications"].include?(controller_name)
   end
@@ -41,4 +42,5 @@ module ManagementHelper
   def menu_user_invites?
     controller_name == "user_invites"
   end
+
 end

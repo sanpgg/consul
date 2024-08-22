@@ -1,6 +1,7 @@
-class MapLocation < ApplicationRecord
+class MapLocation < ActiveRecord::Base
+
   belongs_to :proposal, touch: true
-  belongs_to :investment, class_name: "Budget::Investment", touch: true
+  belongs_to :investment, class_name: Budget::Investment, touch: true
 
   validates :longitude, :latitude, :zoom, presence: true, numericality: true
 
@@ -21,7 +22,8 @@ class MapLocation < ApplicationRecord
     map = new
     map.zoom = Budget::Heading::OSM_DISTRICT_LEVEL_ZOOM
     map.latitude = heading.latitude.to_f if heading.latitude.present?
-    map.longitude = heading.longitude.to_f if heading.longitude.present?
+    map.longitude = heading.longitude.to_f if heading.latitude.present?
     map
   end
+
 end

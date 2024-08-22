@@ -1,18 +1,18 @@
-@charset "utf-8";
+@charset 'utf-8';
 
-@import "settings";
-@import "consul_settings";
-@import "custom_settings";
-@import "foundation";
+@import 'settings';
+@import 'consul_settings';
+@import 'custom_settings';
+@import 'foundation';
 
-@import "motion-ui/motion-ui";
+@import 'motion-ui/motion-ui';
 
 @include foundation-global-styles;
 // @include foundation-xy-grid-classes;
-@include foundation-grid;
+// @include foundation-grid;
 // @include foundation-flex-grid;
 // @include foundation-flex-classes;
-@include foundation-typography;
+// @include foundation-typography;
 @include foundation-forms;
 @include foundation-button;
 @include foundation-accordion;
@@ -31,6 +31,7 @@
 @include foundation-responsive-embed;
 @include foundation-label;
 @include foundation-media-object;
+@include foundation-off-canvas;
 @include foundation-orbit;
 @include foundation-pagination;
 @include foundation-progress-bar;

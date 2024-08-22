@@ -1,4 +1,4 @@
-class AddVideoUrlToProposal < ActiveRecord::Migration[4.2]
+class AddVideoUrlToProposal < ActiveRecord::Migration
   def change
     add_column :proposals, :video_url, :string
   end

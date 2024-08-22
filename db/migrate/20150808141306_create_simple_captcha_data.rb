@@ -1,4 +1,4 @@
-class CreateSimpleCaptchaData < ActiveRecord::Migration[4.2]
+class CreateSimpleCaptchaData < ActiveRecord::Migration
   def self.up
     create_table :simple_captcha_data do |t|
       t.string :key, limit: 40

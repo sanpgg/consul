@@ -1,4 +1,4 @@
-class AddChildrenCountToComments < ActiveRecord::Migration[4.2]
+class AddChildrenCountToComments < ActiveRecord::Migration
   def up
     add_column :comments, :children_count, :integer, default: 0
   end

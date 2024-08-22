@@ -1,12 +1,13 @@
 class Admin::BudgetInvestmentsController < Admin::BaseController
   include FeatureFlags
   include CommentableActions
-  include Translatable
 
   feature_flag :budgets
 
-  has_orders %w[oldest], only: [:show, :edit]
-  has_filters %w[all], only: [:index, :toggle_selection]
+  has_orders %w{oldest}, only: [:show, :edit]
+  has_filters(%w{all without_admin without_valuator under_valuation
+                 valuation_finished winners},
+                 only: [:index, :toggle_selection])
 
   before_action :load_budget
   before_action :load_investment, only: [:show, :edit, :update, :toggle_selection]
@@ -15,15 +16,21 @@ class Admin::BudgetInvestmentsController < Admin::BaseController
   before_action :load_investments, only: [:index, :toggle_selection]
 
   def index
-    load_tags
+    @investments = Budget::Investment.scoped_filter(params, @current_filter)
+    @investments_all = @investments
+    @investments = @investments.page(params[:page])	
     respond_to do |format|
       format.html
       format.js
       format.csv do
-        send_data Budget::Investment::Exporter.new(@investments).to_csv,
-                  filename: "budget_investments.csv"
+        send_data Budget::Investment::Exporter.new(@investments_all).to_csv,
+                  filename: "budget_investments-#{Date.today}.csv"
       end
     end
+  end
+
+  def new_sectors
+    [{ short_name: "K1", large_name: "Poniente" }, { short_name: "K2", large_name: "Casco" }, { short_name: "K3", large_name: "Bosques, Lomas y Tampiquito" }, { short_name: "K4", large_name: "Valle" }, { short_name: "K5", large_name: "Montaña" }, { short_name: "K6", large_name: "Valle Oriente" }]
   end
 
   def show
@@ -31,21 +38,22 @@ class Admin::BudgetInvestmentsController < Admin::BaseController
   end
 
   def edit
-    authorize! :admin_update, @investment
-    load_staff
+    load_admins
+    load_valuators
     load_valuator_groups
     load_tags
   end
 
   def update
-    authorize! :admin_update, @investment
+    set_valuation_tags
     if @investment.update(budget_investment_params)
       redirect_to admin_budget_budget_investment_path(@budget,
                                                       @investment,
-                                                      Budget::Investment.filter_params(params).to_h),
+                                                      Budget::Investment.filter_params(params)),
                   notice: t("flash.actions.update.budget_investment")
     else
-      load_staff
+      load_admins
+      load_valuators
       load_valuator_groups
       load_tags
       render :edit
@@ -53,9 +61,8 @@ class Admin::BudgetInvestmentsController < Admin::BaseController
   end
 
   def toggle_selection
-    authorize! :toggle_selection, @investment
     @investment.toggle :selected
-    @investment.save!
+    @investment.save
     load_investments
   end
 
@@ -72,33 +79,56 @@ class Admin::BudgetInvestmentsController < Admin::BaseController
     end
 
     def resource_name
-      resource_model.parameterize(separator: "_")
+      resource_model.parameterize('_')
     end
 
     def load_investments
-      @investments = Budget::Investment.scoped_filter(params, @current_filter).order_filter(params)
-      @investments = Kaminari.paginate_array(@investments) if @investments.is_a?(Array)
+      @investments = Budget::Investment.scoped_filter(params, @current_filter)
+      @investments = @investments.order_filter(params[:sort_by]) if params[:sort_by].present?
       @investments = @investments.page(params[:page]) unless request.format.csv?
     end
 
     def budget_investment_params
-      attributes = [:external_url, :heading_id, :administrator_id, :tag_list,
+      params.require(:budget_investment)
+            .permit(:title, :description, :external_url, :heading_id, :administrator_id, :tag_list, :ballot_offline_count,
                     :valuation_tag_list, :incompatible, :visible_to_valuators, :selected,
-                    :milestone_tag_list, valuator_ids: [], valuator_group_ids: []]
-      params.require(:budget_investment).permit(attributes, translation_params(Budget::Investment))
+                    valuator_ids: [], valuator_group_ids: [],
+                    image_attributes: [:id, :title, :attachment, :cached_attachment, :user_id, :_destroy],
+                    documents_attributes: [:id, :title, :attachment, :cached_attachment, :user_id, :_destroy])
     end
 
     def load_budget
-      @budget = Budget.find_by_slug_or_id! params[:budget_id]
+      @budget = Budget.includes(:groups).find(params[:budget_id])
     end
 
     def load_investment
-      @investment = @budget.investments.find(params[:id])
+      if params[:id]=="calculate_winners"
+
+        if @budget.is_new?
+          
+          new_sectors.each do |sector|
+            puts "Sector: #{sector[:short_name]}"
+            Budget::Result.new(@budget, nil, sector[:short_name]).calculate_winners_v2
+          end
+  
+          redirect_to admin_budget_budget_investments_path(budget_id: @budget.id, filter: 'winners'),
+                  notice: I18n.t("admin.budgets.winners.calculated")
+        else
+          @budget.headings.each { |heading| Budget::Result.new(@budget, heading).calculate_winners }
+          redirect_to admin_budget_budget_investments_path(budget_id: @budget.id, filter: 'winners'),
+                notice: I18n.t("admin.budgets.winners.calculated")
+        end
+      else
+        @investment = Budget::Investment.by_budget(@budget).find(params[:id])
+      end
     end
 
-    def load_staff
-      @admins = @budget.administrators.includes(:user)
-      @valuators = @budget.valuators.includes(:user).order(description: :asc).order("users.email ASC")
+    def load_admins
+      @admins = Administrator.includes(:user).all
+    end
+
+    def load_valuators
+      @valuators = Valuator.includes(:user).all.order(description: :asc).order("users.email ASC")
     end
 
     def load_valuator_groups
@@ -106,12 +136,17 @@ class Admin::BudgetInvestmentsController < Admin::BaseController
     end
 
     def load_tags
-      @tags = Budget::Investment.tags_on(:valuation_tags).order(:name).distinct
+      @tags = Budget::Investment.tags_on(:valuation).order(:name).uniq
     end
 
     def load_ballot
       query = Budget::Ballot.where(user: current_user, budget: @budget)
-      @ballot = @budget.balloting? ? query.first_or_create! : query.first_or_initialize
+      @ballot = @budget.balloting? ? query.first_or_create : query.first_or_initialize
+    end
+
+    def set_valuation_tags
+      @investment.set_tag_list_on(:valuation, budget_investment_params[:valuation_tag_list])
+      params[:budget_investment] = params[:budget_investment].except(:valuation_tag_list)
     end
 
     def parse_valuation_filters
@@ -125,4 +160,5 @@ class Admin::BudgetInvestmentsController < Admin::BaseController
         end
       end
     end
+
 end

@@ -1,4 +1,4 @@
-class AddRedeemableCodeToUser < ActiveRecord::Migration[4.2]
+class AddRedeemableCodeToUser < ActiveRecord::Migration
   def change
     add_column :users, :redeemable_code, :string
   end

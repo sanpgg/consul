@@ -1,10 +1,11 @@
 module EmbedVideosHelper
-  VIMEO_REGEX = /vimeo.*(staffpicks\/|channels\/|videos\/|video\/|\/)([^#\&\?]*).*/.freeze
-  YOUTUBE_REGEX = /youtu.*(be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/.freeze
 
-  def embedded_video_code(resource)
-    link = resource.video_url
-    title = t("proposals.show.embed_video_title", proposal: resource.title)
+  VIMEO_REGEX = /vimeo.*(staffpicks\/|channels\/|videos\/|video\/|\/)([^#\&\?]*).*/
+  YOUTUBE_REGEX = /youtu.*(be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+
+  def embedded_video_code
+    link = @proposal.video_url
+    title = t('proposals.show.embed_video_title', proposal: @proposal.title)
     if link =~ /vimeo.*/
       server = "Vimeo"
     elsif link =~ /youtu*.*/
@@ -26,7 +27,7 @@ module EmbedVideosHelper
     if match && match[2]
       '<iframe src="' + src + match[2] + '" style="border:0;" allowfullscreen title="' + title + '"></iframe>'
     else
-      ""
+      ''
     end
   end
 
@@ -34,7 +35,7 @@ module EmbedVideosHelper
     return if video_url.blank?
     return if video_url.match(VIMEO_REGEX)
     return if video_url.match(YOUTUBE_REGEX)
-
     errors.add(:video_url, :invalid)
   end
+
 end

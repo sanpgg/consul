@@ -1,4 +1,4 @@
-class CreateSpendingProposals < ActiveRecord::Migration[4.2]
+class CreateSpendingProposals < ActiveRecord::Migration
   def change
     create_table :spending_proposals do |t|
       t.string :title

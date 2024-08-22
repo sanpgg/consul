@@ -1,13 +1,12 @@
 module ModerateActions
   extend ActiveSupport::Concern
   include Polymorphic
-  PER_PAGE = 50
 
   def index
     @resources = @resources.send(@current_filter)
                            .send("sort_by_#{@current_order}")
                            .page(params[:page])
-                           .per(PER_PAGE)
+                           .per(50)
     set_resources_instance
   end
 
@@ -20,15 +19,17 @@ module ModerateActions
     @resources = @resources.where(id: params[:resource_ids])
 
     if params[:hide_resources].present?
-      @resources.accessible_by(current_ability, :hide).each { |resource| hide_resource resource }
+      @resources.accessible_by(current_ability, :hide).each {|resource| hide_resource resource}
+
     elsif params[:ignore_flags].present?
       @resources.accessible_by(current_ability, :ignore_flag).each(&:ignore_flag)
+
     elsif params[:block_authors].present?
-      author_ids = @resources.pluck(author_id)
-      User.where(id: author_ids).accessible_by(current_ability, :block).each { |user| block_user user }
+      author_ids = @resources.pluck(author_id).uniq
+      User.where(id: author_ids).accessible_by(current_ability, :block).each {|user| block_user user}
     end
 
-    redirect_with_query_params_to(action: :index)
+    redirect_to request.query_parameters.merge(action: :index)
   end
 
   private
@@ -55,4 +56,5 @@ module ModerateActions
     def author_id
       :author_id
     end
+
 end

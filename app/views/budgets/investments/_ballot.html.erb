@@ -1,64 +1,97 @@
-<% reason = investment.reason_for_not_being_ballotable_by(current_user, ballot) %>
+<% reason = investment.reason_for_not_being_ballotable_by(current_user, ballot) unless Budget.find_by(id: investment.budget_id).is_new?  %>
 <div class="js-participation supports ballot">
   <% if ballot.has_investment?(investment) %>
 
     <div class="remove supported inline-block">
-      <span class="icon-check-circle"
-            title="<%= t("budgets.investments.investment.already_added") %>">
-      </span>
-      <p class="investment-project-amount">
-        <%= investment.formatted_price %>
-      </p>
+      <% unless @budget.is_new?%>
+        <span class="icon-check-circle"
+          title="<%= t("budgets.investments.investment.already_added") %>">
+        </span>
+        <p class="investment-project-amount">
+          <%= investment.formatted_price %>
+        </p>
+      <% end %>
       <% if investment.should_show_ballots? %>
-        <%= link_to t("budgets.ballots.show.remove"),
+
+      <%= link_to t('budgets.ballots.show.remove'),
                     budget_ballot_line_path(id: investment.id,
                                             budget_id: investment.budget_id,
                                             investments_ids: investment_ids),
-                    class: "delete small expanded",
+                    class: "delete expanded",
                     method: :delete,
-                    remote: true %>
+                    remote: false %>
       <% end %>
     </div>
 
   <% else %>
 
-    <div class="add in-favor">
-      <p class="investment-project-amount">
-        <%= investment.formatted_price %>
-      </p>
-      <% if investment.should_show_ballots? %>
-        <%= link_to t("budgets.investments.investment.add"),
-                    budget_ballot_lines_path(investment_id: investment.id,
-                                             budget_id: investment.budget_id,
-                                             investments_ids: investment_ids),
-                    class: "button button-support small expanded",
-                    title: t("budgets.investments.investment.support_title"),
-                    method: :post,
-                    remote: true %>
+    <% unless Budget.find_by(id: investment.budget_id).is_new? %>
+      <div class="add in-favor <%=investment.should_show_ballots? %>">
+        <p class="investment-project-amount">
+          <%= investment.formatted_price %>
+
+          <!-- Filter for votes -->
+
+          <% if current_user.present? %>
+            <% if investment.group.name == "Juntas Vecinales" %>
+              <% @result = investment.heading.suburb_id == current_user.colonium.first.id %>
+            <% elsif investment.group.name == "Sectores" %>
+              <% @result = investment.heading.sector.try(:downcase) == current_user.colonium.try(:first).try(:sector).try(:downcase) %>
+            <% end %>
+          <% end %>
+          <!-- Filter FOR VOTES -->
+        </p>
+        <% if investment.should_show_ballots? && @result %>
+
+          <% if has_line_by_investment_size(investment.size) %>
+            <p>Ya has votado por una propuesta de este tamaño</p>
+          <% else %>
+            <%= link_to t("budgets.investments.investment.add"),
+              budget_ballot_lines_url(investment_id: investment.id,
+                                      budget_id: investment.budget_id,
+                                      investments_ids: investment_ids).gsub("http://127.0.0.1:3000", ""),
+              class: "button button-support small expanded",
+              title: t('budgets.investments.investment.support_title'),
+              method: :post,
+              remote: false %>
+          <% end %>
+
+        <% end %>
+      </div>
+    <% else %>
+      <% if has_line_by_investment_size(investment.size) %>
+        <p>Ya has votado por una propuesta de este tamaño</p>
+      <% else %>
+        <%= link_to t("budgets.investments.investment.add"), budget_ballot_lines_url(investment_id: investment.id, budget_id: investment.budget_id, investments_ids: investment_ids).gsub("http://127.0.0.1:3000", ""), class: "button button-support small expanded", title: t('budgets.investments.investment.support_title'), method: :post, remote: false %>
       <% end %>
-    </div>
+    <% end %>
 
   <% end %>
 
-  <% if reason.present? && !ballot.has_investment?(investment) %>
+  <% if !Budget.find_by(id: investment.budget_id).is_new? && reason.present? && !ballot.has_investment?(investment) %>
 
-    <div class="js-participation-not-allowed participation-not-allowed" style="display:none">
-      <% my_heading = link_to(investment.heading.name,
+    <div class="js-participation-not-allowed participation-not-allowed">
+
+      <% verify_account = link_to(t("votes.verify_account"), verification_path) %>
+      <% signin = link_to(t("votes.signin"), new_user_session_path) %>
+      <% signup = link_to(t("votes.signup"), new_user_registration_path) %>
+      <% my_heading = link_to(investment&.heading&.name,
                       budget_investments_path(budget_id: investment.budget_id,
                                               heading_id: investment.heading_id)) %>
       <% change_ballot = link_to(t("budgets.ballots.reasons_for_not_balloting.change_ballot"),
-                                          budget_ballot_path(@budget)) %>
+                                          budget_ballot_path(@budget))%>
 
       <p>
         <small>
-          <%= sanitize(t("budgets.ballots.reasons_for_not_balloting.#{reason}",
-                verify_account: link_to_verify_account, signin: link_to_signin,
-                signup: link_to_signup, my_heading: my_heading,
+          <%= t("budgets.ballots.reasons_for_not_balloting.#{reason}",
+                verify_account: verify_account, signin: signin,
+                signup: signup, my_heading: my_heading,
                 change_ballot: change_ballot,
-                heading_link: heading_link(@assigned_heading, @budget))) %>
+                heading_link: heading_link(@assigned_heading, @budget)).html_safe %>
         </small>
       </p>
     </div>
 
   <% end %>
+
 </div>

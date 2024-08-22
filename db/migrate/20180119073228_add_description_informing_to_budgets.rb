@@ -1,4 +1,4 @@
-class AddDescriptionInformingToBudgets < ActiveRecord::Migration[4.2]
+class AddDescriptionInformingToBudgets < ActiveRecord::Migration
   def change
     add_column :budgets, :description_informing, :text
   end

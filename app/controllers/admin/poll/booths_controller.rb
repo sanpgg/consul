@@ -1,8 +1,7 @@
 class Admin::Poll::BoothsController < Admin::Poll::BaseController
-  load_and_authorize_resource class: "Poll::Booth"
+  load_and_authorize_resource class: 'Poll::Booth'
 
   def index
-    @booths = @booths.search(params[:search])
     @booths = @booths.order(name: :asc).page(params[:page])
   end
 
@@ -41,4 +40,5 @@ class Admin::Poll::BoothsController < Admin::Poll::BaseController
     def booth_params
       params.require(:poll_booth).permit(:name, :location)
     end
+
 end

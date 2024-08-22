@@ -1,13 +1,10 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Legislation::Question do
   let(:question) { create(:legislation_question) }
 
-  it_behaves_like "acts as paranoid", :legislation_question
-
   describe "Concerns" do
     it_behaves_like "notifiable"
-    it_behaves_like "globalizable", :legislation_question
   end
 
   it "is valid" do
@@ -20,7 +17,7 @@ describe Legislation::Question do
 
       expect do
         question.destroy
-      end.to change { Legislation::Question.count }.by(-1)
+      end.to change { described_class.count }.by(-1)
     end
 
     example "when it has options but no answers" do
@@ -29,7 +26,7 @@ describe Legislation::Question do
 
       expect do
         question.destroy
-      end.to change { Legislation::Question.count }.by(-1)
+      end.to change { described_class.count }.by(-1)
     end
 
     example "when it has options and answers" do
@@ -40,7 +37,7 @@ describe Legislation::Question do
 
       expect do
         question.destroy
-      end.to change { Legislation::Question.count }.by(-1)
+      end.to change { described_class.count }.by(-1)
     end
   end
 
@@ -68,6 +65,7 @@ describe Legislation::Question do
   end
 
   describe "notifications" do
-    it_behaves_like "notifiable"
+    it_behaves_like 'notifiable'
   end
+
 end

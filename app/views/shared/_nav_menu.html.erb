@@ -1,0 +1,157 @@
+<div id="content-nav-menu">
+    <div class="d-flex justify-content-between">
+        <%= image_tag(image_path_for('logo-dark.png'), id: 'logo-sp', class:'hide-more-xs', alt: "Decide San Pedro") %>
+        <a class="close-nav hide-more-xs">
+            <svg width="16px" height="24px" viewBox="0 0 16 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+                    <g id="Menú-práctico---contenido" transform="translate(-314.000000, -66.000000)" stroke="#071110" stroke-width="2.5">
+                        <g id="Group" transform="translate(302.000000, 56.000000)">
+                            <g id="Group-5" transform="translate(14.000000, 12.000000)">
+                                <line x1="0" y1="10" x2="12" y2="0" id="Path-9"></line>
+                                <line x1="0" y1="10" x2="12" y2="20" id="Path-9-Copy-3"></line>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </a>
+    </div>
+    <ul class="nav-menu d-md-flex justify-content-end align-items-center <%= local_assigns[:myclass] %>" >
+        <li><%= link_to "Explora", budgets_path %></li>
+        <% if current_budget.accepting? %>
+            <% if user_signed_in? %> 
+                <% unless current_user.is_minor? %>
+                    <li><%= link_to "Participa", investment_create_step_path(current_budget) %></li>
+                <% end %>
+            <% else %>
+                <li><%= link_to "Participa", investment_create_step_path(current_budget) %></li>
+            <% end %>
+        <% elsif current_budget.balloting? %>
+            <li><%= link_to "Vota", vota_path(current_budget) %></li>
+        <% elsif current_budget.finished? %>
+            <li><%= link_to "Resultados", budget_results_path(current_budget) %></li>
+        <% end %>
+
+        <% if feature?(:debates) %>
+            <li>
+              <%= layout_menu_link_to t("layouts.header.debates"),
+                                      debates_path,
+                                      controller_name == 'debates',
+                                      accesskey: "1",
+                                      title: t("shared.go_to_page") + t("layouts.header.debates") %>
+            </li>
+        <% end %>
+        <% if feature?(:proposals) %>
+            <li>
+              <%= layout_menu_link_to t("layouts.header.proposals"),
+                                      proposals_path,
+                                      controller.class == ProposalsController,
+                                      accesskey: "2",
+                                      title: t("shared.go_to_page") + t("layouts.header.proposals") %>
+            </li>
+        <% end %>
+        <% if feature?(:polls) %>
+            <li>
+              <%= layout_menu_link_to t("layouts.header.poll_questions"),
+                                        polls_path,
+                                        controller_name == "polls" || (controller_name == "questions" && controller.class.parent == Polls),
+                                        accesskey: "3",
+                                        title: t("shared.go_to_page") + t("layouts.header.poll_questions") %>
+            </li>
+        <% end %>
+        <% if feature?(:legislation) %>
+            <li>
+              <%= layout_menu_link_to t("layouts.header.collaborative_legislation"),
+                                      legislation_processes_path,
+                                      controller.class.parent == Legislation,
+                                      accesskey: "4" %>
+            </li>
+        <% end %>
+        <% if feature?(:spending_proposals) %>
+            <li>
+              <%= layout_menu_link_to t("layouts.header.spending_proposals"),
+                                        spending_proposals_path,
+                                        controller_name == 'spending_proposals',
+                                        accesskey: "s" %>
+            </li>
+        <% end %>
+        <% if feature?(:help_page) %>
+            <li>
+              <%= layout_menu_link_to t("layouts.header.help"),
+                                      help_path,
+                                      current_page?(help_path),
+                                      accesskey: "6",
+                                      title: t("shared.go_to_page") + t("layouts.header.help") %>
+            </li>
+        <% end %>
+        <% unless user_signed_in? %>
+            <li class="line-hr d-md-none d-xl-block">
+                <a href="/users/sign_in">Iniciar sesión</a>
+            </li>
+            <li class="btn-register-nav d-md-none d-xl-block">
+                <%= link_to "Crear cuenta", new_user_registration_path, class: "btn-style-3 d-block py-1 px-3 font-15" %>
+            </li>
+        <% end %>
+
+        <% if show_admin_menu?(current_user) && current_user.administrator? %>
+            <li>
+                <%= link_to t("layouts.header.administration"), admin_root_path %>
+            </li>
+        <% end %>
+        <% if user_signed_in? %>
+            <li class="d-block d-sm-none">
+                <a href="/account">Perfil</a>
+            </li>
+            <li class="d-block d-sm-none">
+                <a href="/#ayuda">Ayuda</a>
+            </li>
+            <li class="d-block d-sm-none">
+                <a href="/notifications">Notificaciones</a>
+            </li>
+            <%= link_to t("devise_views.menu.login_items.logout"), destroy_user_session_path, rel: "nofollow", method: :delete, class: "d-block d-sm-none btn-style-3 py-3 mt-3" %>
+        <% end %>
+        <li class="position-relative">
+            <div class="nav-user">
+                <a class="nav-collapse" data-bs-toggle="collapse" href="#nav-perfil" role="button" aria-expanded="false" aria-controls="nav-perfil">
+                    <span><i class="fas fa-bars"></i></span>
+                </a>
+                <a title="Iniciar sesión" href="/users/sign_in"><span><i class="fa-regular fa-user"></i></span></a>
+            </div>
+            <div id="nav-perfil" class="collapse multi-collapse">
+                <div class="content-nav-perfil">
+                    <h3>Perfil</h3>
+                    <ul>
+                        <% if user_signed_in? %>
+                            <li>
+                                <a href="/account">Información Perfil</a>
+                            </li>
+                            <li>
+                                <a href="/#ayuda">Obtener ayuda</a>
+                            </li>
+                            <li style="display:none;">
+                                <a target="_blank" href="/docs/guia_pp22.pdf">Descarga la guía</a>
+                            </li>
+                            <li>
+                                <a href="/notifications">Notificaciones</a>
+                            </li>
+                            <%= link_to t("devise_views.menu.login_items.logout"), destroy_user_session_path, rel: "nofollow", method: :delete, class: "btn-style-3 d-block py-3 mt-3" %>
+                        <% else %>
+                            <li>
+                                <a href="/users/sign_in">Iniciar sesión</a>
+                            </li>
+                            <li>
+                                <a href="/#ayuda">Obtener ayuda</a>
+                            </li>
+                            <li style="display:none;">
+                                <a target="_blank" href="/docs/guia_pp22.pdf">Descarga la guía</a>
+                            </li>
+
+                            <%= link_to "Crear cuenta", new_user_registration_path, class: "btn-style-3 d-block py-3 mt-3" %>
+                        <% end %> 
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<button id="btn-nav-menu" class="<%= local_assigns[:myclass] %>"><i class="fas fa-bars"></i></button>

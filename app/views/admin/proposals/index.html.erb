@@ -16,7 +16,6 @@
         <th><%= t("admin.proposals.index.title") %></th>
         <th><%= t("admin.proposals.index.author") %></th>
         <th><%= t("admin.proposals.index.milestones") %></th>
-        <th><%= t("admin.proposals.index.selected") %></th>
       </tr>
     </thead>
 
@@ -27,7 +26,6 @@
           <td><%= link_to proposal.title, admin_proposal_path(proposal) %></td>
           <td><%= proposal.author.username %></td>
           <td><%= proposal.milestones.count %></td>
-          <td class="js-select"><%= render "select_proposal", proposal: proposal %></td>
         </tr>
       <% end %>
     </tbody>

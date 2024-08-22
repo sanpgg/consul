@@ -1,4 +1,4 @@
-class RemoveUserConstraints < ActiveRecord::Migration[4.2]
+class RemoveUserConstraints < ActiveRecord::Migration
   def change
     change_column(:users, :email, :string, null: true, unique: true)
   end

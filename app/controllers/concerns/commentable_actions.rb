@@ -2,7 +2,6 @@ module CommentableActions
   extend ActiveSupport::Concern
   include Polymorphic
   include Search
-  include RemotelyTranslatable
 
   def index
     @resources = resource_model.all
@@ -10,10 +9,11 @@ module CommentableActions
     @resources = @current_order == "recommendations" && current_user.present? ? @resources.recommendations(current_user) : @resources.for_render
     @resources = @resources.search(@search_terms) if @search_terms.present?
     @resources = @advanced_search_terms.present? ? @resources.filter(@advanced_search_terms) : @resources
+    @resources = @resources.tagged_with(@tag_filter) if @tag_filter
 
     @resources = @resources.page(params[:page]).send("sort_by_#{@current_order}")
 
-    index_customization
+    index_customization if index_customization.present?
 
     @tag_cloud = tag_cloud
     @banners = Banner.in_section(section(resource_model.name)).with_active
@@ -21,7 +21,6 @@ module CommentableActions
     set_resource_votes(@resources)
 
     set_resources_instance
-    @remote_translations = detect_remote_translations(@resources, featured_proposals)
   end
 
   def show
@@ -30,7 +29,6 @@ module CommentableActions
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
     set_resource_instance
-    @remote_translations = detect_remote_translations([@resource], @comment_tree.comments)
   end
 
   def new
@@ -99,7 +97,13 @@ module CommentableActions
     end
 
     def load_categories
-      @categories = Tag.category.order(:name)
+      @categories = ActsAsTaggableOn::Tag.category.order(:name)
+    end
+
+    def parse_tag_filter
+      if params[:tag].present?
+        @tag_filter = params[:tag] if ActsAsTaggableOn::Tag.named(params[:tag]).exists?
+      end
     end
 
     def set_resource_votes(instance)
@@ -113,13 +117,10 @@ module CommentableActions
     def section(resource_name)
       case resource_name
       when "Proposal"
-        "proposals"
+        'proposals'
       when "Debate"
-        "debates"
+        'debates'
       end
     end
 
-    def featured_proposals
-      @featured_proposals ||= []
-    end
 end

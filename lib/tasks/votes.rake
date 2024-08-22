@@ -1,4 +1,5 @@
 namespace :votes do
+
   desc "Resets cached_votes_up counter to its latest value"
   task reset_vote_counter: :environment do
     models = [Proposal, Budget::Investment]
@@ -9,6 +10,7 @@ namespace :votes do
         print "."
       end
     end
+
   end
 
   desc "Resets hot_score to its new value"

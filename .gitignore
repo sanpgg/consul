@@ -4,6 +4,11 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+vendor/
+
+# IDE
+.idea
+
 # Ignore bundler config.
 /.bundle
 
@@ -17,8 +22,6 @@
 /tmp
 
 /spec/examples.txt
-/config/database.yml
-/config/secrets.yml
 /config/deploy-secrets.yml
 /config/maintenance.yml
 
@@ -29,12 +32,23 @@
 
 # Mac finder artifacts
 .DS_Store
-
-# Intellij IDE project settings
-/.idea
-
 .ruby-gemset
 
 public/sitemap.xml
 public/system/
 /public/ckeditor_assets/
+/public/assets/
+
+# Ignore application configuration
+/config/application.yml
+/config/initializers/dev_environment.rb
+/config/database.yml
+/config/secrets.yml
+
+*.log
+routes.txt
+routes2.txt
+
+Gemfile.lock
+Gemfile
+

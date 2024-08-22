@@ -1,4 +1,4 @@
-class AddHotScoreIndexToDebates < ActiveRecord::Migration[4.2]
+class AddHotScoreIndexToDebates < ActiveRecord::Migration
   def change
     add_index(:debates, :hot_score)
   end

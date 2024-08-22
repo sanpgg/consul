@@ -1,4 +1,4 @@
-class AddPublishedToLegislationProcesses < ActiveRecord::Migration[4.2]
+class AddPublishedToLegislationProcesses < ActiveRecord::Migration
   def change
     add_column :legislation_processes, :published, :boolean, default: true
   end

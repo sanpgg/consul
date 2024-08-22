@@ -1,4 +1,4 @@
-class ChangeNewsletterSegmentRecipientToString < ActiveRecord::Migration[4.2]
+class ChangeNewsletterSegmentRecipientToString < ActiveRecord::Migration
   def change
     change_column :newsletters, :segment_recipient, :string, null: false
   end

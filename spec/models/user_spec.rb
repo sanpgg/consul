@@ -1,37 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe User do
-  describe "#headings_voted_within_group" do
-    it "returns the headings voted by a user" do
-      budget = create(:budget)
-      group = create(:budget_group, budget: budget)
-
-      new_york = create(:budget_heading, group: group, name: "New york")
-      san_francisco = create(:budget_heading, group: group, name: "San Franciso")
-      wyoming = create(:budget_heading, group: group, name: "Wyoming")
-      another_heading = create(:budget_heading, group: group)
-
-      new_york_investment = create(:budget_investment, heading: new_york)
-      san_franciso_investment = create(:budget_investment, heading: san_francisco)
-      wyoming_investment = create(:budget_investment, heading: wyoming)
-
-      user1 = create(:user, votables: [wyoming_investment, san_franciso_investment, new_york_investment])
-      user2 = create(:user)
-
-      expect(user1.headings_voted_within_group(group)).to match_array [new_york, san_francisco, wyoming]
-      expect(user1.headings_voted_within_group(group)).not_to include(another_heading)
-
-      expect(user2.headings_voted_within_group(group)).to be_empty
-    end
-
-    it "returns headings with multiple translations only once" do
-      group = create(:budget_group)
-      heading = create(:budget_heading, group: group, name_en: "English", name_es: "Spanish")
-      user = create(:user, votables: [create(:budget_investment, heading: heading)])
-
-      expect(user.headings_voted_within_group(group).count).to eq 1
-    end
-  end
 
   describe "#debate_votes" do
     let(:user) { create(:user) }
@@ -103,39 +72,39 @@ describe User do
     end
   end
 
-  describe "preferences" do
-    describe "email_on_comment" do
-      it "is false by default" do
+  describe 'preferences' do
+    describe 'email_on_comment' do
+      it 'is false by default' do
         expect(subject.email_on_comment).to eq(false)
       end
     end
 
-    describe "email_on_comment_reply" do
-      it "is false by default" do
+    describe 'email_on_comment_reply' do
+      it 'is false by default' do
         expect(subject.email_on_comment_reply).to eq(false)
       end
     end
 
-    describe "subscription_to_website_newsletter" do
-      it "is true by default" do
+    describe 'subscription_to_website_newsletter' do
+      it 'is true by default' do
         expect(subject.newsletter).to eq(true)
       end
     end
 
-    describe "email_digest" do
-      it "is true by default" do
+    describe 'email_digest' do
+      it 'is true by default' do
         expect(subject.email_digest).to eq(true)
       end
     end
 
-    describe "email_on_direct_message" do
-      it "is true by default" do
+    describe 'email_on_direct_message' do
+      it 'is true by default' do
         expect(subject.email_on_direct_message).to eq(true)
       end
     end
 
-    describe "official_position_badge" do
-      it "is false by default" do
+    describe 'official_position_badge' do
+      it 'is false by default' do
         expect(subject.official_position_badge).to eq(false)
       end
     end
@@ -147,7 +116,7 @@ describe User do
     end
 
     it "is true when the user is an admin" do
-      subject.save!
+      subject.save
       create(:administrator, user: subject)
       expect(subject.administrator?).to be true
     end
@@ -159,7 +128,7 @@ describe User do
     end
 
     it "is true when the user is a moderator" do
-      subject.save!
+      subject.save
       create(:moderator, user: subject)
       expect(subject.moderator?).to be true
     end
@@ -171,7 +140,7 @@ describe User do
     end
 
     it "is true when the user is a valuator" do
-      subject.save!
+      subject.save
       create(:valuator, user: subject)
       expect(subject.valuator?).to be true
     end
@@ -183,7 +152,7 @@ describe User do
     end
 
     it "is true when the user is a manager" do
-      subject.save!
+      subject.save
       create(:manager, user: subject)
       expect(subject.manager?).to be true
     end
@@ -195,7 +164,7 @@ describe User do
     end
 
     it "is true when the user is a poll officer" do
-      subject.save!
+      subject.save
       create(:poll_officer, user: subject)
       expect(subject.poll_officer?).to be true
     end
@@ -206,7 +175,7 @@ describe User do
       expect(subject.organization?).to be false
     end
 
-    describe "when it is an organization" do
+    describe 'when it is an organization' do
       before { create(:organization, user: subject) }
 
       it "is true when the user is an organization" do
@@ -224,7 +193,7 @@ describe User do
       expect(subject).not_to be_verified_organization
     end
 
-    describe "when it is an organization" do
+    describe 'when it is an organization' do
       before { create(:organization, user: subject) }
 
       it "is false when the user is not a verified organization" do
@@ -239,12 +208,12 @@ describe User do
   end
 
   describe "organization_attributes" do
-    before { subject.organization_attributes = { name: "org", responsible_name: "julia" } }
+    before { subject.organization_attributes = {name: 'org', responsible_name: 'julia'} }
 
     it "triggers the creation of an associated organization" do
       expect(subject.organization).to be
-      expect(subject.organization.name).to eq("org")
-      expect(subject.organization.responsible_name).to eq("julia")
+      expect(subject.organization.name).to eq('org')
+      expect(subject.organization.responsible_name).to eq('julia')
     end
 
     it "deactivates the validation of username, and activates the validation of organization" do
@@ -264,14 +233,14 @@ describe User do
 
     it "is true when the user is an official" do
       subject.official_level = 3
-      subject.save!
+      subject.save
       expect(subject.official?).to be true
     end
   end
 
   describe "add_official_position!" do
-    it "raises an exception when level not valid" do
-      expect { subject.add_official_position!("Boss", 89) }.to raise_error ActiveRecord::RecordInvalid
+    it "is false when level not valid" do
+      expect(subject.add_official_position!("Boss", 89)).to be false
     end
 
     it "updates official position fields" do
@@ -309,7 +278,7 @@ describe User do
       create(:user, official_position: "Manager", official_level: 5)
       2.times { create(:user) }
 
-      officials = User.officials
+      officials = described_class.officials
       expect(officials.size).to eq(4)
       officials.each do |user|
         expect(user.official_level).to be > 0
@@ -323,7 +292,7 @@ describe User do
       # We will use empleados.madrid.es as the officials' domain
       # Subdomains are also accepted
 
-      Setting["email_domain_for_officials"] = "officials.madrid.es"
+      Setting['email_domain_for_officials'] = 'officials.madrid.es'
       user1 = create(:user, email: "john@officials.madrid.es", confirmed_at: Time.current)
       user2 = create(:user, email: "john@yes.officials.madrid.es", confirmed_at: Time.current)
       user3 = create(:user, email: "john@unofficials.madrid.es", confirmed_at: Time.current)
@@ -335,12 +304,14 @@ describe User do
       expect(user4.has_official_email?).to eq(false)
 
       # We reset the officials' domain setting
-      Setting.find_by(key: "email_domain_for_officials").update!(value: "")
+      Setting.find_by(key: 'email_domain_for_officials').update(value: '')
     end
   end
 
   describe "official_position_badge" do
+
     describe "Users of level 1" do
+
       it "displays the badge if set in preferences" do
         user = create(:user, official_level: 1, official_position_badge: true)
 
@@ -352,9 +323,11 @@ describe User do
 
         expect(user.display_official_position_badge?).to eq false
       end
+
     end
 
     describe "Users higher than level 1" do
+
       it "displays the badge regardless of preferences" do
         user1 = create(:user, official_level: 2, official_position_badge: false)
         user2 = create(:user, official_level: 3, official_position_badge: false)
@@ -366,18 +339,23 @@ describe User do
         expect(user3.display_official_position_badge?).to eq true
         expect(user4.display_official_position_badge?).to eq true
       end
+
     end
+
   end
 
   describe "scopes" do
+
     describe "active" do
+
       it "returns users that have not been erased" do
         user1 = create(:user, erased_at: nil)
         user2 = create(:user, erased_at: nil)
         user3 = create(:user, erased_at: Time.current)
 
-        expect(User.active).to match_array [user1, user2]
-        expect(User.active).not_to include(user3)
+        expect(described_class.active).to include(user1)
+        expect(described_class.active).to include(user2)
+        expect(described_class.active).not_to include(user3)
       end
 
       it "returns users that have not been blocked" do
@@ -386,20 +364,25 @@ describe User do
         user3 = create(:user)
         user3.block
 
-        expect(User.active).to match_array [user1, user2]
-        expect(User.active).not_to include(user3)
+        expect(described_class.active).to include(user1)
+        expect(described_class.active).to include(user2)
+        expect(described_class.active).not_to include(user3)
       end
+
     end
 
     describe "erased" do
+
       it "returns users that have been erased" do
         user1 = create(:user, erased_at: Time.current)
         user2 = create(:user, erased_at: Time.current)
         user3 = create(:user, erased_at: nil)
 
-        expect(User.erased).to match_array [user1, user2]
-        expect(User.erased).not_to include(user3)
+        expect(described_class.erased).to include(user1)
+        expect(described_class.erased).to include(user2)
+        expect(described_class.erased).not_to include(user3)
       end
+
     end
   end
 
@@ -407,21 +390,21 @@ describe User do
     it "find users by email" do
       user1 = create(:user, email: "larry@consul.dev")
       create(:user, email: "bird@consul.dev")
-      search = User.search("larry@consul.dev")
-
-      expect(search).to eq [user1]
+      search = described_class.search("larry@consul.dev")
+      expect(search.size).to eq(1)
+      expect(search.first).to eq(user1)
     end
 
     it "find users by name" do
       user1 = create(:user, username: "Larry Bird")
       create(:user, username: "Robert Parish")
-      search = User.search("larry")
-
-      expect(search).to eq [user1]
+      search = described_class.search("larry")
+      expect(search.size).to eq(1)
+      expect(search.first).to eq(user1)
     end
 
     it "returns no results if no search term provided" do
-      expect(User.search("    ")).to be_empty
+      expect(described_class.search("    ").size).to eq(0)
     end
   end
 
@@ -434,33 +417,34 @@ describe User do
 
     it "expires cache with becoming a moderator" do
       expect { create(:moderator, user: user) }
-      .to change { user.updated_at }
+      .to change { user.updated_at}
     end
 
     it "expires cache with becoming an admin" do
       expect { create(:administrator, user: user) }
-      .to change { user.updated_at }
+      .to change { user.updated_at}
     end
 
     it "expires cache with becoming a veridied organization" do
       create(:organization, user: user)
       expect { user.organization.verify }
-      .to change { user.reload.updated_at }
+      .to change { user.reload.updated_at}
     end
   end
 
   describe "document_number" do
     it "upcases document number" do
-      user = User.new(document_number: "x1234567z")
+      user = described_class.new(document_number: "x1234567z")
       user.valid?
       expect(user.document_number).to eq("X1234567Z")
     end
 
     it "removes all characters except numbers and letters" do
-      user = User.new(document_number: " 12.345.678 - B")
+      user = described_class.new(document_number: " 12.345.678 - B")
       user.valid?
       expect(user.document_number).to eq("12345678B")
     end
+
   end
 
   describe "#erase" do
@@ -477,10 +461,10 @@ describe User do
                      reset_password_token: "token2",
                      email_verification_token: "token3")
 
-      user.erase("a test")
+      user.erase('a test')
       user.reload
 
-      expect(user.erase_reason).to eq("a test")
+      expect(user.erase_reason).to eq('a test')
       expect(user.erased_at).to    be
 
       expect(user.username).to be_nil
@@ -511,10 +495,11 @@ describe User do
       user = create(:user)
       identity = create(:identity, user: user)
 
-      user.erase("an identity test")
+      user.erase('an identity test')
 
       expect(Identity.exists?(identity.id)).not_to be
     end
+
   end
 
   describe "#take_votes_from" do
@@ -551,7 +536,7 @@ describe User do
       user.take_votes_from other_user
 
       expect(other_user.votes.count).to eq(0)
-      expect(user.vote_ids).to match_array [v1.id, v2.id, v3.id]
+      expect(user.vote_ids.sort).to eq([v1.id, v2.id, v3.id].sort)
     end
 
     it "reassigns budget ballots from other user" do
@@ -569,7 +554,7 @@ describe User do
       user.take_votes_from other_user
 
       expect(Budget::Ballot.where(user: other_user).count).to eq(0)
-      expect(Budget::Ballot.where(user: user)).to match_array [b1, b2]
+      expect(Budget::Ballot.where(user: user).sort).to eq([b1, b2].sort)
     end
 
     it "reassigns poll voters from other user" do
@@ -587,7 +572,7 @@ describe User do
       user.take_votes_from other_user
 
       expect(Poll::Voter.where(user: other_user).count).to eq(0)
-      expect(Poll::Voter.where(user: user)).to match_array [v1, v2]
+      expect(Poll::Voter.where(user: user).sort).to eq([v1, v2].sort)
     end
   end
 
@@ -644,6 +629,7 @@ describe User do
       expect(user_2.reload.former_users_data_log).to include("id: #{user_1.id}")
       expect(user_1.reload.document_number).to be_blank
     end
+
   end
 
   describe "email_required?" do
@@ -675,13 +661,15 @@ describe User do
     let(:user) { create(:user) }
 
     it "returns followed object tags" do
-      create(:proposal, tag_list: "Sport", followers: [user])
+      proposal = create(:proposal, tag_list: "Sport")
+      create(:follow, followable: proposal, user: user)
 
       expect(user.interests).to eq ["Sport"]
     end
 
     it "deals gracefully with hidden proposals" do
-      proposal = create(:proposal, tag_list: "Sport", followers: [user])
+      proposal = create(:proposal, tag_list: "Sport")
+      create(:follow, followable: proposal, user: user)
 
       proposal.hide
 
@@ -689,12 +677,17 @@ describe User do
     end
 
     it "discards followed objects duplicated tags" do
-      create(:proposal, tag_list: "Sport", followers: [user])
-      create(:proposal, tag_list: "Sport", followers: [user])
-      create(:budget_investment, tag_list: "Sport", followers: [user])
+      proposal1 = create(:proposal, tag_list: "Sport")
+      proposal2 = create(:proposal, tag_list: "Sport")
+      budget_investment = create(:budget_investment, tag_list: "Sport")
+
+      create(:follow, followable: proposal1, user: user)
+      create(:follow, followable: proposal2, user: user)
+      create(:follow, followable: budget_investment, user: user)
 
       expect(user.interests).to eq ["Sport"]
     end
+
   end
 
   describe ".find_by_manager_login" do
@@ -709,4 +702,5 @@ describe User do
       expect(User.find_by_manager_login("admin_user_#{user.id}")).to eq user
     end
   end
+
 end

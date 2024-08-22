@@ -1,4 +1,4 @@
-class AddPriceToBudget < ActiveRecord::Migration[4.2]
+class AddPriceToBudget < ActiveRecord::Migration
   def change
     add_column :budgets, :price, :integer
   end

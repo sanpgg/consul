@@ -1,4 +1,4 @@
-class Legislation::AnnotationsController < Legislation::BaseController
+class Legislation::AnnotationsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   before_action :authenticate_user!, only: [:create, :new_comment]
@@ -8,7 +8,7 @@ class Legislation::AnnotationsController < Legislation::BaseController
   load_and_authorize_resource :draft_version, through: :process
   load_and_authorize_resource
 
-  has_orders %w[most_voted newest oldest], only: :show
+  has_orders %w{most_voted newest}, only: :show
 
   def index
     @annotations = @draft_version.annotations
@@ -18,7 +18,7 @@ class Legislation::AnnotationsController < Legislation::BaseController
     @commentable = @annotation
 
     if params[:sub_annotation_ids].present?
-      @sub_annotations = Legislation::Annotation.where(id: params[:sub_annotation_ids].split(","))
+      @sub_annotations = Legislation::Annotation.where(id: params[:sub_annotation_ids].split(','))
       annotations = [@commentable, @sub_annotations]
     else
       annotations = [@commentable]
@@ -33,17 +33,14 @@ class Legislation::AnnotationsController < Legislation::BaseController
       render(json: {}, status: :not_found) && return
     end
 
-    existing_annotation = @draft_version.annotations.find_by(
-      range_start: annotation_params[:ranges].first[:start],
-      range_start_offset: annotation_params[:ranges].first[:startOffset].to_i,
-      range_end: annotation_params[:ranges].first[:end],
-      range_end_offset: annotation_params[:ranges].first[:endOffset].to_i
-    )
+    existing_annotation = @draft_version.annotations.where(
+      range_start: annotation_params[:ranges].first[:start], range_start_offset: annotation_params[:ranges].first[:startOffset].to_i,
+      range_end: annotation_params[:ranges].first[:end], range_end_offset: annotation_params[:ranges].first[:endOffset].to_i).first
 
     @annotation = existing_annotation
     if @annotation.present?
-      comment = @annotation.comments.build(body: annotation_params[:text], user: current_user)
-      if comment.save
+      comment = @annotation.comments.create(body: annotation_params[:text], user: current_user)
+      if comment.present?
         render json: @annotation.to_json
       else
         render json: comment.errors.full_messages, status: :unprocessable_entity
@@ -111,4 +108,5 @@ class Legislation::AnnotationsController < Legislation::BaseController
       end
     rescue JSON::ParserError
     end
+
 end

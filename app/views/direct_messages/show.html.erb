@@ -1,15 +1,19 @@
-<div class="row">
-  <div class="small-12 medium-9 column">
-    <%= back_link_to user_path(@direct_message.receiver) %>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="mt-4">
+        <span><strong><%= t("users.direct_messages.show.receiver",
+        receiver: @direct_message.receiver.name) %></strong></span>
+      </div>
 
-    <div class="clear"></div>
-
-    <div class="margin-top">
-      <span><strong><%= t("users.direct_messages.show.receiver",
-      receiver: @direct_message.receiver.name) %></strong></span>
+      <h1><%= @direct_message.title %></h1>
+      <p><%= simple_format text_with_links(@direct_message.body), {}, sanitize: false  %></p>
     </div>
-
-    <h1><%= @direct_message.title %></h1>
-    <p><%= simple_format sanitize_and_auto_link(@direct_message.body), {}, sanitize: false %></p>
+    <div class="col-md-12 mt-5">
+      <hr>
+      <div class="mt-3">
+        <%= back_link_to user_path(@direct_message.receiver) %>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,12 +1,11 @@
-class Comment < ApplicationRecord
+class Comment < ActiveRecord::Base
   include Flaggable
   include HasPublicAuthor
   include Graphqlable
   include Notifiable
 
-  COMMENTABLE_TYPES = %w[Debate Proposal Budget::Investment Poll Topic
-                        Legislation::Question Legislation::Annotation
-                        Legislation::Proposal].freeze
+  COMMENTABLE_TYPES = %w(Debate Proposal Budget::Investment Poll Topic Legislation::Question
+                        Legislation::Annotation Legislation::Proposal).freeze
 
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
@@ -15,10 +14,7 @@ class Comment < ApplicationRecord
 
   attr_accessor :as_moderator, :as_administrator
 
-  translates :body, touch: true
-  include Globalizable
-
-  validates_translation :body, presence: true
+  validates :body, presence: true
   validates :user, presence: true
 
   validates :commentable_type, inclusion: { in: COMMENTABLE_TYPES }
@@ -26,8 +22,8 @@ class Comment < ApplicationRecord
   validate :validate_body_length
   validate :comment_valuation, if: -> { valuation }
 
-  belongs_to :commentable, -> { with_hidden }, polymorphic: true, counter_cache: true, touch: true
-  belongs_to :user, -> { with_hidden }, inverse_of: :comments
+  belongs_to :commentable, -> { with_hidden }, polymorphic: true, counter_cache: true
+  belongs_to :user, -> { with_hidden }
 
   before_save :calculate_confidence_score
 
@@ -49,7 +45,6 @@ class Comment < ApplicationRecord
 
   scope :sort_by_most_voted, -> { order(confidence_score: :desc, created_at: :desc) }
   scope :sort_descendants_by_most_voted, -> { order(confidence_score: :desc, created_at: :asc) }
-  scope :sort_by_supports, -> { order("cached_votes_up - cached_votes_down DESC") }
 
   scope :sort_by_newest, -> { order(created_at: :desc) }
   scope :sort_descendants_by_newest, -> { order(created_at: :desc) }
@@ -118,20 +113,16 @@ class Comment < ApplicationRecord
   end
 
   def call_after_commented
-    commentable.after_commented if commentable.respond_to?(:after_commented)
+    commentable.try(:after_commented)
   end
 
   def self.body_max_length
-    Setting["comments_body_max_length"].to_i
+    Setting['comments_body_max_length'].to_i
   end
 
   def calculate_confidence_score
     self.confidence_score = ScoreCalculator.confidence_score(cached_votes_total,
                                                              cached_votes_up)
-  end
-
-  def votes_score
-    cached_votes_up - cached_votes_down
   end
 
   private

@@ -1,4 +1,4 @@
-class AddContextForLegislationAnnotations < ActiveRecord::Migration[4.2]
+class AddContextForLegislationAnnotations < ActiveRecord::Migration
   def change
     add_column :legislation_annotations, :context, :text
   end

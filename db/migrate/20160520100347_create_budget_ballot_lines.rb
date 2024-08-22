@@ -1,10 +1,11 @@
-class CreateBudgetBallotLines < ActiveRecord::Migration[4.2]
+class CreateBudgetBallotLines < ActiveRecord::Migration
   def change
     create_table :budget_ballot_lines do |t|
       t.integer :ballot_id, index: true
       t.integer :investment_id, index: true
 
-      t.timestamps null: false
+      t.datetime "created_at", null: false
+      t.datetime "updated_at", null: false
     end
   end
 end

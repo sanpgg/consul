@@ -1,4 +1,4 @@
-class AddAssignmentsCounterCacheToSpendingProposal < ActiveRecord::Migration[4.2]
+class AddAssignmentsCounterCacheToSpendingProposal < ActiveRecord::Migration
   def change
     add_column :spending_proposals, :valuation_assignments_count, :integer, default: 0
   end

@@ -1,4 +1,5 @@
 class Admin::SignatureSheetsController < Admin::BaseController
+
   def index
     @signature_sheets = SignatureSheet.all.order(created_at: :desc)
   end
@@ -12,7 +13,7 @@ class Admin::SignatureSheetsController < Admin::BaseController
     @signature_sheet.author = current_user
     if @signature_sheet.save
       @signature_sheet.delay.verify_signatures
-      redirect_to [:admin, @signature_sheet], notice: I18n.t("flash.actions.create.signature_sheet")
+      redirect_to [:admin, @signature_sheet], notice: I18n.t('flash.actions.create.signature_sheet')
     else
       render :new
     end
@@ -20,17 +21,12 @@ class Admin::SignatureSheetsController < Admin::BaseController
 
   def show
     @signature_sheet = SignatureSheet.find(params[:id])
-    @voted_signatures = Vote.where(signature: @signature_sheet.signatures.verified).count
   end
 
   private
 
     def signature_sheet_params
-      params.require(:signature_sheet).permit(
-        :signable_type,
-        :signable_id,
-        :title,
-        :required_fields_to_verify
-      )
+      params.require(:signature_sheet).permit(:signable_type, :signable_id, :document_numbers)
     end
+
 end

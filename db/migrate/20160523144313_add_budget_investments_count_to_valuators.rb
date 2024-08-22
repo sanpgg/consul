@@ -1,4 +1,4 @@
-class AddBudgetInvestmentsCountToValuators < ActiveRecord::Migration[4.2]
+class AddBudgetInvestmentsCountToValuators < ActiveRecord::Migration
   def change
     add_column :valuators, :budget_investments_count, :integer, default: 0
   end

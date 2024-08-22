@@ -1,4 +1,4 @@
-class CreateLegislationQuestions < ActiveRecord::Migration[4.2]
+class CreateLegislationQuestions < ActiveRecord::Migration
   def change
     create_table :legislation_questions do |t|
       t.references :legislation_process, index: true

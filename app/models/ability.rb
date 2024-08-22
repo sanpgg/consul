@@ -13,8 +13,6 @@ class Ability
         merge Abilities::Administrator.new(user)
       elsif user.moderator?
         merge Abilities::Moderator.new(user)
-      elsif user.manager?
-        merge Abilities::Manager.new(user)
       else
         merge Abilities::Common.new(user)
       end
@@ -22,4 +20,5 @@ class Ability
       merge Abilities::Everyone.new(user)
     end
   end
+
 end

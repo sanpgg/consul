@@ -1,4 +1,4 @@
-class AddGeozoneRestrictedToPolls < ActiveRecord::Migration[4.2]
+class AddGeozoneRestrictedToPolls < ActiveRecord::Migration
   def change
     add_column :polls, :geozone_restricted, :boolean, default: false, index: true
   end

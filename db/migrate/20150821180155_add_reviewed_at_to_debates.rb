@@ -1,4 +1,4 @@
-class AddReviewedAtToDebates < ActiveRecord::Migration[4.2]
+class AddReviewedAtToDebates < ActiveRecord::Migration
   def change
     add_column :debates, :reviewed_at, :datetime
   end

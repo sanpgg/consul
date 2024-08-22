@@ -1,9 +1,11 @@
 class Admin::GeozonesController < Admin::BaseController
+
   respond_to :html
 
   load_and_authorize_resource
 
   def index
+    @image_map = SiteCustomization::Image.where(name: "map_image").first
     @geozones = Geozone.all.order("LOWER(name)")
   end
 
@@ -33,10 +35,10 @@ class Admin::GeozonesController < Admin::BaseController
 
   def destroy
     if @geozone.safe_to_destroy?
-      @geozone.destroy!
-      redirect_to admin_geozones_path, notice: t("admin.geozones.delete.success")
+      @geozone.destroy
+      redirect_to admin_geozones_path, notice: t('admin.geozones.delete.success')
     else
-      redirect_to admin_geozones_path, flash: { error: t("admin.geozones.delete.error") }
+      redirect_to admin_geozones_path, flash: { error: t('admin.geozones.delete.error') }
     end
   end
 

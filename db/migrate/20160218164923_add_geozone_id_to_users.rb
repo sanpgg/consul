@@ -1,4 +1,4 @@
-class AddGeozoneIdToUsers < ActiveRecord::Migration[4.2]
+class AddGeozoneIdToUsers < ActiveRecord::Migration
   def change
     add_reference :users, :geozone, index: true, foreign_key: true
   end

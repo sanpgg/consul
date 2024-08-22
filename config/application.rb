@@ -1,21 +1,16 @@
-require_relative "boot"
 
-require "rails/all"
+require File.expand_path('../boot', __FILE__)
 
+require 'rails/all'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module Consul
   class Application < Rails::Application
-    config.load_defaults 5.1
-
-    # Keep belongs_to fields optional by default, because that's the way
-    # Rails 4 models worked
-    config.active_record.belongs_to_required_by_default = false
-
-    # Use local forms with `form_with`, so it works like `form_for`
-    config.action_view.form_with_generates_remote_forms = false
+    # Settings in config/environments/* take precedence over those specified here.
+    # Application configuration should go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded.
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -23,69 +18,47 @@ module Consul
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    config.i18n.default_locale = :en
+    config.i18n.default_locale = :es
     available_locales = [
       "ar",
-      "bg",
-      "bs",
-      "ca",
-      "cs",
-      "da",
       "de",
-      "el",
       "en",
       "es",
-      "es-PE",
-      "eu",
       "fa",
       "fr",
       "gl",
       "he",
-      "hr",
-      "id",
       "it",
-      "ka",
       "nl",
-      "oc",
       "pl",
       "pt-BR",
-      "ro",
-      "ru",
-      "sl",
       "sq",
-      "so",
-      "sr",
       "sv",
-      "tr",
       "val",
       "zh-CN",
       "zh-TW"]
     config.i18n.available_locales = available_locales
     config.i18n.fallbacks = {
-      "ca"    => "es",
-      "es-PE" => "es",
-      "eu"    => "es",
-      "fr"    => "es",
-      "gl"    => "es",
-      "it"    => "es",
-      "oc"    => "fr",
-      "pt-BR" => "es",
-      "val"   => "es"
+      'fr'    => 'es',
+      'gl'    => 'es',
+      'it'    => 'es',
+      'pt-BR' => 'es'
     }
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'custom', '**', '*.{rb,yml}')]
 
-    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**[^custom]*", "*.{rb,yml}")]
-    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom", "**", "*.{rb,yml}")]
-
-    config.after_initialize do
-      Globalize.set_fallbacks_to_all_available_locales
-    end
+    config.after_initialize { Globalize.set_fallbacks_to_all_available_locales }
 
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
-    config.assets.paths << Rails.root.join("vendor", "assets", "fonts")
+
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
 
     # Add lib to the autoload path
-    config.autoload_paths << Rails.root.join("lib")
-    config.time_zone = "Madrid"
+    config.autoload_paths << Rails.root.join('lib')
+    config.time_zone = 'America/Monterrey'
+    #config.active_record.default_timezone = :local
+
     config.active_job.queue_adapter = :delayed_job
 
     # CONSUL specific custom overrides
@@ -95,17 +68,7 @@ module Consul
     #
     config.autoload_paths << "#{Rails.root}/app/controllers/custom"
     config.autoload_paths << "#{Rails.root}/app/models/custom"
-    config.paths["app/views"].unshift(Rails.root.join("app", "views", "custom"))
-  end
-end
-
-class Rails::Engine
-  initializer :prepend_custom_assets_path, group: :all do |app|
-    if self.class.name == "Consul::Application"
-      %w[images fonts javascripts].each do |asset|
-        app.config.assets.paths.unshift(Rails.root.join("app", "assets", asset, "custom").to_s)
-      end
-    end
+    config.paths['app/views'].unshift(Rails.root.join('app', 'views', 'custom'))
   end
 end
 

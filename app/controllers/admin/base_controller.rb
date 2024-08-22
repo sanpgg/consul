@@ -1,5 +1,5 @@
 class Admin::BaseController < ApplicationController
-  layout "admin"
+  layout 'admin'
   before_action :authenticate_user!
 
   skip_authorization_check
@@ -8,6 +8,7 @@ class Admin::BaseController < ApplicationController
   private
 
     def verify_administrator
-      raise CanCan::AccessDenied unless current_user&.administrator?
+      raise CanCan::AccessDenied unless current_user.try(:administrator?)
     end
+
 end

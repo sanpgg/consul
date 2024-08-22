@@ -1,4 +1,4 @@
-class AddLocationToBooths < ActiveRecord::Migration[4.2]
+class AddLocationToBooths < ActiveRecord::Migration
   def change
     add_column :poll_booths, :location, :string
   end

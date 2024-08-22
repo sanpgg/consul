@@ -1,64 +1,115 @@
-<div class="expanded budget no-margin-top padding">
-  <div class="row">
-    <%= back_link_to @ballot_referer %>
+<div class="container">
+	<style>
+		.botonr {
+			background: #D659A0 !important;
+			color: white !important;
+			padding: 2px;
+			padding-right: 2px;
+			padding-left: 2px;
+			border-radius: 10px;
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+		.botonr:hover {
+			background: #A33D7C !important;
+			color: white !important;
+		}
+	</style>
 
-    <h1 class="text-center"><%= t("budgets.ballots.show.title") %></h1>
+	<div class="mt-3 padding">
+	  <div class="row">
+	    <%= back_link_to budgets_path %>
 
-    <div class="small-12 medium-8 column small-centered text-center">
-      <h2>
-        <%= sanitize(t("budgets.ballots.show.voted", count: @ballot.investments.count)) %>
-      </h2>
-      <p class="confirmed">
-        <%= t("budgets.ballots.show.voted_info") %>
-      <p>
-      <p><%= t("budgets.ballots.show.voted_info_2") %></p>
-    </div>
-  </div>
-</div>
+	    <h1 class="text-center"><%= t("budgets.ballots.show.title") %></h1>
 
-<div class="row ballot">
-  <% ballot_groups = @ballot.groups.sort_by_name %>
-  <% ballot_groups.each do |group| %>
-    <% heading = @ballot.heading_for_group(group) %>
-    <div id="<%= dom_id(group) %>" class="small-12 medium-6 column end">
-      <div class="margin-top ballot-content">
-        <div class="subtitle">
-          <h3>
-            <%= group.name %> - <%= heading.name %>
-          </h3>
-          <%= link_to sanitize(@ballot.amount_available_info(heading)),
-                      budget_group_path(@budget, group) %>
-        </div>
-        <% if @ballot.has_lines_in_group?(group) %>
-          <h4 class="amount-spent text-right">
-            <%= sanitize(@ballot.amount_spent_info(heading)) %>
-          </h4>
-        <% else %>
-          <p>
-            <%= t("budgets.ballots.show.zero") %><br>
-          </p>
-        <% end %>
+	    <div class="small-12 medium-8 column small-centered text-center">
+	      <h2>
+	        <%= t("budgets.ballots.show.voted_html",
+	            count: @ballot.investments.count) %>
+	      </h2>
+	      <p style="display:none;">
+	          <small style="background: white;font-size: 50px;">
+	          <%= t("budgets.ballots.show.voted_info_html") %>
+	        </small>
+	      </p>
+	    </div>
+	  </div>
+	</div>
 
-        <ul class="ballot-list">
-          <%= render partial: "budgets/ballot/investment",
-                     collection: @ballot.investments.by_group(group.id) %>
-        </ul>
-      </div>
-    </div>
-  <% end %>
+	<div class="row ballot">
+	  <% ballot_groups = @ballot.groups.order(name: :asc) %>
+	  <% ballot_groups.each do |group| %>
+	    <div id="<%= dom_id(group) %>" class="small-12 medium-6 column end">
+	      <div class="margin-top ballot-content">
+	        <div class="subtitle">
+	          <h3>
+	            <!-- AQUI VA EL LINK A MI SECTOR -->
+	            <%= @ballot.heading_for_group(group).name %>
+	          </h3>
+	               <%= link_to t("budgets.ballots.show.remaining",
+	                      amount: @ballot.formatted_amount_available(@ballot.heading_for_group(group))).html_safe,
+	                      budget_investments_path(@budget,heading_id: @ballot.heading_for_group(group).id), class: "botonr" %>
+	        </div>
+	        <% if @ballot.has_lines_in_group?(group) %>
+	          <h4 class="amount-spent text-left">
+	            Has asignado:
+	            <span>
+	              <%= @ballot.formatted_amount_spent(@ballot.heading_for_group(group)) %>
+	            </span>
+	          </h4>
+	        <% else %>
+	          <p>
+	            <%= t("budgets.ballots.show.zero") %><br>
+	          </p>
+	        <% end %>
 
-  <% no_balloted_groups = @budget.groups.sort_by_name - ballot_groups %>
-  <% no_balloted_groups.each do |group| %>
-    <div id="<%= dom_id(group) %>" class="small-12 medium-6 column end">
-      <div class="margin-top ballot-content">
-        <div class="subtitle">
-          <h3>
-            <%= group.name %>
-          </h3>
-          <%= link_to t("budgets.ballots.show.no_balloted_group_yet"), budget_group_path(@budget, group) %>
-        </div>
-      </div>
-    </div>
-  <% end %>
+	        <ul class="ballot-list">
+	          <%= render partial: 'budgets/ballot/investment',
+	                     collection: @ballot.investments.by_group(group.id) %>
+	        </ul>
+	      </div>
+	    </div>
+	  <% end %>
 
+	  <% no_balloted_groups = @budget.groups.order(name: :asc) - ballot_groups %>
+
+	  <% no_balloted_groups.each do | group | %>
+	    <div id="<%= dom_id(group) %>" class="small-12 medium-6 column end">
+
+	      <div class="margin-top ballot-content">
+	        <div class="subtitle <%=group%> ">
+	          <h3>
+	            <%= group.name %>
+	          </h3>
+
+	          <% if current_user.level_two_and_three_verified? %>
+
+	            <% colonia_id = Budget::Heading.find_by(suburb_id: current_user.colonium.first.id, group_id: group.id) %>
+	            <% sector_id = Budget::Heading.find_by(sector: current_user.sector.parameterize.upcase, group_id: group.id) %>
+
+	            <% if group.name == "Juntas Vecinales" %>
+	              <%= link_to t("budgets.ballots.show.no_balloted_group_yet"), budget_investments_path(@budget, heading_id: colonia_id), class: "botonr" %>
+	            <% elsif group.name == "Sectores" %>
+	              <%= link_to t("budgets.ballots.show.no_balloted_group_yet"), budget_investments_path(@budget, heading_id: sector_id), class: "botonr" %>
+	            <% else %>
+	              <%= link_to t("budgets.ballots.show.no_balloted_group_yet"), budget_group_path(@budget, group), class: "botonr" %>
+	            <% end %>
+
+	          <% else %>
+	            <div class="callout warning">
+	            <%= t("legislation.proposals.not_verified",verify_account: link_to(t("votes.verify_account"), verification_path )).html_safe %>
+	            </div>
+	          <% end %>
+	        </div>
+	      </div>
+	    </div>
+	  <% end %>
+
+	</div>
+	<div class="mt-3 padding">
+	  <div class="row">
+	    <br><br>
+	    <p>La propuesta con más votos del Sector o colonia será la que tendrá disponible todo el presupuesto del Sector o la colonia. En caso de no requerir todo el presupuesto, podrá hacerse el proyecto en 2º lugar con el recurso sobrante, siempre y cuando pueda ejecutarse de manera integral o una etapa funcional por sí misma y completa. Así se hará sucesivamente con todos los proyectos. Para que tenga efecto lo anterior, los proyectos deberán tener un mínimo de 10 votos de usuarios verificados para poder ser ejecutados.</p>
+	  </div>
+	</div>
 </div>

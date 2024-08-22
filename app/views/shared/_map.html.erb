@@ -11,16 +11,19 @@
           <% end %>
         </ul>
       </div>
-
       <div class="show-for-medium medium-9 column text-center">
-        <%= image_tag(image_path_for("map.jpg"), usemap: "#map") %>
+        <% if @image_map.image.exists? %>
+          <%= image_tag @image_map.image.url ,usemap: "#map" %>
+        <% else %>
+          <%= image_tag("map.jpg", usemap: "#map") %>
+        <% end %>
       </div>
 
       <map name="map" id="html_map">
         <% @geozones.each do |geozone| %>
           <area shape="poly"
                 coords="<%= geozone.html_map_coordinates %>"
-                href="<%= polymorphic_path(@resource, search: geozone.name) %>"
+                href="<%= polymorphic_url(@resource, search: geozone.name) %>"
                 title="<%= geozone.name %>"
                 alt="<%= geozone.name %>">
         <% end %>
@@ -29,9 +32,11 @@
 
     <h2><%= t("map.proposal_for_district") %></h2>
 
-    <%= form_for(@resource, url: new_url_path, method: :get) do |f| %>
+    <%= form_for(@resource, url: new_url_path, method: :get ) do |f| %>
       <div class="small-12 medium-4">
-        <%= f.select :geozone_id, geozone_select_options, include_blank: t("geozones.none") %>
+        <%= f.label :geozone_id,  t("map.select_district") %>
+        <%= f.select :geozone_id, geozone_select_options,
+                     {include_blank: t("geozones.none"), label: false} %>
       </div>
 
       <div class="actions small-12">
@@ -43,8 +48,8 @@
   <div class="small-12 medium-3 column">
     <aside class="sidebar">
       <%= link_to t("map.start_proposal"),
-                  new_proposal_path, class: "button radius expand" %>
-      <%= render "shared/tag_cloud", taggable: "proposal" %>
+                  new_proposal_path, class: 'button radius expand' %>
+      <%= render "shared/tag_cloud", taggable: 'proposal' %>
     </aside>
   </div>
 </div>

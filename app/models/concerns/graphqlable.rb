@@ -2,8 +2,9 @@ module Graphqlable
   extend ActiveSupport::Concern
 
   class_methods do
+
     def graphql_field_name
-      name.gsub("::", "_").underscore.to_sym
+      name.gsub('::', '_').underscore.to_sym
     end
 
     def graphql_field_description
@@ -11,7 +12,7 @@ module Graphqlable
     end
 
     def graphql_pluralized_field_name
-      name.gsub("::", "_").underscore.pluralize.to_sym
+      name.gsub('::', '_').underscore.pluralize.to_sym
     end
 
     def graphql_pluralized_field_description
@@ -19,15 +20,17 @@ module Graphqlable
     end
 
     def graphql_type_name
-      name.gsub("::", "_")
+      name.gsub('::', '_')
     end
 
     def graphql_type_description
       model_name.human.to_s
     end
+
   end
 
   def public_created_at
     created_at.change(min: 0)
   end
+
 end

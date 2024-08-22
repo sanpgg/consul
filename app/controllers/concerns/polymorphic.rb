@@ -1,11 +1,10 @@
 module Polymorphic
+
   private
 
     def resource
-      if resource_model.to_s == "Budget::Investment"
+      if resource_model.to_s == 'Budget::Investment'
         @resource ||= instance_variable_get("@investment")
-      elsif resource_model.to_s == "Legislation::Proposal"
-        @resource ||= instance_variable_get("@proposal")
       else
         @resource ||= instance_variable_get("@#{resource_name}")
       end
@@ -30,4 +29,5 @@ module Polymorphic
     def strong_params
       send("#{resource_name}_params")
     end
+
 end

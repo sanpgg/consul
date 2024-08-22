@@ -1,5 +1,5 @@
-class RemoveDescriptionFromPollQuestions < ActiveRecord::Migration[4.2]
+class RemoveDescriptionFromPollQuestions < ActiveRecord::Migration
   def change
-    remove_column :poll_questions, :description, :text
+    remove_column :poll_questions, :description
   end
 end

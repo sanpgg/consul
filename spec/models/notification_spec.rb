@@ -1,28 +1,33 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Notification do
+
   let(:notification) { build(:notification) }
 
   context "validations" do
-    it "is valid" do
+
+    it "should be valid" do
       expect(notification).to be_valid
     end
 
-    it "is not valid without a user" do
+    it "should not be valid without a user" do
       notification.user = nil
       expect(notification).not_to be_valid
     end
+
   end
 
   context "scopes" do
+
     describe "#read" do
       it "returns only read notifications" do
         read_notification1 = create(:notification, :read)
         read_notification2 = create(:notification, :read)
         unread_notification = create(:notification)
 
-        expect(Notification.read).to match_array [read_notification1, read_notification2]
-        expect(Notification.read).not_to include unread_notification
+        expect(described_class.read).to include read_notification1
+        expect(described_class.read).to include read_notification2
+        expect(described_class.read).not_to include unread_notification
       end
     end
 
@@ -32,8 +37,9 @@ describe Notification do
         unread_notification1 = create(:notification)
         unread_notification2 = create(:notification)
 
-        expect(Notification.unread).to match_array [unread_notification1, unread_notification2]
-        expect(Notification.unread).not_to include read_notification
+        expect(described_class.unread).to include unread_notification1
+        expect(described_class.unread).to include unread_notification2
+        expect(described_class.unread).not_to include read_notification
       end
     end
 
@@ -42,39 +48,43 @@ describe Notification do
         old_notification = create :notification
         new_notification = create :notification
 
-        expect(Notification.recent).to eq [new_notification, old_notification]
+        sorted_notifications = described_class.recent
+        expect(sorted_notifications.size).to be 2
+        expect(sorted_notifications.first).to eq new_notification
+        expect(sorted_notifications.last).to eq old_notification
       end
     end
 
     describe "#for_render" do
       it "returns notifications including notifiable and user" do
-        allow(Notification).to receive(:includes).with(:notifiable).exactly(:once)
-        Notification.for_render
+        allow(described_class).to receive(:includes).with(:notifiable).exactly(:once)
+        described_class.for_render
       end
     end
+
   end
 
   describe "#mark_as_read" do
     it "destroys notification" do
       notification = create(:notification)
-      expect(Notification.read.size).to eq 0
-      expect(Notification.unread.size).to eq 1
+      expect(described_class.read.size).to eq 0
+      expect(described_class.unread.size).to eq 1
 
       notification.mark_as_read
-      expect(Notification.read.size).to eq 1
-      expect(Notification.unread.size).to eq 0
+      expect(described_class.read.size).to eq 1
+      expect(described_class.unread.size).to eq 0
     end
   end
 
   describe "#mark_as_unread" do
     it "destroys notification" do
       notification = create(:notification, :read)
-      expect(Notification.unread.size).to eq 0
-      expect(Notification.read.size).to eq 1
+      expect(described_class.unread.size).to eq 0
+      expect(described_class.read.size).to eq 1
 
       notification.mark_as_unread
-      expect(Notification.unread.size).to eq 1
-      expect(Notification.read.size).to eq 0
+      expect(described_class.unread.size).to eq 1
+      expect(described_class.read.size).to eq 0
     end
   end
 
@@ -93,27 +103,25 @@ describe Notification do
       comment = create(:comment)
       notification = create(:notification, user: user, notifiable: comment)
 
-      expect(Notification.existent(user, comment)).to eq(notification)
+      expect(described_class.existent(user, comment)).to eq(notification)
     end
 
     it "returns nil when there are no notifications of that notifiable for a user" do
       user = create(:user)
       comment1 = create(:comment)
       comment2 = create(:comment)
-
       create(:notification, user: user, notifiable: comment1)
 
-      expect(Notification.existent(user, comment2)).to eq(nil)
+      expect(described_class.existent(user, comment2)).to eq(nil)
     end
 
     it "returns nil when there are notifications of a notifiable for another user" do
       user1 = create(:user)
       user2 = create(:user)
       comment = create(:comment)
+      notification = create(:notification, user: user1, notifiable: comment)
 
-      create(:notification, user: user1, notifiable: comment)
-
-      expect(Notification.existent(user2, comment)).to eq(nil)
+      expect(described_class.existent(user2, comment)).to eq(nil)
     end
   end
 
@@ -122,7 +130,7 @@ describe Notification do
       user = create(:user)
       comment = create(:comment)
 
-      Notification.add(user, comment)
+      described_class.add(user, comment)
       expect(user.notifications.count).to eq(1)
     end
 
@@ -130,8 +138,8 @@ describe Notification do
       user = create(:user)
       comment = create(:comment)
 
-      Notification.add(user, comment)
-      Notification.add(user, comment)
+      described_class.add(user, comment)
+      described_class.add(user, comment)
 
       expect(user.notifications.count).to eq(1)
       expect(user.notifications.first.counter).to eq(2)
@@ -141,10 +149,10 @@ describe Notification do
       user = create(:user)
       comment = create(:comment)
 
-      first_notification = Notification.add(user, comment)
-      first_notification.update!(read_at: Time.current)
+      first_notification = described_class.add(user, comment)
+      first_notification.update(read_at: Time.current)
 
-      second_notification = Notification.add(user, comment)
+      second_notification = described_class.add(user, comment)
 
       expect(user.notifications.count).to eq(2)
       expect(first_notification.counter).to eq(1)
@@ -167,5 +175,7 @@ describe Notification do
 
       expect(notification.notifiable_action).to eq "replies_to"
     end
+
   end
+
 end

@@ -1,19 +1,40 @@
-<div class="row margin-bottom">
-  <div class="small-12 column">
+<div class="container mb-5">
+  <div class="row mt-4">  
+    <div class="margin-bottom">
+      <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    <a href="/">Inicio</a>
+                </li>
+                <li>
+                  <a href="/account">Perfil</a>
+                </li>
+                <li>
+                    <span>Notificaciones</span>
+                </li>
+            </ul>
+        </div>
 
-    <h1><%= t("notifications.index.title") %></h1>
+        <h1 class="h2-style mt-4 h2-style mt-4"><%= t("notifications.index.title") %></h1>
+        </br>
+        <ul class="menu simple clear">
+          <li>
+            <%= link_to t("notifications.index.unread"), notifications_path %>
+          </li>
+          <li class="is-active">
+            <h2><%= link_to t("notifications.index.read"), read_notifications_path %></h2>
+          </li>
+        </ul>
 
-    <ul class="menu simple clear">
-      <li>
-        <%= link_to t("notifications.index.unread"), notifications_path %>
-      </li>
-      <li class="is-active">
-        <h2><%= link_to t("notifications.index.read"), read_notifications_path %></h2>
-      </li>
-    </ul>
-
-    <ul class="no-bullet clear notifications-list">
-      <%= render @notifications %>
-    </ul>
+        <ul class="no-bullet clear notifications-list">
+          <%= render @notifications %>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
+<hr>
+  <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7 mb-5">
+    <a class="back" href="/account"><span class="icon-angle-left"></span>Volver</a>
+  </div>

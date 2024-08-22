@@ -1,4 +1,4 @@
-class CreateLegislationProcesses < ActiveRecord::Migration[4.2]
+class CreateLegislationProcesses < ActiveRecord::Migration
   def change
     create_table :legislation_processes do |t|
       t.string :title

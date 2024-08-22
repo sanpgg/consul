@@ -1,4 +1,6 @@
 class CommentsController < ApplicationController
+  include CustomUrlsHelper
+
   before_action :authenticate_user!, only: :create
   before_action :load_commentable, only: :create
   before_action :verify_resident_for_commentable!, only: :create
@@ -12,7 +14,6 @@ class CommentsController < ApplicationController
     if @comment.save
       CommentNotifier.new(comment: @comment).process
       add_notification @comment
-      EvaluationCommentNotifier.new(comment: @comment).process if send_evaluation_notification?
     else
       render :new
     end
@@ -35,15 +36,13 @@ class CommentsController < ApplicationController
   def flag
     Flag.flag(current_user, @comment)
     set_comment_flags(@comment)
-
-    render "shared/_refresh_flag_actions", locals: { flaggable: @comment, divider: true }
+    respond_with @comment, template: 'comments/_refresh_flag_actions'
   end
 
   def unflag
     Flag.unflag(current_user, @comment)
     set_comment_flags(@comment)
-
-    render "shared/_refresh_flag_actions", locals: { flaggable: @comment, divider: true }
+    respond_with @comment, template: 'comments/_refresh_flag_actions'
   end
 
   private
@@ -85,7 +84,7 @@ class CommentsController < ApplicationController
 
     def add_notification(comment)
       notifiable = comment.reply? ? comment.parent : comment.commentable
-      notifiable_author_id = notifiable&.author_id
+      notifiable_author_id = notifiable.try(:author_id)
       if notifiable_author_id.present? && notifiable_author_id != comment.author_id
         Notification.add(notifiable.author, notifiable)
       end
@@ -104,11 +103,8 @@ class CommentsController < ApplicationController
       return if current_user.administrator? || current_user.moderator?
 
       if @commentable.respond_to?(:comments_closed?) && @commentable.comments_closed?
-        redirect_to polymorphic_path(@commentable), alert: t("comments.comments_closed")
+        redirect_to @commentable, alert: t('comments.comments_closed')
       end
     end
 
-    def send_evaluation_notification?
-      @comment.valuation && Setting["feature.valuation_comment_notification"]
-    end
 end

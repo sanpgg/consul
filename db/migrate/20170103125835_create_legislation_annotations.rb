@@ -1,4 +1,4 @@
-class CreateLegislationAnnotations < ActiveRecord::Migration[4.2]
+class CreateLegislationAnnotations < ActiveRecord::Migration
   def change
     create_table :legislation_annotations do |t|
       t.string :quote

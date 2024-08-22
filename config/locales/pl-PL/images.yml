@@ -4,6 +4,7 @@ pl:
     form:
       title: Obraz opisujący
       title_placeholder: Dodaj opisowy tytuł obrazu
+      attachment_label: Wybierz obraz
       delete_button: Usuń obraz
       note: "Możesz przesłać jeden obraz następujących typów treści: %{accepted_content_types}, do %{max_file_size} MB."
       add_new_image: Dodaj obraz
@@ -13,6 +14,7 @@ pl:
       destroy:
         notice: Obraz został pomyślnie usunięty.
         alert: Nie można zniszczyć obrazu.
+        confirm: Czy na pewno chcesz usunąć obraz? Tego działania nie można cofnąć!
     errors:
       messages:
         in_between: musi być pomiędzy %{min} i %{max}

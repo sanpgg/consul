@@ -18,12 +18,6 @@ namespace :moderation do
     put :moderate, on: :collection
   end
 
-  namespace :legislation do
-    resources :proposals, only: :index do
-      put :hide, on: :member
-      put :moderate, on: :collection
-    end
-  end
   resources :comments, only: :index do
     put :hide, on: :member
     put :moderate, on: :collection
@@ -34,9 +28,7 @@ namespace :moderation do
     put :moderate, on: :collection
   end
 
-  resources :administrator_tasks, only: %i[index edit update]
-
-  resources :budget_investments, only: :index, controller: "budgets/investments" do
+  resources :budget_investments, only: :index, controller: 'budgets/investments' do
     put :hide, on: :member
     put :moderate, on: :collection
   end

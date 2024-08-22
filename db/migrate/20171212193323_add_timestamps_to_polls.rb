@@ -1,4 +1,4 @@
-class AddTimestampsToPolls < ActiveRecord::Migration[4.2]
+class AddTimestampsToPolls < ActiveRecord::Migration
   def change
     add_timestamps :polls, null: true
   end

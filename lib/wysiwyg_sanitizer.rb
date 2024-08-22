@@ -10,4 +10,5 @@ class WYSIWYGSanitizer
   def sanitize(html)
     ActionController::Base.helpers.sanitize(html, tags: allowed_tags, attributes: allowed_attributes)
   end
+
 end

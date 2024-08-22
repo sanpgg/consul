@@ -1,4 +1,4 @@
-class AddReportingFieldsToSpendingProposal < ActiveRecord::Migration[4.2]
+class AddReportingFieldsToSpendingProposal < ActiveRecord::Migration
   def change
     add_column :spending_proposals, :price, :float
     add_column :spending_proposals, :legal, :boolean, default: nil

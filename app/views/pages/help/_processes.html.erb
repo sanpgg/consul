@@ -6,13 +6,11 @@
 
     <p>
       <% link = link_to(t("pages.help.processes.link"), legislation_processes_path) %>
-      <%= sanitize(t("pages.help.processes.description", link: link)) %>
+      <%= t("pages.help.processes.description", link: link).html_safe %>
     </p>
     <ul class="features">
       <li>
-        <%= sanitize(t("pages.help.processes.feature",
-              link: link_to(t("pages.help.processes.feature_link", org_name: setting["org_name"]),
-                               new_user_registration_path))) %>
+        <% link = link_to(t("pages.help.processes.link"), legislation_processes_path) %>
       </li>
     </ul>
   </div>

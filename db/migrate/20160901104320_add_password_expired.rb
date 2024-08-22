@@ -1,4 +1,4 @@
-class AddPasswordExpired < ActiveRecord::Migration[4.2]
+class AddPasswordExpired < ActiveRecord::Migration
   def change
     add_column :users, :password_changed_at, :datetime
     add_index :users, :password_changed_at

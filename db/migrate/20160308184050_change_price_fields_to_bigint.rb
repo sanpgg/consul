@@ -1,4 +1,4 @@
-class ChangePriceFieldsToBigint < ActiveRecord::Migration[4.2]
+class ChangePriceFieldsToBigint < ActiveRecord::Migration
   def up
     change_column :spending_proposals, :price, :bigint
     change_column :spending_proposals, :price_first_year, :bigint

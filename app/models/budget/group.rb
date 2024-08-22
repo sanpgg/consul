@@ -1,34 +1,17 @@
 class Budget
-  class Group < ApplicationRecord
+  class Group < ActiveRecord::Base
     include Sluggable
-
-    translates :name, touch: true
-    include Globalizable
-    translation_class_delegate :budget
-
-    class Translation
-      validate :name_uniqueness_by_budget
-
-      def name_uniqueness_by_budget
-        if budget.groups.joins(:translations)
-                        .where(name: name)
-                        .where.not("budget_group_translations.budget_group_id": budget_group_id).any?
-          errors.add(:name, I18n.t("errors.messages.taken"))
-        end
-      end
-    end
 
     belongs_to :budget
 
     has_many :headings, dependent: :destroy
 
-    validates_translation :name, presence: true
     validates :budget_id, presence: true
+    validates :name, presence: true, uniqueness: { scope: :budget }
     validates :slug, presence: true, format: /\A[a-z0-9\-_]+\z/
 
-    def self.sort_by_name
-      all.sort_by(&:name)
-    end
+    scope :sectores, -> { find_by(id: 17) }
+    scope :colonia, ->(group_id) { find_by(id: group_id) }
 
     def single_heading_group?
       headings.count == 1
@@ -36,8 +19,9 @@ class Budget
 
     private
 
-      def generate_slug?
-        slug.nil? || budget.drafting?
-      end
+    def generate_slug?
+      slug.nil? || budget.drafting?
+    end
+
   end
 end

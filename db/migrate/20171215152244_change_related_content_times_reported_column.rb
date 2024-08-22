@@ -1,4 +1,4 @@
-class ChangeRelatedContentTimesReportedColumn < ActiveRecord::Migration[4.2]
+class ChangeRelatedContentTimesReportedColumn < ActiveRecord::Migration
   def change
     rename_column :related_contents, :times_reported, :flags_count
   end

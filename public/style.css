@@ -1,0 +1,600 @@
+/*
+Theme Name: Decide San pedro
+Author: Innovación
+Author URI: https://decide.sanpedro.gob.mx/
+Description: Decide San pedro - Presupuesto Participativo
+Version: 2.0
+Text Domain: decide.sanpedro.gob.mx
+*/
+
+/* Table of Content
+==================================================
+1.    Helpers
+2.    Fonts
+3.    Global Styles
+4.    Top Header
+5.    Header area
+6.    Slider
+7.    Footer
+*/
+
+/* Helpers
+================================================== */
+:root
+{
+    --bg-color-green: #00B777;
+    --bg-color-2: #071110;
+    --bg-color-lime: #BDDD35;
+    --bg-color-orange: #FFA700;
+    --bg-color-purple: #E08FFF;
+    --bg-color-transparent: transparent !important;
+    
+    --font-helvetica: 'helvetica_neueregular';
+    --font-helvetica-bold: 'helvetica_neuebold';
+    --font-helvetica-bold_italic: 'helvetica_neuebold_italic';
+    --font-helvetica-italic: 'helvetica_neueitalic';
+
+    --font-helvetica-thin: 'helvetica_neuethin';
+    --font-helvetica-thin-italic: 'helvetica_neuethin_italic';
+    
+    --font-helvetica-medium: 'helvetica_neuemedium';
+    --font-helvetica-medium-italic: 'helvetica_neuemedium_italic';
+
+    --font-helvetica-light: 'helvetica_neuelight';
+    --font-helvetica-light-italic: 'helvetica_neuelight_italic';
+}
+
+/* Fonts
+================================================== */
+@font-face {
+    font-family: 'helvetica_neueregular';
+    src: url('fonts/helveticaneue.eot');
+    src: url('fonts/helveticaneue.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue.woff2') format('woff2'),
+         url('fonts/helveticaneue.woff') format('woff'),
+         url('fonts/helveticaneue.ttf') format('truetype'),
+         url('fonts/helveticaneue.svg#helvetica_neueregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'helvetica_neuebold';
+    src: url('fonts/helveticaneue-bold.eot');
+    src: url('fonts/helveticaneue-bold.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-bold.woff2') format('woff2'),
+         url('fonts/helveticaneue-bold.woff') format('woff'),
+         url('fonts/helveticaneue-bold.ttf') format('truetype'),
+         url('fonts/helveticaneue-bold.svg#helvetica_neuebold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'helvetica_neuebold_italic';
+    src: url('fonts/helveticaneue-bolditalic-04.eot');
+    src: url('fonts/helveticaneue-bolditalic-04.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-bolditalic-04.woff2') format('woff2'),
+         url('fonts/helveticaneue-bolditalic-04.woff') format('woff'),
+         url('fonts/helveticaneue-bolditalic-04.ttf') format('truetype'),
+         url('fonts/helveticaneue-bolditalic-04.svg#helvetica_neuebold_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica_neueitalic';
+    src: url('fonts/helveticaneue-italic.eot');
+    src: url('fonts/helveticaneue-italic.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-italic.woff2') format('woff2'),
+         url('fonts/helveticaneue-italic.woff') format('woff'),
+         url('fonts/helveticaneue-italic.ttf') format('truetype'),
+         url('fonts/helveticaneue-italic.svg#helvetica_neueitalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica_neuethin';
+    src: url('fonts/helveticaneue-thin.eot');
+    src: url('fonts/helveticaneue-thin.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-thin.woff2') format('woff2'),
+         url('fonts/helveticaneue-thin.woff') format('woff'),
+         url('fonts/helveticaneue-thin.ttf') format('truetype'),
+         url('fonts/helveticaneue-thin.svg#helvetica_neuethin') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica_neuethin_italic';
+    src: url('fonts/helveticaneue-thinitalic-14.eot');
+    src: url('fonts/helveticaneue-thinitalic-14.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-thinitalic-14.woff2') format('woff2'),
+         url('fonts/helveticaneue-thinitalic-14.woff') format('woff'),
+         url('fonts/helveticaneue-thinitalic-14.ttf') format('truetype'),
+         url('fonts/helveticaneue-thinitalic-14.svg#helvetica_neuethin_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica_neuemedium';
+    src: url('fonts/helveticaneue-medium.eot');
+    src: url('fonts/helveticaneue-medium.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-medium.woff2') format('woff2'),
+         url('fonts/helveticaneue-medium.woff') format('woff'),
+         url('fonts/helveticaneue-medium.ttf') format('truetype'),
+         url('fonts/helveticaneue-medium.svg#helvetica_neuemedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica_neuemedium_italic';
+    src: url('fonts/helveticaneue-mediumitalic-12.eot');
+    src: url('fonts/helveticaneue-mediumitalic-12.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-mediumitalic-12.woff2') format('woff2'),
+         url('fonts/helveticaneue-mediumitalic-12.woff') format('woff'),
+         url('fonts/helveticaneue-mediumitalic-12.ttf') format('truetype'),
+         url('fonts/helveticaneue-mediumitalic-12.svg#helvetica_neuemedium_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica_neuelight';
+    src: url('fonts/helveticaneue-light.eot');
+    src: url('fonts/helveticaneue-light.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-light.woff2') format('woff2'),
+         url('fonts/helveticaneue-light.woff') format('woff'),
+         url('fonts/helveticaneue-light.ttf') format('truetype'),
+         url('fonts/helveticaneue-light.svg#helvetica_neuelight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica_neuelight_italic';
+    src: url('fonts/helveticaneue-lightitalic-09.eot');
+    src: url('fonts/helveticaneue-lightitalic-09.eot?#iefix') format('embedded-opentype'),
+         url('fonts/helveticaneue-lightitalic-09.woff2') format('woff2'),
+         url('fonts/helveticaneue-lightitalic-09.woff') format('woff'),
+         url('fonts/helveticaneue-lightitalic-09.ttf') format('truetype'),
+         url('fonts/helveticaneue-lightitalic-09.svg#helvetica_neuelight_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Global Styles
+================================================== */
+.font-12{
+    font-size: 12px;
+}
+.font-16{
+    font-size: 16px;
+}
+.font-18{
+    font-size: 18px;
+}
+.pt-30{
+    padding-top: 30px;
+}
+.pb-50{
+    padding-bottom: 50px;
+}
+.w-250{
+    width: 100%;
+    max-width: 250px;
+}
+.mt-110{
+    margin-top: 110px;
+}
+.btn-black{
+    text-decoration: none;
+    position: relative;
+    z-index: 2;
+    border-radius: 20px;
+    padding: 5px 14px;
+    background-color: #000;
+    color: #fff;
+    letter-spacing: 0;
+    line-height: 23px;
+}
+.btn-black:hover{
+    background-color: #fff;
+    outline: solid 1px #000;
+    color: #000;
+}
+
+/* Top Header
+================================================== */
+header{
+    margin-bottom: 0 !important;
+    border: none !important;
+}
+.auth-page .nav-menu li a{
+    color: #071110;
+}
+
+.bg-transparent{
+    background-color: var(--bg-color-transparent);
+}
+
+.bg-green-color{
+	background-color: var(--bg-color-green);
+}
+.logo{
+    width: 119px;
+}
+.nav-user{
+    padding: 10px 20px;
+    border-radius: 25px;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 5px 0 rgba(209,209,209,0.5);
+}
+.nav-user span{
+    color: #A2A9B3;
+    margin: 0 4px;
+}
+.nav-menu{
+    padding: 0;
+    margin: 0;
+}
+.nav-menu li{
+    list-style: none;
+}
+.nav-menu li a{
+    font-family: var(--font-helvetica);
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 21px;
+    text-align: center;
+    color: #fff;
+    padding: 0 10px;
+    margin-right: 5px;
+    text-decoration: none;
+}
+
+/* Content
+================================================== */
+    /*--Slider--*/
+    .bg-slider{
+        display: block;
+        height: 588px;
+        border-radius: 40px;
+        background-position: left;
+        background-repeat: no-repeat;
+        background-color: #fff;
+    }
+    .bg-slider h5{
+        font-family: var(--font-helvetica-bold);
+        font-size: 30px;
+        line-height: 34px;
+    }
+    .controls-slider{
+        z-index: 1;
+        position: absolute;
+        bottom: 24px;
+        right: 37px;
+    }
+    .animated {
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+    .btn-control{
+        padding: 2px 13px;
+        background-color: #d0d4d9;
+        font-size: 20px;
+        color: #fff;
+        border: none;
+        border-radius: 15px;
+        -webkit-transition: all 400ms ease-in-out;
+        -moz-transition: all 400ms ease-in-out;
+        transition: all 400ms ease-in-out;
+        margin: 0px 5px;
+    }
+    .btn-control:hover{
+        background: #000;
+        border: 2px solid #000;
+        color: #fff;
+        -webkit-transform: scalex(1.2);
+        -moz-transform: scalex(1.2);
+        -ms-transform: scalex(1.2);
+        -o-transform: scalex(1.2);
+        transform: scalex(1.2);
+    }
+    .content-cat-share span{
+        color: var(--bg-color-orange);
+        font-size: 20px;
+        font-family: var(--font-helvetica-bold);
+    }
+
+    .content-cat-share span i{
+        line-height: 13px;
+        font-size: 35px;
+    }
+    @-webkit-keyframes lightSpeedIn {
+        0% {
+            -webkit-transform: translateX(100%) skewX(-30deg);
+            transform: translateX(100%) skewX(-30deg);
+            opacity: 0;
+        }
+
+        60% {
+            -webkit-transform: translateX(-20%) skewX(30deg);
+            transform: translateX(-20%) skewX(30deg);
+            opacity: 1;
+        }
+
+        80% {
+            -webkit-transform: translateX(0%) skewX(-15deg);
+            transform: translateX(0%) skewX(-15deg);
+            opacity: 1;
+        }
+
+        100% {
+            -webkit-transform: translateX(0%) skewX(0deg);
+            transform: translateX(0%) skewX(0deg);
+            opacity: 1;
+        }
+    }
+
+    @keyframes lightSpeedIn {
+        0% {
+            -webkit-transform: translateX(100%) skewX(-30deg);
+            -ms-transform: translateX(100%) skewX(-30deg);
+            transform: translateX(100%) skewX(-30deg);
+            opacity: 0;
+        }
+
+        60% {
+            -webkit-transform: translateX(-20%) skewX(30deg);
+            -ms-transform: translateX(-20%) skewX(30deg);
+            transform: translateX(-20%) skewX(30deg);
+            opacity: 1;
+        }
+
+        80% {
+            -webkit-transform: translateX(0%) skewX(-15deg);
+            -ms-transform: translateX(0%) skewX(-15deg);
+            transform: translateX(0%) skewX(-15deg);
+            opacity: 1;
+        }
+
+        100% {
+            -webkit-transform: translateX(0%) skewX(0deg);
+            -ms-transform: translateX(0%) skewX(0deg);
+            transform: translateX(0%) skewX(0deg);
+            opacity: 1;
+        }
+    }
+
+    .lightSpeedIn {
+        -webkit-animation-name: lightSpeedIn;
+        animation-name: lightSpeedIn;
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out;
+    }
+
+    /*Carousel*/
+    .item-pasos{
+        background-color: #fff;
+        border-radius: 14px;
+        width: 95%;
+        -webkit-box-shadow: 0px 0px 29px 0px rgb(0 169 92 / 42%);
+        box-shadow: 0px 0px 29px 0px rgb(0 169 92 / 42%);
+        padding: 35px 35px;
+        margin: 23px auto;
+        text-align: center;
+    }
+    .item-pasos h5{
+        font-family: var(--font-helvetica);
+        font-size: 12px;
+        line-height: 18px;
+    }
+    .item-pasos h3{
+        font-family: var(--font-helvetica-bold);
+        font-size: 24px;
+    }
+    .item-pasos p{
+        font-family: var(--font-helvetica);
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: center;
+        padding: 0 25px;
+    }
+    .item-pasos img{
+        width: 100%;
+        max-width: 250px;
+    }
+    .owl-nav{
+        width: 100%;
+        position: absolute;
+        top: 43%;
+    }
+    .owl-nav .owl-prev{
+         display: block;
+        text-align: left;
+        float: left;
+        margin-left: -40px;
+    }
+
+    .owl-nav .owl-next{
+        display: block;
+        text-align: right;
+        float: right;
+        margin-right: -40px;
+    }
+    .owl-nav .owl-prev,
+    .owl-nav .owl-next{
+        padding: 4px 15px;
+        border-radius: 30px;
+        background-color: #00A95C;
+        display: inline-block;
+        width: 50px;
+       height: 50px;
+    }
+    .owl-nav .owl-prev i,
+    .owl-nav .owl-next i{
+        color: #fff;
+        font-size: 40px;
+    }
+
+.title-proyectos p{
+    font-family: var(--font-helvetica);
+    font-size: 80px;
+    line-height: 95px;
+}
+.item-proyecto{
+    border-radius: 20px;
+    box-shadow: rgb(0 0 0 / 8%) 0px 4px 12px;
+    border: 1px solid #EEEEEE;
+}
+.proyecto-status{
+    padding: 20px 0px 40px;
+    width: 85%;
+    margin: 0 auto;
+}
+.proyecto-status h4{
+    font-size: 20px;
+    font-family: var(--font-helvetica-bold);
+    color:var(--bg-color-lime);
+    line-height: 26px;
+}
+.proyecto-status h3{
+    padding: 7px 0 20px;
+    font-size: 18px;
+    font-family: var(--font-helvetica-bold);
+    line-height: 26px;
+}
+.proyecto-status span{
+    font-family: var(--font-helvetica-bold);
+    font-size: 18px;
+    color:#879B9A;
+    padding-bottom: 7px;
+    display: block;
+}
+.proyecto-status .progress{
+    height: 10px;
+    border-radius: 8px;
+}
+.proyecto-status .progress-bar{
+    background-color: var(--bg-color-lime);
+}
+/*
+.progress-bar{
+    position: relative;
+}
+.progress-bar:hover::after{
+    content: "hola";
+    position: absolute;
+    right: 0;
+    z-index: 30;
+    padding: 40px;
+    background-color: #d0d4d9;
+}*/
+.tooltip{ 
+    position:relative;
+    float:right;
+}
+.progress{
+    border-radius:0;
+    overflow:visible;
+}
+.progress-bar{
+    -webkit-transition: width 1.5s ease-in-out;
+    transition: width 1.5s ease-in-out;
+}
+.bg-gradiente{
+    background: linear-gradient(0deg, #FFFFFF 0%, #EEF4F3 100%);
+}
+
+/*Sectores*/
+.content-sectores-proyectos ul{
+    padding: 0;
+    margin: 0; 
+}
+.content-sectores-proyectos ul li{
+    width: 100%;
+    max-width: 128px;
+    list-style: none;
+    margin-right: 20px;
+}
+.content-sectores-proyectos h3{
+    font-family: var(--font-helvetica);
+    font-size: 80px;
+    color: #000;
+}
+.content-sectores-proyectos h4{
+    text-transform: uppercase;
+    font-family: var(--font-helvetica-bold);
+    margin: 0;
+    font-size: 22px;
+    color: #000;
+}
+.content-sectores-proyectos .box-content span{
+    line-height: 20px;
+    font-size: 15px;
+}
+.box-content{
+    height: 86px;
+    line-height: 17px;
+    text-align: center;
+    padding: 10px 6px;
+    border-radius: 14px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(106,117,144,0.2);
+}
+/* Register - Users
+================================================== */
+.background-half {
+    background: rgb(224,143,255);
+    background: linear-gradient(90deg, rgba(224, 143, 255,1) 0%, rgba(224, 143, 255,1) 40%, rgba(105,24,50,0) 40%);
+}
+
+/* Footer
+================================================== */
+.footer{
+    padding-top: 0;
+    margin-top: 0 !important;
+    min-height: initial !important;
+}
+.bg-footer{
+    background-color: var(--bg-color-2);
+}
+.content-footer{
+    margin-top: 20px;
+    padding: 20px;
+}
+.content-footer p{
+    color: #fff;
+    font-family: var(--font-helvetica);
+    font-size: 11px;
+    line-height: 16px;
+}
+.logo-footer{
+    width: 100%;
+    max-width: 269px;
+}
+.logo-footer-decide{
+    width: 100%;
+    max-width: 107px;
+}
+.copyright p{
+    margin-top: 15px;
+    font-size: 11px;
+    line-height: 16px;
+    color: #fff;
+    max-width: 250px;
+}
+.aviso-privacidad{
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}

@@ -1,0 +1,33 @@
+<div class="content-form mt-5">
+    <h2 class="mb-3">No puedo iniciar sesión</h2>
+    <div style="margin-bottom: 30px;">
+        <p class="mb-3">Si no puedes iniciar sesión, prueba con las siguientes opciones:</p>
+        <p class="mb-3"><b>1. Comprueba que estás utilizando los datos de inicio de sesión correctos.</b></p>
+        <p class="mb-3">Vuelva a verificar que el correo electrónico y la contraseña coincidan con los detalles que se ingresaron al
+            crear tu cuenta. A veces, al correo electrónico le puede faltar un punto o tener un error tipográfico, como
+            “con” en lugar de “com”.</p>
+        <p class="mb-3"><b>2. Restablece tu contraseña</b></p>
+        <p class="mb-3">Verifica que la contraseña sea la misma que registraste cuando creaste tu perfil de usuario en la plataforma
+            Decide San Pedro. Si olvidaste tu contraseña, haga clic <%= link_to "aquí", new_password_path(resource_name) %> y te enviaremos un enlace a su correo electrónico
+            para restablecerla.</p>
+        <p class="mb-3"><b>3. Ponte en contacto con el equipo de soporte</b></p>
+        <br>
+        <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+	  <%= link_to t("devise_views.shared.links.new_confirmation"), new_confirmation_path(resource_name) %><br>
+	<% end -%>
+    <br>
+	<%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+	  <%= link_to t("devise_views.shared.links.new_unlock"), new_unlock_path(resource_name) %><br>
+	<% end -%>
+    <br>
+	<%- if devise_mapping.omniauthable? && devise_mapping.name == 'user' %>
+	  <%- resource_class.omniauth_providers.each do |provider| %>
+	    <%= link_to t("devise_views.shared.links.signin_with_provider", provider: provider.to_s.titleize), omniauth_authorize_path(resource_name, provider) %><br>
+	  <% end -%>
+	<% end -%>
+        <br>
+        <p class="mb-3">Si aún tienes dificultades para restablecer tu contraseña, llámanos al <a href="tel:81 1212 1212">81 1212 1212</a> o escríbenos a <a href="mailto:decide@sanpedro.gob.mx">decide@sanpedro.gob.mx</a></p>
+    </div>
+
+    <%= link_to "Volver a intentar iniciar sesión", new_user_session_path, class: 'btn-default' %>
+</div>

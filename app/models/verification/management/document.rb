@@ -2,19 +2,12 @@ class Verification::Management::Document
   include ActiveModel::Model
   include ActiveModel::Dates
 
-  attr_accessor :document_type, :document_number, :date_of_birth, :postal_code
+  attr_accessor :document_type
+  attr_accessor :document_number
 
   validates :document_type, :document_number, presence: true
-  validates :date_of_birth, presence: true, if: -> { Setting.force_presence_date_of_birth? }
-  validates :postal_code, presence: true, if: -> { Setting.force_presence_postal_code? }
 
   delegate :username, :email, to: :user, allow_nil: true
-
-  def initialize(attrs = {})
-    self.date_of_birth = parse_date("date_of_birth", attrs)
-    attrs = remove_date("date_of_birth", attrs)
-    super
-  end
 
   def user
     @user = User.active.by_document(document_type, document_number).first
@@ -25,7 +18,7 @@ class Verification::Management::Document
   end
 
   def in_census?
-    response = CensusCaller.new.call(document_type, document_number, date_of_birth, postal_code)
+    response = CensusCaller.new.call(document_type, document_number)
     response.valid? && valid_age?(response)
   end
 
@@ -49,4 +42,5 @@ class Verification::Management::Document
   def verify
     user.update(verified_at: Time.current) if user?
   end
+
 end

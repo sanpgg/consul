@@ -1,4 +1,4 @@
-class AddStatusToMilestones < ActiveRecord::Migration[4.2]
+class AddStatusToMilestones < ActiveRecord::Migration
   disable_ddl_transaction!
 
   def change

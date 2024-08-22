@@ -1,4 +1,4 @@
-class CreateBudgetValuatorAssignments < ActiveRecord::Migration[4.2]
+class CreateBudgetValuatorAssignments < ActiveRecord::Migration
   def change
     create_table :budget_valuator_assignments, index: false do |t|
       t.belongs_to :valuator

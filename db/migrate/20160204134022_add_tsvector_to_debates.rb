@@ -1,4 +1,5 @@
-class AddTsvectorToDebates < ActiveRecord::Migration[4.2]
+class AddTsvectorToDebates < ActiveRecord::Migration
+
   def up
     add_column :debates, :tsv, :tsvector
     add_index :debates, :tsv, using: "gin"
@@ -8,4 +9,5 @@ class AddTsvectorToDebates < ActiveRecord::Migration[4.2]
     remove_index :debates, :tsv
     remove_column :debates, :tsv
   end
+
 end

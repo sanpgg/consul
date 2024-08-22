@@ -1,8 +1,5 @@
 class Management::BaseController < ActionController::Base
-  include GlobalizeFallbacks
-  layout "management"
-  default_form_builder ConsulFormBuilder
-  protect_from_forgery with: :exception
+  layout 'management'
 
   before_action :verify_manager
   before_action :set_locale
@@ -14,7 +11,7 @@ class Management::BaseController < ActionController::Base
   private
 
     def verify_manager
-      raise ActionController::RoutingError.new("Not Found") if current_manager.blank?
+      raise ActionController::RoutingError.new('Not Found') if current_manager.blank?
     end
 
     def current_manager
@@ -46,6 +43,7 @@ class Management::BaseController < ActionController::Base
       session[:locale] ||= I18n.default_locale
 
       I18n.locale = session[:locale]
+      Globalize.locale = I18n.locale
     end
 
     def current_budget
@@ -61,4 +59,5 @@ class Management::BaseController < ActionController::Base
         @manager_logged_in = User.find_by_manager_login(session[:manager]["login"])
       end
     end
+
 end

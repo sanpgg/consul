@@ -1,4 +1,4 @@
-class CreatePollBoothAssignments < ActiveRecord::Migration[4.2]
+class CreatePollBoothAssignments < ActiveRecord::Migration
   def change
     create_table :poll_booth_assignments do |t|
       t.integer :booth_id

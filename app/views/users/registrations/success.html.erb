@@ -1,9 +1,11 @@
-<% provide(:title) { t("devise_views.users.registrations.success.title") } %>
-<h2><%= t("devise_views.users.registrations.success.title") %></h2>
-<p><%= sanitize(t("devise_views.users.registrations.success.thank_you")) %></p>
-<p><%= sanitize(t("devise_views.users.registrations.success.instructions_1")) %></p>
-<p><%= t("devise_views.users.registrations.success.instructions_2") %></p>
-<p>
-  <%= link_to t("devise_views.users.registrations.success.back_to_index"),
-      root_path, class: "button margin-top expanded" %>
-</p>
+<div class="content-form mt-5">
+  <div class="text-center">
+    <h2>¡Revisa tu correo!</h2>
+    <p>Te hemos enviado un mensaje a tu correo electrónico:</p>
+    <p style="color: #00B777;"><%= session[:user_email] %></p>
+    <p>Por favor, haz clic en el botón “<b>Confirmar mi cuenta</b>”.</p>
+  </div>
+  <div class="text-center" style="margin-top: 30px;">
+    <%= link_to "Volver a la página principal", new_user_session_path, class: 'btn-default' %>
+  </div>
+</div>

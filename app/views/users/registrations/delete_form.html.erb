@@ -1,23 +1,24 @@
 <%= back_link_to %>
+<div class="content-form my-5 pb-5">
+  <h2><%= t("devise_views.users.registrations.delete_form.title") %></h2>
 
-<h2><%= t("devise_views.users.registrations.delete_form.title") %></h2>
+  <%= form_for(resource, as: resource_name,
+               url: users_registrations_path,
+               html: { method: :delete }) do |f| %>
+    <%= devise_error_messages! %>
 
-<%= form_for(resource, as: resource_name,
-             url: users_registrations_path,
-             html: { method: :delete }) do |f| %>
-  <%= render "shared/errors", resource: resource %>
+    <div data-alert class="callout alert">
+      <%= t("devise_views.users.registrations.delete_form.info") %>
+    </div>
+    <p>
+      <%= t("devise_views.users.registrations.delete_form.info_reason") %>
+    </p>
 
-  <div data-alert class="callout alert">
-    <%= t("devise_views.users.registrations.delete_form.info") %>
-  </div>
-  <p>
-    <%= t("devise_views.users.registrations.delete_form.info_reason") %>
-  </p>
+    <%= f.text_field :erase_reason,
+          autofocus: true,
+          placeholder: t("devise_views.users.registrations.delete_form.erase_reason_label"),
+          label: t("devise_views.users.registrations.delete_form.erase_reason_label") %>
 
-  <%= f.text_field :erase_reason,
-        autofocus: true,
-        placeholder: t("devise_views.users.registrations.delete_form.erase_reason_label"),
-        label: t("devise_views.users.registrations.delete_form.erase_reason_label") %>
-
-  <%= f.submit t("devise_views.users.registrations.delete_form.submit"), class: "button alert expanded" %>
-<% end %>
+    <%= f.submit t("devise_views.users.registrations.delete_form.submit"), class: "button alert expanded mt-2 mb-2" %>
+  <% end %>
+</div>

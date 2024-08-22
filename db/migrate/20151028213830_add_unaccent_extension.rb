@@ -1,11 +1,5 @@
-class AddUnaccentExtension < ActiveRecord::Migration[4.2]
+class AddUnaccentExtension < ActiveRecord::Migration
   def change
-    return if extension_enabled?("unaccent")
-
-    begin
-      enable_extension "unaccent"
-    rescue StandardError => e
-      raise "Could not create extension unaccent. Please contact with your system administrator: #{e}"
-    end
+    execute "create extension if not exists unaccent"
   end
 end

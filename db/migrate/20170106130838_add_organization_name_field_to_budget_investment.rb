@@ -1,4 +1,4 @@
-class AddOrganizationNameFieldToBudgetInvestment < ActiveRecord::Migration[4.2]
+class AddOrganizationNameFieldToBudgetInvestment < ActiveRecord::Migration
   def change
     add_column :budget_investments, :organization_name, :string
   end

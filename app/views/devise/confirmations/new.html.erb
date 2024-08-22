@@ -1,25 +1,24 @@
 <% provide :title do %><%= t("devise_views.confirmations.new.title") %><% end %>
-<h2><%= t("devise_views.confirmations.new.title") %></h2>
+<div class="content-form my-5 pb-5">
+  <h2><%= t("devise_views.confirmations.new.title") %></h2>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "shared/errors", resource: resource %>
+  <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+    <%= render 'shared/errors', resource: resource %>
 
-  <div class="row">
-    <div class="small-12 columns">
-      <%= f.email_field :email, autofocus: true, placeholder: t("devise_views.confirmations.new.email_label"), value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+    <div class="w-64">
+        <%= f.email_field :email, autofocus: true, placeholder: t("devise_views.confirmations.new.email_label"), value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
 
-      <% if @requires_password %>
-          <p><%= f.password_field :password %></p>
-          <p><%= f.password_field :password_confirmation %></p>
-      <% end %>
+        <% if @requires_password %>
+            <p><%= f.password_field :password %></p>
+            <p><%= f.password_field :password_confirmation %></p>
+        <% end %>
 
-      <%= hidden_field_tag :confirmation_token, @confirmation_token %>
+        <%= hidden_field_tag :confirmation_token,@confirmation_token %>
+        <p class="font-family-primary font-16 text-center">Revisa tu cuenta de correo electrónico y haz clic en el botón <strong>“Confirmar mi cuenta”</strong>.</p>
 
-      <div class="small-12 medium-6 small-centered">
-        <%= f.submit(t("devise_views.confirmations.new.submit"), class: "button expanded") %>
-      </div>
+        <%= f.submit(t("devise_views.confirmations.new.submit"), class: "button expanded mt-2 mb-2") %>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
 
 <%= render "devise/shared/links" %>

@@ -1,4 +1,4 @@
-class CreateGeozones < ActiveRecord::Migration[4.2]
+class CreateGeozones < ActiveRecord::Migration
   def change
     create_table :geozones do |t|
       t.string :name

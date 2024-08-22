@@ -16,26 +16,6 @@ module Abilities
       can :update, Proposal do |proposal|
         proposal.editable_by?(user)
       end
-      can :publish, Proposal do |proposal|
-        proposal.draft? && proposal.author.id == user.id && !proposal.retired?
-      end
-      can :dashboard, Proposal do |proposal|
-        proposal.author.id == user.id
-      end
-      can :manage_polls, Proposal do |proposal|
-        proposal.author.id == user.id
-      end
-      can :manage_mailing, Proposal do |proposal|
-        proposal.author.id == user.id
-      end
-      can :manage_poster, Proposal do |proposal|
-        proposal.author.id == user.id
-      end
-
-      can :results, Poll do |poll|
-        poll.related&.author&.id == user.id
-      end
-
       can [:retire_form, :retire], Proposal, author_id: user.id
 
       can :read, Legislation::Proposal
@@ -46,13 +26,13 @@ module Abilities
 
       can :create, Comment
       can :create, Debate
-      can [:create, :created], Proposal
+      can :create, Proposal
       can :create, Legislation::Proposal
 
       can :suggest, Debate
       can :suggest, Proposal
       can :suggest, Legislation::Proposal
-      can :suggest, Tag
+      can :suggest, ActsAsTaggableOn::Tag
 
       can [:flag, :unflag], Comment
       cannot [:flag, :unflag], Comment, user_id: user.id
@@ -71,9 +51,7 @@ module Abilities
 
       can [:create, :destroy], Follow
 
-      can [:destroy], Document do |document|
-        document.documentable&.author_id == user.id
-      end
+      can [:destroy], Document, documentable: { author_id: user.id }
 
       can [:destroy], Image, imageable: { author_id: user.id }
 
@@ -85,16 +63,18 @@ module Abilities
       end
 
       if user.level_two_or_three_verified?
-        can :vote, Proposal, &:published?
+        can :vote, Proposal
         can :vote_featured, Proposal
+        can :vote, SpendingProposal
+        can :create, SpendingProposal
 
         can :vote, Legislation::Proposal
         can :vote_featured, Legislation::Proposal
         can :create, Legislation::Answer
 
         can :create, Budget::Investment,               budget: { phase: "accepting" }
-        can :edit, Budget::Investment,                 budget: { phase: "accepting" }, author_id: user.id
-        can :update, Budget::Investment,               budget: { phase: "accepting" }, author_id: user.id
+        can :edit, Budget::Investment,                 budget: { phase: "accepting" }
+        can :update, Budget::Investment,               budget: { phase: "accepting" }
         can :suggest, Budget::Investment,              budget: { phase: "accepting" }
         can :destroy, Budget::Investment,              budget: { phase: ["accepting", "reviewing"] }, author_id: user.id
         can :vote, Budget::Investment,                 budget: { phase: "selecting" }
@@ -104,7 +84,6 @@ module Abilities
 
         can :create, DirectMessage
         can :show, DirectMessage, sender_id: user.id
-
         can :answer, Poll do |poll|
           poll.answerable_by?(user)
         end
@@ -115,10 +94,23 @@ module Abilities
 
       can [:create, :show], ProposalNotification, proposal: { author_id: user.id }
 
+      can :create, Annotation
+      can [:update, :destroy], Annotation, user_id: user.id
+
       can [:create], Topic
       can [:update, :destroy], Topic, author_id: user.id
 
       can :disable_recommendations, [Debate, Proposal]
+
+      can :pre, Budget::Investment
+      can :autocomplete, Budget::Investment
+      can :geocode, Budget::Investment
+      can :reverse_geocode, Budget::Investment
+      can :complete_profile, User # define complete_profile for User model
+      can :profile, User
+      can :update_profile, User
+      can :created, Budget::Investment
+      can :load_more_investments, Budget
     end
   end
 end

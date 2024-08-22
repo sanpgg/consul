@@ -1,17 +1,9 @@
 eu:
   date:
-    abbr_day_names:
-      - Sun
-      - Astl
-      - Mar
-      - Astk
-      - Ost
-      - Osti
-      - Lar
     abbr_month_names:
       - 
-      - Iga
-      - Ots
+      - Jan
+      - Feb
       - Mar
       - Apr
       - May

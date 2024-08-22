@@ -1,4 +1,4 @@
-class CreateGeozonesPollQuestions < ActiveRecord::Migration[4.2]
+class CreateGeozonesPollQuestions < ActiveRecord::Migration
   def change
     create_table :geozones_poll_questions do |t|
       t.references :geozone, index: true, foreign_key: true

@@ -1,57 +1,127 @@
-<main>
-  <div class="activity row margin-top">
-    <div class="small-12 column">
-
-      <% if @user != current_user %>
-        <% if @user.email_on_direct_message? %>
-          <%= link_to t("users.show.send_private_message"),
-                      new_user_direct_message_path(@user),
-                      class: "button hollow float-right" %>
-        <% else %>
-          <div class="callout primary float-right">
-            <%= t("users.show.no_private_messages") %>
-          </div>
-        <% end %>
-      <% end %>
-
-      <h2 class="inline-block">
-        <%= avatar_image(@user, seed: @user.id, size: 60) %>
-        <%= @user.name %>
-        <% if current_administrator? %>
-          <small><%= @user.email %></small>
-        <% end %>
-      </h2>
-
-      <% if @user.public_activity || @authorized_current_user %>
-        <ul class="menu simple margin-top">
-          <% @valid_filters.each do |filter| %>
-            <% if @activity_counts[filter] > 0 %>
-              <% if @current_filter == filter %>
-                <li class="is-active">
-                  <h2><%= t("users.show.filters.#{filter}", count: @activity_counts[filter]) %></h2>
-                </li>
-              <% else %>
-                <li>
-                  <%= link_to t("users.show.filters.#{filter}", count: @activity_counts[filter]),
-                              current_path_with_query_params(filter: filter, page: 1) %>
-                </li>
-              <% end %>
-            <% end %>
-          <% end %>
-        </ul>
-
-        <% if @activity_counts.values.inject(&:+) == 0 %>
-          <div class="callout primary">
-            <%= t("users.show.no_activity") %>
-          </div>
-        <% end %>
-
-        <%= render "activity_page" %>
-      <% else %>
-        <div class="callout warning margin">
-          <%= t("users.show.private_activity") %>
+<div class="container mt-5 pb-5 d-none">
+  <div class="row justify-content-center">
+     <div class="col-md-6 col-lg-6 col-xl-5">
+        <div class="text-center pb-4">
+           <% sector = new_sectors.select {|e| e[:short_name] == current_user&.colonium&.first.sector}.first %>
+           <p class="text-capitalize"><strong><%= current_user.born_names %></strong>, perteneces al sector <%= sector[:short_name] %> <%= sector[:large_name] %></p>
         </div>
-      <% end %>
-    </div>
+
+        <h1 class="mb-2">Mi votación</h1>
+        <p>
+           Vota por tus proyectos favoritos, <strong>cuentas con 2 votos: 1
+           sectorial y 1 comunitario</strong>. Hasta el momento has votado por:
+        </p>
+
+        <div class="d-flex justify-content-between mt-4">
+           <div class="box-gray proyecto-sectorial">
+              <h3>Proyecto <br>Sectorial</h3>
+              <span>Grande (12.5 mdp)</span>
+              <span class="check green"><i class="fa-solid fa-check"></i>!Has votado¡</span>
+              <a href="/presupuestos/11/ballot">Ver proyecto<br> votado</a>
+           </div>
+           <div class="box-gray proyecto-comunitario">
+              <h3>Proyecto <br>Comunitario</h3>
+              <span>Grande (1 mdp)</span>
+              <span class="check lila"><i class="fa-solid fa-check"></i>!Has votado¡</span>
+              <a href="/presupuestos/11/ballot">Ver proyecto<br> votado</a>
+           </div>
+        </div>
+        <div class="description p-4">
+           <p>
+              Puedes cambiar tus votos en cualquier momento hasta
+              el 30 de abril. Si necesitas un comprobante de tus votos,
+              solo haz captura de pantalla.
+           </p>
+        </div>
+        <div class="box-gray-icon d-flex d-flex align-items-center d-none">
+           <img src="../images/img-proyecto-votado.png">
+           <div class="content-description">
+              <h4>Con tu participación </h4>
+              <p>
+                 puedes hacer realidad<br>
+                 11 proyectos
+              </p>
+           </div>
+        </div>
+     </div>
   </div>
+</div>
+<hr>
+<div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7 mb-5">
+  <a class="back" href="/account"><span class="icon-angle-left"></span>Volver</a>
+</div>
+<main>
+ <div class="container mb-5">
+   <div class="activity row mt-4">
+     <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7">
+       <div class="breadcrumbs">
+           <ul>
+               <li>
+                   <a href="/">Inicio</a>
+               </li>
+               <li>
+                 <a href="/account">Perfil</a>
+               </li>
+               <li>
+                   <span>Mi actividad</span>
+               </li>
+           </ul>
+       </div>
+       <% if @user != current_user %>
+         <% if @user.email_on_direct_message? %>
+           <%= link_to t("users.show.send_private_message"),
+                       new_user_direct_message_path(@user),
+                       class: "button hollow float-right" %>
+         <% else %>
+           <div class="callout primary float-right">
+             <%= t("users.show.no_private_messages") %>
+           </div>
+         <% end %>
+       <% end %>
+
+       <h2 class="inline-block">
+         <%= avatar_image(@user, seed: @user.id, size: 60) %>
+         <%= @user.name %>
+         <% if current_administrator? %>
+           <small><%= @user.email %></small>
+         <% end %>
+       </h2>
+
+       <% if @user.public_activity || @authorized_current_user %>
+         <ul class="menu simple margin-top">
+           <% @valid_filters.each do |filter| %>
+             <% if @activity_counts[filter] > 0 %>
+               <% if @current_filter == filter %>
+                 <li class="is-active">
+                   <h2><%= t("users.show.filters.#{filter}", count: @activity_counts[filter]) %></h2>
+                 </li>
+               <% else %>
+                 <li>
+                   <%= link_to t("users.show.filters.#{filter}", count: @activity_counts[filter]),
+                               current_path_with_query_params(filter: filter, page: 1) %>
+                 </li>
+               <% end %>
+             <% end %>
+           <% end %>
+         </ul>
+
+         <% if @activity_counts.values.inject(&:+) == 0 %>
+           <div class="callout primary">
+             <%= t("users.show.no_activity") %>
+           </div>
+         <% end %>
+
+         <%= render "activity_page" %>
+       <% else %>
+         <div class="callout warning margin">
+           <%= t('users.show.private_activity') %>
+         </div>
+       <% end %>
+     </div>
+   </div>
+ </div>
+ <hr>
+ <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7 mb-5">
+   <a class="back" href="/account"><span class="icon-angle-left"></span>Volver</a>
+ </div>
 </main>

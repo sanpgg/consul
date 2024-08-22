@@ -30,10 +30,10 @@
   <% @comments.each do |comment| %>
     <tr id="<%= dom_id(comment) %>">
       <td>
-        <%= sanitize_and_auto_link comment.body %>
+        <%= text_with_links comment.body %>
       </td>
     </tr>
   <% end %>
 </table>
 
-<%= paginate [@debates, @comments].sort_by { |x| x.size }.last %>
+<%= paginate [@debates, @comments].sort_by {|x| x.size}.last %>

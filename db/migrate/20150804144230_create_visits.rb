@@ -1,4 +1,4 @@
-class CreateVisits < ActiveRecord::Migration[4.2]
+class CreateVisits < ActiveRecord::Migration
   def change
     create_table :visits, id: false do |t|
       t.uuid :id, default: nil, primary_key: true

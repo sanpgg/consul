@@ -1,0 +1,85 @@
+<style>
+    .unabled {
+        cursor: not-allowed;
+    }
+
+    .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    }
+</style>
+<div class="container mt-5 pb-5">
+    <div class="content-propuesta">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-xl-6">
+                <p class="text-center">
+                    <%= current_user.born_names %> perteneces al sector: <b>
+                            <%= current_user.colonium.first.sector %>
+                        </b>
+                </p>
+
+                <h1 class="text-center mb-3">Registra tu propuesta</h1>
+
+                <div class="w-74 mt-3 mb-4 m-auto">
+                    <span class="step float-start mt-2 me-3">1º</span>
+                    <p class="font-medium font-16">
+                        Selecciona si el tipo de proyecto que quieres proponer es sectorial ($12.5 MDP) o comunitario ($1 MDP):
+                    </p>
+                </div>
+                <div class="select-project d-flex justify-content-center">
+                    <% if current_budget.investments.where(author: current_user, size: "large").count == 0 %>
+                        <%= link_to new_budget_investment_path(current_budget, size: 'large') do %>
+                            <div class='project p-4 text-center'>
+                                <h4>Proyecto<br />Sectorial</h4>
+                                <span>Grande</span>
+                                <p class="quantity">$12.5</p>
+                                <p class="unit">mdp</p>
+                            </div>
+                        <% end %>
+                    <% else %>
+                        <div class='project project p-4 text-center unabled'>
+                            <h4>Proyecto<br />Sectorial</h4>
+                            <span>Grande</span>
+                            <p class="p-unabled">Ya tienes una propuesta registrada</p>
+                            <p class="quantity">$12.5 mdp</p>
+                        </div>
+                    <% end %>
+
+                    <% if current_budget.investments.where(author: current_user, size: "medium").count == 0 %>
+                        <%= link_to new_budget_investment_path(current_budget, size: 'medium') do %>
+                            <div class='project p-4 text-center'>
+                                <h4>Proyecto<br />Comunitario</h4>
+                                <span>Mediano</span>
+                                <p class="quantity">$1</p>
+                                <p class="unit">mdp</p>
+                            </div>
+                        <% end %>
+                    <% else %>
+                        <div class='project project p-4 text-center unabled'>
+                            <h4>Proyecto<br />Comunitario</h4>
+                            <span>Mediano</span>
+                            <p class="p-unabled">Ya tienes una propuesta registrada</p>
+                            <p class="quantity">$1 mdp</p>
+                        </div>
+                    <% end %>
+                </div>
+                <div class="w-74 mt-4 m-auto">
+                    <div class="text-center text-ins">
+                        <p class="text-gray">Haz clic en el tipo de proyecto que deseas registrar.</p>
+                        <p class="text-gray">Puedes proponer uno de cada tipo</p>
+                    </div>
+
+                    <h5 class="mt-3 mb-2">¿Qué es un proyecto sectorial y comunitario?</h5>
+                    <ul>
+                        <li class="mb-2"><strong>Sectoriales</strong>, el proyecto con potencial de impacto en todo el municipio que abarque cuando menos el 50% del presupuesto, y que gana uno por sector.</li>
+                        <li class="mb-2"><strong>Comunitario</strong>, un proyecto con menor escala que el proyecto sectorial en recursos, que favorece la colaboración entre colonias.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

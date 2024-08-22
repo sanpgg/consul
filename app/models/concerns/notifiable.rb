@@ -12,10 +12,6 @@ module Notifiable
     end
   end
 
-  def notifiable_body
-    body if attribute_names.include?("body")
-  end
-
   def notifiable_available?
     case self.class.name
     when "ProposalNotification"
@@ -29,8 +25,8 @@ module Notifiable
 
   def check_availability(resource)
     resource.present? &&
-      !(resource.respond_to?(:hidden?) && resource.hidden?) &&
-      !(resource.respond_to?(:retired?) && resource.retired?)
+      resource.try(:hidden_at).nil? &&
+      resource.try(:retired_at).nil?
   end
 
   def linkable_resource

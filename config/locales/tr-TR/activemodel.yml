@@ -2,7 +2,7 @@ tr:
   activemodel:
     models:
       verification:
-        residence: "İkamet"
+        residence: "Konut"
         sms: "Kısa mesaj"
     attributes:
       verification:

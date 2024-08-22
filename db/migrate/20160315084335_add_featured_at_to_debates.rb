@@ -1,4 +1,4 @@
-class AddFeaturedAtToDebates < ActiveRecord::Migration[4.2]
+class AddFeaturedAtToDebates < ActiveRecord::Migration
   def change
     add_column :debates, :featured_at, :datetime
   end

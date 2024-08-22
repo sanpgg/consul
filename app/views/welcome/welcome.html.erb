@@ -1,0 +1,112 @@
+<div class=" mb-5">
+  <div class=" mt-4">
+    <div class="">
+      <div class="breadcrumbs">
+          <ul>
+              <li>
+                  <a href="/">Inicio</a>
+              </li>
+              <li>
+                  <span>Perfil</span>
+              </li>
+          </ul>
+      </div>
+
+      <% unless current_user.level_three_verified? %>
+        
+        <% if current_user.level_two_verified? %>
+          <div class="content-card box-shadow p-4 brd-radius-14">
+          <% unless current_user.is_minor? %>
+            <h1>¡Un paso más!</h1>
+            <p class="card-text">Ahora sólo falta la foto de tu identificación oficial INE ó licencia de conducir para que puedas proponer o votar por un proyecto participativo.</p>
+            <div style="margin-top: 25px;">
+              <%= link_to "Subir identificación", complete_profile_path, class: 'btn-black py-2 px-4' %>
+            </div>
+          <% else %>
+            <h1>¡Identifícate!</h1>
+            <p class="card-text">Ahora sólo falta la foto de tu acta de nacimiento o CURP y la identificación oficial INE o licencia de conducir de tu tutor(ra) para que puedas proponer o votar por un proyecto participativo.</p>
+                
+            <div style="margin-top: 25px;">
+              <%= link_to "Subir identificación", complete_profile_path, class: 'btn-black py-2 px-4' %>
+            </div>
+          <% end %>
+          </div>
+        <% elsif current_user.unverified? %>
+          <div class="content-card box-shadow p-4 brd-radius-14">
+            <h1>¡Perfil incompleto!</h1>
+            <p class="card-text">Hay algunos datos necesarios que debes completar.</p>
+              
+            <div style="margin-top: 25px;">
+              <%= link_to "Completar mis datos", profile_path, class: 'btn-black py-2 px-4' %>
+            </div>
+          </div>
+        <% end %>
+        
+      <% end %>
+    </div>
+  </div>
+  <div class="content-perfil">
+    <div class="content-cards-perfil">
+      <div class="">
+        <div class="">
+          
+          <% if current_user.level_two_or_three_verified? %>
+            <h2 class="h2-style mt-4">Perfil</h2>
+            <div class="d-flex">
+              <div class="avatar">
+                <i class="fa-regular fa-face-smile fs-1"></i>
+                <%= avatar_image(@account, seed: @account.id, size: 100, class: "margin-bottom d-none", bg_color: "#071110", txt_color: "#071110") %>
+              </div>
+              <div class="data-user">
+                <% sector = new_sectors.select {|e| e[:short_name] == current_user.colonium.first.sector}.first %>
+                <p><%= current_user.born_names %>, perteneces al sector</p>
+                <p><strong><%= sector[:short_name] %> - <%= sector[:large_name] %></strong></p>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-info-perfil.png">
+                <h5><%= link_to "Información Personal", profile_path %></h5>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-ayuda.png">
+                <h5><a href="/#ayuda">Obtener ayuda</a></h5>
+              </div>
+            </div>
+            <div class="col-md-6" style="display:none;">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-guia.png">
+                <h5><a target="_blank" href="/docs/guia_pp22.pdf">Descarga la Guía 2023</a></h5>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-notificacion.png">
+                <h5><a href="/notifications">Notificaciones</a></h5>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-info-perfil.png">
+                <h5>
+                  <%= layout_menu_link_to t("layouts.header.my_activity_link"),
+                  user_path(current_user),
+                  controller_name == 'users',
+                  rel: "nofollow",
+                  title: t("shared.go_to_page") +
+                        t("layouts.header.my_activity_link") %>
+                </h5>
+              </div>
+            </div>
+          </div>
+          <a class="font-medium font-15 text-decoration-underline text-default" href="/users/registrations/delete_form">¿Necesitas desactivar tu cuenta?</a>
+        </div>
+      </div>
+    </div>
+  </div><!--.content-perfil-->
+  </div>

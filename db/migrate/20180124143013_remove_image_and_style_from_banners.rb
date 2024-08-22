@@ -1,6 +1,6 @@
-class RemoveImageAndStyleFromBanners < ActiveRecord::Migration[4.2]
+class RemoveImageAndStyleFromBanners < ActiveRecord::Migration
   def change
-    remove_column :banners, :image, :string
-    remove_column :banners, :style, :string
+    remove_column :banners, :image
+    remove_column :banners, :style
   end
 end

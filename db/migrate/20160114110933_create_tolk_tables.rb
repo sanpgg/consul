@@ -1,15 +1,17 @@
-class CreateTolkTables < ActiveRecord::Migration[4.2]
+class CreateTolkTables < ActiveRecord::Migration
   def self.up
     create_table :tolk_locales do |t|
       t.string   :name
-      t.timestamps
+      t.datetime :created_at
+      t.datetime :updated_at
     end
 
     add_index :tolk_locales, :name, unique: true
 
     create_table :tolk_phrases do |t|
       t.text     :key
-      t.timestamps
+      t.datetime :created_at
+      t.datetime :updated_at
     end
 
     create_table :tolk_translations do |t|
@@ -18,7 +20,8 @@ class CreateTolkTables < ActiveRecord::Migration[4.2]
       t.text     :text
       t.text     :previous_text
       t.boolean  :primary_updated, default: false
-      t.timestamps
+      t.datetime :created_at
+      t.datetime :updated_at
     end
 
     add_index :tolk_translations, [:phrase_id, :locale_id], unique: true

@@ -1,15 +1,59 @@
+<style>
+
+  .warning {
+    color: red;
+  }
+
+  .iil {
+    display: inline;
+    margin-right: 20px;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: baseline;
+    column-gap: 30px;
+  }
+
+  .grid-item {
+    text-align: start;
+    width: 100%;
+  }
+
+</style>
+
 <h2><%= t("admin.users.index.title") %></h2>
 
-<div class="small-12 medium-6">
-  <%= form_tag admin_users_path, method: :get, remote: true  do %>
-    <div class="input-group">
-      <%= text_field_tag :search, "", placeholder: t("admin.users.search.placeholder") %>
-      <div class="input-group-button">
-        <%= submit_tag t("admin.users.search.search"), class: "button" %>
-      </div>
+  <div class="container">
+
+    <div class="grid-item">
+      <%= form_tag admin_users_path, method: :get, remote: true  do %>
+        <div class="input-group">
+    
+          <%= text_field_tag :search, '', placeholder: t('admin.users.search.placeholder') %>
+    
+          <div class="input-group-button">
+            <%= submit_tag t('admin.users.search.search'), class: 'button' %>
+          </div>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-</div>
+  
+    <div class="grid-item">
+    
+      <%= link_to 'Generar Reporte', download_csv_admin_users_path(new_report: true), class: "iil" %>
+  
+      <%= link_to 'Generar Reporte v2', download_csv_v2_admin_users_path(new_report: true), class: "iil" %>
+      
+      <%= link_to 'Importar usuarios', import_admin_users_path, class: "iil" %>
+
+      <%= link_to "Eliminar INEs", remove_ine_data_admin_users_path, method: :post %>
+    
+    </div>
+  
+  </div>
+
 
 <div id="users">
   <%= render "users" %>

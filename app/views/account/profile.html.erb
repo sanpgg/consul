@@ -1,0 +1,185 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+<div class="container mb-5">
+  <div class="row mt-4">  
+    <div class="margin-bottom">
+      <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-8 offset-xl-2 col-xl-8">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    <a href="/">Inicio</a>
+                </li>
+                <li>
+                  <a href="/account">Perfil</a>
+                </li>
+                <li>
+                    <span>Actualizar información</span>
+                </li>
+            </ul>
+        </div>
+        <h2 class="inline-block margin-bottom h2-style mt-4">
+          Información personal
+        </h2>
+        <div class="row">
+          <div class="container-data-personal order-2 order-md-1 col-sm-12 col-md-12 col-lg-8">
+            <%= form_for(current_user, url: update_user_profile_path, method: :put) do |f| %>
+              <%= render "shared/errors", resource: current_user %>
+
+              <div class="mb-3">
+                <p><b>Correo:</b> <%= current_user.email %></p>
+              </div>                            
+
+              <div class="mb-3">
+                <%= f.text_field :born_names, autofocus: true, maxlength: User.username_max_length, placeholder: "Introduce tu nombre", label: true, required: true %>
+              </div>                            
+              <div class="mb-3">
+                <%= f.text_field :paternal_last_name, autofocus: true, maxlength: User.username_max_length, placeholder: "Introduce tu apellido paterno", label: true, required: true %>
+              </div>
+              <div class="mb-3">                           
+                <%= f.text_field :maternal_last_name, autofocus: true, maxlength: User.username_max_length, placeholder: "Introduce tu apellido materno", label: true, required: true %>
+              </div>
+              <div class="mb-3"> 
+                <%= f.select :gender, User::GENDER.collect {|e| [ e[:label], e[:value] ] }, { label: true, required: true } %>
+              </div>
+              <div class="mb-3"> 
+                <%= f.select :birthplace, AddressUser::STATES.collect {|e| [ e[:name], e[:code] ] }, { label: true, required: true } %>
+              </div>
+
+              <% if current_user.colonium_ids.blank? %>
+                  <div class="mb-3"> 
+                      <%= f.select :colonium_ids, get_coloniums, include_blank: "Seleccionar colonia", :label => "Colonia o residencia actual", required: true %>
+                  </div>
+              <% end %>
+              
+              <% if current_user.date_of_birth.blank? %>
+                  <div class="mb-3"> 
+                      <%= f.text_field :date_of_birth, data: { mask: '9999-09-09', placeholder: 'yyyy-mm-dd' }, placeholder: 'Día / Mes / Año ', required: true %>
+                  </div>
+              <% end %>
+
+              <div class="mb-3"> 
+                <%= f.text_field :tutor, autofocus: true, placeholder: "Introduce el nombre y apellido de tu tutor", label: true %>
+              </div>
+              <div class="mb-3">               
+                <%= f.text_field :phone_number, label: true, placeholder: 'Ingresa tu número telefónico', required: true %>
+              </div>
+
+              <% if current_user.email.present? %>
+                <h2 class="inline-block margin-bottom h2-style mt-4">
+                  <%= t("account.show.notifications")%>
+                </h2>  
+
+                <div>
+                  <%= f.label :email_on_comment do %>
+                    <%= f.check_box :email_on_comment, title: t('account.show.email_on_comment_label'), label: false %>
+                    <span class="checkbox">
+                      <%= t("account.show.email_on_comment_label") %>
+                    </span>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= f.label :email_on_comment_reply do %>
+                    <%= f.check_box :email_on_comment_reply, title: t('account.show.email_on_comment_reply_label'), label: false %>
+                    <span class="checkbox">
+                      <%= t("account.show.email_on_comment_reply_label") %>
+                    </span>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= f.label :email_newsletter_subscribed do %>
+                    <%= f.check_box :newsletter, title: t('account.show.subscription_to_website_newsletter_label'), label: false %>
+                    <span class="checkbox">
+                      <%= t("account.show.subscription_to_website_newsletter_label") %>
+                    </span>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= f.label :email_digest do %>
+                    <%= f.check_box :email_digest, title: t('account.show.email_digest_label'), label: false %>
+                    <span class="checkbox">
+                      <%= t("account.show.email_digest_label") %>
+                    </span>
+                  <% end %>
+                </div>
+
+                <div>
+                  <%= f.label :email_on_direct_message do %>
+                    <%= f.check_box :email_on_direct_message, title: t('account.show.email_on_direct_message_label'), label: false %>
+                    <span class="checkbox">
+                      <%= t("account.show.email_on_direct_message_label") %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>  
+              <%= f.submit "Actualizar", class: "signin-b button hollow float-right-medium" %>
+            <% end %>
+          </div>
+          <div class="order-1 order-md-2 col-sm-12 col-md-12 col-lg-4">
+            <div class="container-info-personal mb-4">
+              <p class="info-title-personal"><b>¿Por qué mi información no aparece aquí?</b></p>
+              <p class="desc-title-personal">Para proteger tu identidad, ocultamos algunos datos de la cuenta.</p>
+              <hr class="hr-info-personal">
+              <p class="info-title-personal"><b>¿Qué datos se pueden editar?</b></p>
+              <p class="desc-title-personal">No se pueden modificar los datos que Decide San Pedro utiliza para verificar tu identidad. Aunque puedes modificar tus datos personales y de contacto, también puedes contactarte con nosotros para pedir una actualización o cambio en tus datos y/o documentos de identificación personal.</p>
+              <p class="info-title-personal">Si tienes alguna duda, llámanos al 81 1212 1212 o escríbenos a decide@sanpedro.gob.mx </p>
+            </div>
+          </div>
+        </div>            
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+  <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7 mb-5">
+    <a class="back" href="/account"><span class="icon-angle-left"></span>Volver</a>
+  </div>
+<script>
+    $(document).ready(function() {
+
+      $('input[data-mask]').mask('09/09/9999');
+
+      var tutorField = $('#user_tutor');
+      var tutorLabel = $('label[for="user_tutor"]');
+      tutorField.hide();
+      tutorLabel.hide();
+
+      function isValidDate(dateObject) {
+        return new Date(dateObject).toString() !== 'Invalid Date';
+      }
+
+      $('#user_date_of_birth').change(function() {
+        var dob = $(this).val().split('/');
+
+        var dobDate = new Date(dob[2], dob[1] - 1, dob[0]);
+        var today = new Date();
+
+        var age = today.getFullYear() - dobDate.getFullYear();
+
+        if(!isValidDate(dobDate) || $(this).val().length != 10)
+        {
+          alert('La fecha no es válida.');
+          return;
+        }
+
+        var m = today.getMonth() - dobDate.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+          age--;
+        }
+        if (age < 18) {
+          tutorField.show();
+          tutorField.attr('required', 'required');
+          tutorLabel.show();
+        } else {
+          tutorField.hide();
+          tutorField.removeAttr('required');
+          tutorLabel.hide();
+        }
+      });
+
+    });
+  </script>

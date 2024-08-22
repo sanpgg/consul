@@ -7,7 +7,6 @@ namespace :legislation do
       get :result_publication
       get :proposals
       get :milestones
-      get :summary
     end
 
     resources :questions, only: [:show] do
@@ -36,17 +35,4 @@ namespace :legislation do
       end
     end
   end
-end
-
-resolve "Legislation::Proposal" do |proposal, options|
-  [proposal.process, :proposal, options.merge(id: proposal)]
-end
-
-resolve "Legislation::Question" do |question, options|
-  [question.process, :question, options.merge(id: question)]
-end
-
-resolve "Legislation::Annotation" do |annotation, options|
-  [annotation.draft_version.process, :draft_version, :annotation,
-   options.merge(draft_version_id: annotation.draft_version, id: annotation)]
 end

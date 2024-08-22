@@ -1,7 +1,7 @@
 fa:
   admin:
     header:
-      title: مدیران
+      title: مدیر
     actions:
       actions: اقدامات
       confirm: آیا مطمئن هستید؟
@@ -20,20 +20,25 @@ fa:
         edit: ویرایش  أگهی
         delete: حذف  أگهی
         filters:
-          all: همه
+          all: تمام
           with_active: فعال
           with_inactive: غیر فعال
         preview: پیش نمایش
       banner:
-        sections:
-          homepage: صفحه اصلی
-          debates: مباحثه
-          proposals: طرح های پیشنهادی
-          budgets: بودجه مشارکتی
+        title: عنوان
+        description: توضیحات
+        target_url: لینک
+        post_started_at: پست شروع شد در
+        post_ended_at: پست پایان رسید در
       edit:
         editing: ویرایش  أگهی
         form:
           submit_button: ذخیره تغییرات
+      errors:
+        form:
+          error:
+            one: "خطا باعث شد که این بنر ذخیره نشود."
+            other: "خطاها باعث شدند که این بنر ذخیره نشود."
       new:
         creating: ایجاد أگهی
     activity:
@@ -47,7 +52,7 @@ fa:
         content: محتوا
         filter: نمایش
         filters:
-          all: همه
+          all: تمام
           on_comments: توضیحات
           on_debates: مباحثه
           on_proposals: طرح های پیشنهادی
@@ -69,7 +74,6 @@ fa:
         table_edit_budget: ویرایش
         edit_groups: ویرایش سرفصلهای گروه
         edit_budget: ویرایش بودجه
-        no_budgets: "هیچ بودجه ای وجود ندارد."
       create:
         notice: بودجه مشارکتی جدید با موفقیت ایجاد شده!
       update:
@@ -89,23 +93,41 @@ fa:
         unable_notice: شما نمی توانید یک بودجه را اختصاص داده شده را از بین ببرید.
       new:
         title: بودجه مشارکت جدید
+      show:
+        groups:
+          one: 1 گروه بندی بودجه
+          other: " گروه بندی بودجه%{count}"
+      form:
+        group: نام گروه
+        no_groups: هیچ گروهی ایجاد نشده است. هر کاربر تنها در یک گروه  میتواند رای دهد.
+        add_group: افزودن گروه جدید
+        create_group: ایجاد گروه
+        edit_group: ویرایش گروه
+        submit: ذخیره گروه
+        heading: عنوان سرفصل
+        add_heading: اضافه کردن سرفصل
+        amount: مقدار
+        population: "جمعیت (اختیاری)"
+        population_help_text: "این داده ها  منحصرا برای محاسبه آمار شرکت استفاده شده است"
+        save_heading: ذخیره سرفصل
+        no_heading: این گروه هیچ عنوان مشخصی ندارد
+        table_heading: سرفصل
+        table_amount: مقدار
+        table_population: جمعیت
+        population_info: "فیلد جمع آوری بودجه برای اهداف آماری در انتهای بودجه برای نشان دادن  هر بخش که نشان دهنده منطقه با جمعیتی است که رای داده است. فیلد اختیاری است، بنابراین اگر آن را خالی بگذارید اعمال نخواهد شد."
       winners:
         calculate: محاسبه سرمایه گذاری های برنده
         calculated: برندگان در حال محاسبه می باشند، ممکن است یک دقیقه طول بکشد.
         recalculate: "قانون گذاری\n"
-    budget_groups:
-      name: "نام"
-      form:
-        edit: "ویرایش گروه"
-        submit: "ذخیره گروه"
-    budget_headings:
-      form:
-        population_info: "فیلد جمع آوری بودجه برای اهداف آماری در انتهای بودجه برای نشان دادن  هر بخش که نشان دهنده منطقه با جمعیتی است که رای داده است. فیلد اختیاری است، بنابراین اگر آن را خالی بگذارید اعمال نخواهد شد."
-        submit: "ذخیره سرفصل"
     budget_phases:
       edit:
+        start_date: "تاریخ شروع\n"
+        end_date: تاریخ پایان
+        summary: خلاصه
         summary_help_text: این متن به کاربر در مورد فاز اطلاع می دهد. برای نشان دادن آن حتی اگر فاز فعال نیست، کادر انتخاب را در زیر انتخاب کنید
+        description: توضیحات
         description_help_text: هنگامی که فاز فعال است، این متن در هدر ظاهر می شود
+        enabled: فاز فعال
         enabled_help_text: این مرحله در زمانبندی فازهای بودجه عمومی و همچنین برای هر هدف دیگر فعال خواهد بود
         save_changes: ذخیره تغییرات
     budget_investments:
@@ -116,8 +138,13 @@ fa:
         tags_filter_all: همه برچسب ها
         advanced_filters: فیلترهای پیشرفته
         placeholder: جستجو در پروژه ها
+        sort_by:
+          placeholder: مرتب سازی بر اساس
+          id: شناسه
+          title: عنوان
+          supports: پشتیبانی ها
         filters:
-          all: همه
+          all: تمام
           without_admin: بدون تعیین مدیر
           without_valuator: بدون تعیین ارزیاب
           under_valuation: تحت ارزیابی
@@ -127,6 +154,8 @@ fa:
           undecided: بلاتکلیف
           unfeasible: غیر قابل پیش بینی
           winners: برندگان
+          one_filter_html: "فیلترهای فعلی موجود:<b><em>%{filter}</em></b>"
+          two_filters_html: "فیلترهای فعلی موجود:<b><em>%{filter}%{advanced_filters}</em></b>"
         buttons:
           filter: فیلتر
         download_current_selection: "انتخاب کنونی را دانلود کنید"
@@ -135,27 +164,14 @@ fa:
         assigned_admin: سرپرست تعیین شده
         no_admin_assigned: بدون  تعیین مدیر
         no_valuators_assigned: بدون  تعیین ارزیاب
+        no_valuation_groups: بدون  تعیین گروه ارزیاب
         feasibility:
-          feasible: "امکان پذیر"
+          feasible: "امکان پذیر %{price}\n"
           unfeasible: "غیر قابل پیش بینی"
           undecided: "بلاتکلیف"
         selected: "انتخاب شده"
         select: "انتخاب"
-        list:
-          id: شناسه
-          title: عنوان
-          supports: پشتیبانی ها
-          admin: مدیران
-          valuator: ارزیابی
-          valuation_group: گروه ارزيابي
-          geozone: حوزه عملیات
-          feasibility: "امکان پذیری\n"
-          valuation_finished: Val. Fin.
-          selected: انتخاب شده
-          visible_to_valuators: نشان دادن به ارزیاب ها
-          incompatible: ناسازگار
         cannot_calculate_winners: بودجه باید در مرحله "رای گیری پروژه ها"، "بررسی رای گیری" یا " پایان بودجه" برای محاسبه پروژه های برنده باقی بماند
-        see_results: "مشاهده نتایج"
       show:
         assigned_admin: سرپرست تعیین شده
         assigned_valuators: اختصاص ارزیاب ها
@@ -170,6 +186,7 @@ fa:
         dossier: پرونده
         edit_dossier: ویرایش پرونده
         tags: برچسب ها
+        user_tags: برچسب های کاربر
         undefined: تعریف نشده
         compatibility:
           title: سازگاری
@@ -177,21 +194,33 @@ fa:
           "false": سازگار
         selection:
           title: انتخاب
+          "true": انتخاب شده
+          "false": "انتخاب نشده\n"
         winner:
           title: برندگان
           "true": "بله"
           "false": "نه"
+        image: "تصویر"
+        see_image: "دیدن تصویر"
+        no_image: "بدون تصویر"
+        documents: "اسناد"
+        see_documents: "دیدن اسناد (%{count})"
+        no_documents: "بدون اسناد"
         valuator_groups: "گروهای ارزيابي"
       edit:
         classification: طبقه بندی
         compatibility: سازگاری
+        mark_as_incompatible: علامت گذاری به عنوان ناسازگار
         selection: انتخاب
+        mark_as_selected: علامت گذاری به عنوان انتخاب شده
         assigned_valuators: ارزیاب ها
         select_heading: انتخاب عنوان
         submit_button: به روز رسانی
         user_tags: ' برچسب اختصاص داده شده به کاربر'
+        tags: برچسب ها
         tags_placeholder: "برچسبهایی را که میخواهید با کاما (،) جدا کنید"
         undefined: تعریف نشده
+        user_groups: "گروه ها"
       search_unfeasible: جستجو غیر قابل انجام است
     milestones:
       index:
@@ -199,7 +228,6 @@ fa:
         table_title: "عنوان"
         table_description: "توضیحات"
         table_publication_date: "تاریخ انتشار"
-        table_status: وضعیت ها
         table_actions: "اقدامات"
         delete: "حذف نقطه عطف"
         no_milestones: "نقاط قوت را مشخص نکرده اید"
@@ -210,6 +238,8 @@ fa:
         new_milestone: ایجاد نقطه عطف جدید
       new:
         creating: ایجاد نقطه عطف جدید
+        date: تاریخ
+        description: شرح
       edit:
         title: ویرایش نقطه عطف
       create:
@@ -218,29 +248,31 @@ fa:
         notice: نقطه عطف با موفقیت به روز رسانی شده
       delete:
         notice: نقطه عطف با موفقیت حذف شد.
-    statuses:
-      index:
-        table_name: نام
-        table_description: توضیحات
-        table_actions: اقدامات
-        delete: حذف
-        edit: ویرایش
-    progress_bars:
-      index:
-        table_id: "شناسه"
-        table_kind: "نوع"
-        table_title: "عنوان"
     comments:
       index:
+        filter: فیلتر
+        filters:
+          all: همه
+          with_confirmed_hide: تایید
+          without_confirmed_hide: انتظار
+        hidden_debate: بحث های پنهان
+        hidden_proposal: پیشنهاد های پنهان
         title: نظرات مخفی
+        no_hidden_comments: نظر پنهان وجود ندارد.
     dashboard:
       index:
         back: بازگشت به %{org}
-        title: مدیر
+        title: مدیران
         description: خوش آمدید به پنل مدیریت %{org}.
     debates:
       index:
+        filter: فیلتر
+        filters:
+          all: همه
+          with_confirmed_hide: تایید
+          without_confirmed_hide: انتظار
         title: بحث های پنهان
+        no_hidden_debates: بحث های پنهان وجود ندارد.
     hidden_users:
       index:
         filter: فیلتر
@@ -252,17 +284,10 @@ fa:
         user: کاربر
         no_hidden_users: هیچ کاربر پنهانی وجود ندارد
       show:
-        email: "پست الکترونیکی:"
-        hidden_at: "پنهان در:"
-        registered_at: "ثبت در:"
+        email: 'پست الکترونیکی'
+        hidden_at: 'پنهان در:'
+        registered_at: 'ثبت در:'
         title: فعالیت های کاربر (%{user})
-    hidden_budget_investments:
-      index:
-        filter: فیلتر
-        filters:
-          all: همه
-          with_confirmed_hide: تایید
-          without_confirmed_hide: انتظار
     legislation:
       processes:
         create:
@@ -276,11 +301,16 @@ fa:
         edit:
           back: برگشت
           submit_button: ذخیره تغییرات
+        errors:
+          form:
+            error: خطا
         form:
           enabled: فعال
           process: "روند\n"
           debate_phase: فاز بحث
           proposals_phase: ' فاز طرحها'
+          start: شروع
+          end: پایان
           use_markdown: برای قالب کردن متن از Markdown استفاده کنید
           title_placeholder: عنوان فرایند
           summary_placeholder: خلاصه توضیحات
@@ -291,33 +321,29 @@ fa:
           delete: حذف
           title: فرآیندهای قانونی
           filters:
+            open: بازکردن
+            next: بعدی
+            past: گذشته
             all: همه
         new:
           back: برگشت
           title: ایجاد یک پروسه جدید قانون مشارکتی 
           submit_button: فرآیند را ایجاد کنید
-        proposals:
-          select_order: مرتب سازی بر اساس
-          orders:
-            title: عنوان
-            supports: پشتیبانی ها
         process:
-          title: "روند\n"
+          title: "فرآیند\n"
           comments: توضیحات
           status: وضعیت ها
+          creation_date: تاریخ ایجاد
           status_open: بازکردن
           status_closed: بسته
           status_planned: برنامه ریزی شده
         subnav:
           info: اطلاعات
-          homepage: صفحه اصلی
           questions: بحث
           proposals: طرح های پیشنهادی
       proposals:
         index:
-          title: عنوان
           back: برگشت
-          supports: پشتیبانی ها
         form:
           custom_categories: "دسته بندی ها\n"
           custom_categories_description: دسته بندی هایی که کاربران می توانند ایجاد پیشنهاد را انتخاب کنند.
@@ -334,7 +360,11 @@ fa:
           back: برگشت
           submit_button: ذخیره تغییرات
           warning: شما متن را ویرایش کرده اید، فراموش نکنید که برای ذخیره دائمی تغییرات، روی ذخیره کلیک کنید.
+        errors:
+          form:
+            error: خطا
         form:
+          title_html: 'در حال ویرایش<span class="strong">%{draft_version_title}</span>  از روند<span class="strong">%{process_title}</span>'
           launch_text_editor: راه اندازی ویرایشگر متن
           close_text_editor: ویرایشگر متن را ببند
           use_markdown: برای قالب کردن متن از Markdown استفاده کنید
@@ -355,6 +385,9 @@ fa:
           back: برگشت
           title: ایجاد نسخه  جدید
           submit_button: ایجاد نسخه
+        statuses:
+          draft: ' پیش نویس'
+          published: منتشر شده
         table:
           title: عنوان
           created_at: "ایجاد شده در\n"
@@ -374,6 +407,9 @@ fa:
           back: برگشت
           title: "ویرایش%{question_title}"
           submit_button: ذخیره تغییرات
+        errors:
+          form:
+            error: خطا
         form:
           add_option: اضافه کردن گزینه
           value_placeholder: یک پاسخ بسته را اضافه کنید
@@ -403,12 +439,11 @@ fa:
         add: اضافه کردن
         delete: حذف
       search:
-        title: "مدیران: جستجوی کاربر"
+        title: 'مدیران: جستجوی کاربر'
     menu:
       activity: فعالیت مدیر
       admin: منوی ادمین
       banner: مدیریت آگهی ها
-      proposals: طرح های پیشنهادی
       proposals_topics: موضوعات پیشنهادی
       budgets: بودجه مشارکتی
       geozones: مدیریت geozones
@@ -420,7 +455,6 @@ fa:
       managers: "مدیرها\n"
       moderators: سردبیرها
       newsletters: خبرنامه ها
-      admin_notifications: اطلاعیه ها
       emails_download: دانلود ایمیل
       valuators: ارزیاب ها
       poll_officers: افسران نظرسنجی
@@ -430,24 +464,15 @@ fa:
       poll_shifts: مدیریت تغییرات
       officials: مقامات
       organizations: سازمان ها
+      spending_proposals: هزینه های طرح ها
       stats: آمار
       signature_sheets: ورق امضا
       site_customization:
         homepage: صفحه اصلی
-        pages: صفحه سفارشی
-        images: صفحات سفارشی
         content_blocks: محتوای بلوکهای سفارشی 
-        information_texts_menu:
-          debates: "مباحثه"
-          community: "جامعه"
-          proposals: "طرح های پیشنهادی"
-          polls: "نظر سنجی ها"
-          mailers: "پست الکترونیکی"
-          management: "مدیریت"
-          welcome: "خوش آمدید "
-        buttons:
-          save: "ذخیره کردن"
       title_moderated_content: کنترل محتویات
+      title_budgets: بودجه ها
+      title_polls: نظر سنجی ها
       title_profiles: پروفایل
       legislation: قانون همکاری
       users: کاربران
@@ -473,7 +498,7 @@ fa:
         add: اضافه کردن
         delete: حذف
       search:
-        title: "مدیران: جستجوی کاربر"
+        title: 'مدیران: جستجوی کاربر'
     segment_recipient:
       all_users: "تمام کاربران\n"
       administrators: مدیران
@@ -515,24 +540,6 @@ fa:
         body: محتوای ایمیل
         body_help_text: چگونگی دیدن ایمیل توسط کاربران
         send_alert: آیا مطمئن هستید که میخواهید این خبرنامه را به%{n} کاربران ارسال کنید؟
-    admin_notifications:
-      index:
-        section_title: اطلاعیه ها
-        title: عنوان
-        segment_recipient: گیرندگان
-        sent: "ارسال شد\n"
-        actions: اقدامات
-        draft: ' پیش نویس'
-        edit: ویرایش
-        delete: حذف
-        preview: پیش نمایش
-      show:
-        send: ارسال اعلان
-        sent_at: ارسال شده توسط
-        title: عنوان
-        body: متن
-        link: لینک
-        segment_recipient: گیرندگان
     emails_download:
       index:
         title: دانلود ایمیل
@@ -554,12 +561,22 @@ fa:
         add: افزودن به ارزیابان
         delete: حذف
       search:
-        title: "ارزیابی کنندگان: جستجوی کاربر"
+        title: 'ارزیابی کنندگان: جستجوی کاربر'
+      summary:
+        title: خلاصه ارزشیابی برای پروژه های سرمایه گذاری
+        valuator_name: ارزیاب
+        finished_and_feasible_count: تمام شده و امکان پذیر است
+        finished_and_unfeasible_count: تمام شده  و غیر قابل پیش بینی 
+        finished_count: به پایان رسید
+        in_evaluation_count: در ارزیابی
+        total_count: "جمع\n"
+        cost: "هزینه\n"
       form:
         edit_title: "ارزیابی کنندگان: ویرایش ارزیاب"
+        update: "به روزرسانی ارزیابی "
         updated: " ارزیابی  با موفقیت به روز رسانی شده"
       show:
-        description: "توضیحات"
+        description: "شرح"
         email: "پست الکترونیکی"
         group: "گروه"
         no_description: "بدون شرح"
@@ -575,6 +592,7 @@ fa:
         title: "گروه ارزیاب ها:%{group}"
         no_valuators: "هیچ ارزیاب اختصاصی برای این نظرسنجی وجود دارد."
       form:
+        name: "نام گروه"
         new: "ایجاد گروه  ارزيابها"
         edit: "ذخیره  گروه  ارزيابها"
     poll_officers:
@@ -607,6 +625,7 @@ fa:
         shift: "تخصیص"
         shifts: "تغییرات در این غرفه"
         date: "تاریخ"
+        task: "وظیفه\n"
         edit_shifts: تغییر شیفت ها
         new_shift: "تغییر جدید"
         no_shifts: "این غرفه هیچ تغییری ندارد"
@@ -640,6 +659,11 @@ fa:
     poll_booth_assignments:
       alert:
         shifts: "تغییرات مربوط به این غرفه وجود دارد. اگر شما انتصاب غرفه را حذف کنید، تغییرات نیز حذف خواهد شد. ادامه می دهید؟"
+      flash:
+        destroy: "غرفه  تعیین نشده است"
+        create: "غرفه اختصاص داده شده"
+        error_destroy: "هنگام برچیدن انتصاب غرفه خطایی رخ داد"
+        error_create: "خطایی در هنگام اختصاص دادن غرفه به نظرسنجی رخ داد"
       show:
         location: "محل"
         officers: "افسرها"
@@ -659,15 +683,16 @@ fa:
         table_location: "محل"
     polls:
       index:
-        title: "فهرست غرفه"
         create: "ایجاد نظرسنجی"
         name: "نام"
         dates: "تاریخ"
-        start_date: "تاریخ شروع\n"
-        closing_date: "تاريخ خاتمه"
         geozone_restricted: "محدود به مناطق"
       new:
         title: "نظر سنجی جدید"
+        show_results_and_stats: "نتایج و آمار نشان می دهد"
+        show_results: "مشاهده نتایج"
+        show_stats: "نمایش آمار"
+        results_and_stats_reminder: "علامتگذاری  گزینه های نتایج و / یا آمار این نظرسنجی در دسترس عموم قرار خواهد گرفت و هر کاربر آنها را مشاهده میکند."
         submit_button: "ایجاد نظرسنجی"
       edit:
         title: "ویرایش نظرسنجی "
@@ -696,9 +721,11 @@ fa:
         create_question: "ایجاد سوال"
         table_proposal: "طرح های پیشنهادی"
         table_question: "سوال"
-        table_poll: "نظرسنجی"
       edit:
         title: "ویرایش پرسش"
+      new:
+        title: "ایجاد سوال"
+        poll_label: "نظرسنجی"
       answers:
         images:
           add_image: "اضافه کردن تصویر"
@@ -755,7 +782,7 @@ fa:
         title: "نتایج"
         no_results: "هیچ نتیجه ای وجود ندارد"
       result:
-        table_whites: "صندوق کاملا خالی"
+        table_whites: "رأی گیری کاملا خالی است"
         table_nulls: "برگه های نامعتبر"
         table_total: "کل آراء"
         table_answer: پاسخ
@@ -773,6 +800,8 @@ fa:
         no_location: "بدون مکان"
       new:
         title: "غرفه های جدید"
+        name: "نام"
+        location: "محل"
         submit_button: "ایجاد غرفه"
       edit:
         title: "ویرایش غرفه"
@@ -785,9 +814,9 @@ fa:
     officials:
       edit:
         destroy: حذف وضعیت 'رسمی'
-        title: "مقام: ویرایش کاربر"
+        title: 'مقام: ویرایش کاربر'
       flash:
-        official_destroyed: "جزئیات ذخیره شده: کاربر دیگر رسمی نیست"
+        official_destroyed: 'جزئیات ذخیره شده: کاربر دیگر رسمی نیست'
         official_updated: جزئیات رسمی ذخیره شده
       index:
         title: مقامات
@@ -804,7 +833,7 @@ fa:
       search:
         edit_official: ویرایش رسمی
         make_official: رسمی
-        title: "موقعیت های رسمی: جستجوی کاربر"
+        title: 'موقعیت های رسمی: جستجوی کاربر'
         no_results: موقعیت های رسمی یافت نشد
     organizations:
       index:
@@ -814,6 +843,9 @@ fa:
           pending: انتظار
           rejected: رد شده
           verified: تایید
+        hidden_count_html:
+          one: همچنین <strong> یک سازمان </ strong>بدون کاربر یا با یک کاربر پنهان وجود دارد.
+          other: همچنین <strong>%{count} یک سازمان </ strong>بدون کاربر یا با یک کاربر پنهان وجود دارد.
         name: نام
         email: پست الکترونیکی
         phone_number: تلفن
@@ -831,12 +863,6 @@ fa:
       search:
         title: جستجو سازمان ها
         no_results: هیچ سازمان یافت نشد
-    proposals:
-      index:
-        title: طرح های پیشنهادی
-        id: شناسه
-        author: نویسنده
-        milestones: نقطه عطف
     hidden_proposals:
       index:
         filter: فیلتر
@@ -850,6 +876,10 @@ fa:
       flash:
         updated: ارزش به روز شد
       index:
+        banners: سبک بنر
+        banner_imgs: تصاویر بنر
+        no_banners_images: ' بنربدون تصویر'
+        no_banners_styles: هیچ سبک بنری نیست
         title: تنظیمات پیکربندی
         update_setting: به روز رسانی
         feature_flags: ویژگی ها
@@ -865,13 +895,7 @@ fa:
             update: پیکربندی نقشه با موفقیت به روز شد
           form:
             submit: به روز رسانی
-      setting_actions: اقدامات
-      setting_status: وضعیت ها
-      setting_value: "ارزش\n"
-      no_description: "بدون توضیح\n"
     shared:
-      true_value: "بله"
-      false_value: "نه"
       booths_search:
         button: جستجو
         placeholder: جستجوی غرفه با نام
@@ -884,6 +908,9 @@ fa:
       proposal_search:
         button: جستجو
         placeholder: پیشنهادات را با عنوان، کد، توضیحات یا سوال جستجو کنید
+      spending_proposal_search:
+        button: جستجو
+        placeholder: جستجو پیشنهادات هزینه با عنوان یا توضیحات
       user_search:
         button: جستجو
         placeholder: جستجوی کاربر توسط ایمیل
@@ -894,11 +921,62 @@ fa:
       description: توضیحات
       image: تصویر
       show_image: نمایش تصویر
-      proposal: طرح های پیشنهادی
-      author: نویسنده
-      content: محتوا
-      created_at: "ایجاد شده در\n"
-      delete: حذف
+    spending_proposals:
+      index:
+        geozone_filter_all: تمام مناطق
+        administrator_filter_all: همه مدیران
+        valuator_filter_all: همه ارزیابان
+        tags_filter_all: همه برچسب ها
+        filters:
+          valuation_open: بازکردن
+          without_admin: بدون تعیین مدیر
+          managed: مدیریت شده
+          valuating: تحت ارزیابی
+          valuation_finished: ' اتمام ارزیابی '
+          all: همه
+        title: پروژه های سرمایه گذاری برای بودجه مشارکتی
+        assigned_admin: سرپرست تعیین شده
+        no_admin_assigned: بدون  تعیین مدیر
+        no_valuators_assigned: بدون  تعیین ارزیاب
+        summary_link: "خلاصه پروژه سرمایه گذاری"
+        valuator_summary_link: "خلاصه ارزیابی"
+        feasibility:
+          feasible: "امکان پذیر %{price}\n"
+          not_feasible: "امکان پذیر نیست"
+          undefined: "تعریف نشده"
+      show:
+        assigned_admin: سرپرست تعیین شده
+        assigned_valuators: اختصاص ارزیاب ها
+        back: برگشت
+        classification: طبقه بندی
+        heading: "پروژه سرمایه گذاری%{id}"
+        edit: ویرایش
+        edit_classification: ویرایش طبقه بندی
+        association_name: انجمن
+        by: "توسط\n"
+        sent: "ارسال شد\n"
+        geozone: دامنه
+        dossier: پرونده
+        edit_dossier: ویرایش پرونده
+        tags: برچسب ها
+        undefined: تعریف نشده
+      edit:
+        classification: طبقه بندی
+        assigned_valuators: ارزیاب ها
+        submit_button: به روز رسانی
+        tags: برچسب ها
+        tags_placeholder: "برچسبهایی را که میخواهید با کاما (،) جدا کنید"
+        undefined: تعریف نشده
+      summary:
+        title: خلاصه ای برای پروژه های سرمایه گذاری
+        title_proposals_with_supports: خلاصه ای برای پروژه های سرمایه گذاری با پشتیبانی
+        geozone_name: دامنه
+        finished_and_feasible_count: تمام شده و امکان پذیر است
+        finished_and_unfeasible_count: تمام شده  و غیر قابل پیش بینی 
+        finished_count: به پایان رسید
+        in_evaluation_count: در ارزیابی
+        total_count: "جمع\n"
+        cost_for_geozone: "هزینه\n"
     geozones:
       index:
         title: Geozone
@@ -910,6 +988,11 @@ fa:
         external_code: ویدیوهای خارجی
         census_code: کد سرشماری
         coordinates: مختصات
+      errors:
+        form:
+          error:
+            one: "خطا باعث می شود که این geozone نجات یابد"
+            other: 'خطاها باعث می شود که این geozone نجات یابد'
       edit:
         form:
           submit_button: ذخیره تغییرات
@@ -923,11 +1006,11 @@ fa:
         error: این geozone را نمی توان حذف نمود زیرا عناصر متصل به آن وجود دارد
     signature_sheets:
       author: نویسنده
-      created_at: تاریخ ایجاد
+      created_at: ' ایجاد تاریخ'
       name: نام
       no_signature_sheets: "ورق امضا وجود ندارد"
       index:
-        title: محاسبه برنده سرمایه گذاری
+        title: ورق امضا
         new: ورق های امضای جدید
       new:
         title: ورق های امضای جدید
@@ -936,6 +1019,8 @@ fa:
       show:
         created_at: ایجاد شده
         author: نویسنده
+        documents: اسناد
+        document_count: "تعداد اسناد:"
         verified:
           one: "%{count} امضا معتبر است"
           other: "%{count} امضا معتبر است"
@@ -956,6 +1041,7 @@ fa:
           proposals: طرح های پیشنهادی
           budgets: بودجه های باز
           budget_investments: پروژه سرمایه گذاری
+          spending_proposals: هزینه های طرح ها
           unverified_users: کاربران تایید نشده
           user_level_three: کاربران سطح سه
           user_level_two: کاربران سطح دو
@@ -964,11 +1050,13 @@ fa:
           verified_users_who_didnt_vote_proposals: کاربران تأیید شده که آرا پیشنهاد نموده اند
           visits: بازديد
           votes: کل رای
+        spending_proposals_title: هزینه های طرح ها
         budgets_title: بودجه مشارکتی
+        visits_title: بازديد
         direct_messages: پیام های مستقیم
         proposal_notifications: اطلاعیه های پیشنهاد
         incomplete_verifications: تأیید ناقص
-        polls: نظر سنجی ها
+        polls: نظرسنجی
       direct_messages:
         title: پیام های مستقیم
         total: "جمع\n"
@@ -995,6 +1083,8 @@ fa:
         add_tag: اضافه کردن یک  پیشنهاد جدید
         title: موضوعات پیشنهادی
         topic: موضوع
+      name:
+        placeholder: نام موضوع را تایپ کنید
     users:
       columns:
         name: نام
@@ -1015,7 +1105,6 @@ fa:
         title: تأیید ناقص
     site_customization:
       content_blocks:
-        information: اطلاعات در مورد محتوای بلوک
         create:
           notice: بلوک محتوا با موفقیت ایجاد شد
           error: بلوک محتوا ایجاد نشد
@@ -1026,6 +1115,9 @@ fa:
           notice: بلوک محتوا با موفقیت حذف شد.
         edit:
           title: ویرایش بلوک محتوا
+        errors:
+          form:
+            error: خطا
         index:
           create: ایجاد محتوای جدید بلوک
           delete: حذف بلوک
@@ -1058,6 +1150,9 @@ fa:
           notice: صفحه با موفقیت حذف شد.
         edit:
           title: ویرایش %{page_title}
+        errors:
+          form:
+            error: خطا
         form:
           options: "گزینه ها\n"
         index:
@@ -1071,15 +1166,9 @@ fa:
           created_at: "ایجاد شده در\n"
           status: وضعیت ها
           updated_at: "ایجاد شده در\n"
+          status_draft: ' پیش نویس'
+          status_published: منتشر شده
           title: عنوان
-          slug: slug
-          cards_title: کارتها
-        cards:
-          create_card: ایجاد کارت
-          title: عنوان
-          description: توضیحات
-          link_text: لینک متن
-          link_url: لینک آدرس
     homepage:
       title: صفحه اصلی
       description: ماژول های فعال در صفحه اصلی به ترتیب در اینجا نمایش داده می شوند.

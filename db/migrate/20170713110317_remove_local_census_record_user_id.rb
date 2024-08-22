@@ -1,6 +1,5 @@
-class RemoveLocalCensusRecordUserId < ActiveRecord::Migration[4.2]
+class RemoveLocalCensusRecordUserId < ActiveRecord::Migration
   def change
-    remove_foreign_key :local_census_records, :users
-    remove_column :local_census_records, :user_id, :integer
+    remove_column :local_census_records, :user_id
   end
 end

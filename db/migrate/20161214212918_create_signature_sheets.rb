@@ -1,4 +1,4 @@
-class CreateSignatureSheets < ActiveRecord::Migration[4.2]
+class CreateSignatureSheets < ActiveRecord::Migration
   def change
     create_table :signature_sheets do |t|
       t.references :signable, polymorphic: true

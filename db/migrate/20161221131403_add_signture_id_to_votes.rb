@@ -1,4 +1,4 @@
-class AddSigntureIdToVotes < ActiveRecord::Migration[4.2]
+class AddSigntureIdToVotes < ActiveRecord::Migration
   def change
     add_reference :votes, :signature, index: true
   end

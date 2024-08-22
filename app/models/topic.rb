@@ -1,12 +1,12 @@
-class Topic < ApplicationRecord
+class Topic < ActiveRecord::Base
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
   include Notifiable
 
   belongs_to :community
-  belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :topics
+  belongs_to :author, -> { with_hidden }, class_name: 'User', foreign_key: 'author_id'
 
-  has_many :comments, as: :commentable, inverse_of: :commentable
+  has_many :comments, as: :commentable
 
   validates :title, presence: true
   validates :description, presence: true
@@ -15,4 +15,5 @@ class Topic < ApplicationRecord
   scope :sort_by_newest, -> { order(created_at: :desc) }
   scope :sort_by_oldest, -> { order(created_at: :asc) }
   scope :sort_by_most_commented, -> { reorder(comments_count: :desc) }
+
 end

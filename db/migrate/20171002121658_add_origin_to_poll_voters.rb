@@ -1,4 +1,4 @@
-class AddOriginToPollVoters < ActiveRecord::Migration[4.2]
+class AddOriginToPollVoters < ActiveRecord::Migration
   def change
     add_column :poll_voters, :origin, :string
   end

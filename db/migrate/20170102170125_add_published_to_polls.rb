@@ -1,4 +1,4 @@
-class AddPublishedToPolls < ActiveRecord::Migration[4.2]
+class AddPublishedToPolls < ActiveRecord::Migration
   def change
     add_column :polls, :published, :boolean, default: false
   end

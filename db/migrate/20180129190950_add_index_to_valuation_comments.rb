@@ -1,4 +1,4 @@
-class AddIndexToValuationComments < ActiveRecord::Migration[4.2]
+class AddIndexToValuationComments < ActiveRecord::Migration
   disable_ddl_transaction!
 
   def change

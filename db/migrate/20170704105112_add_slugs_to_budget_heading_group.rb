@@ -1,4 +1,4 @@
-class AddSlugsToBudgetHeadingGroup < ActiveRecord::Migration[4.2]
+class AddSlugsToBudgetHeadingGroup < ActiveRecord::Migration
   def change
     add_column :budgets, :slug, :string
     add_column :budget_groups, :slug, :string

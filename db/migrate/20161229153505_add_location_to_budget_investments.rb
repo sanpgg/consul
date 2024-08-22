@@ -1,4 +1,4 @@
-class AddLocationToBudgetInvestments < ActiveRecord::Migration[4.2]
+class AddLocationToBudgetInvestments < ActiveRecord::Migration
   def change
     add_column :budget_investments, :location, :string
   end

@@ -1,4 +1,4 @@
-class AddIndexesForSearches < ActiveRecord::Migration[4.2]
+class AddIndexesForSearches < ActiveRecord::Migration
   def change
     add_index :debates, :title
     # add_index :debates, :description

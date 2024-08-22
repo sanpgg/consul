@@ -1,7 +1,7 @@
 class Admin::HiddenBudgetInvestmentsController < Admin::BaseController
   include FeatureFlags
 
-  has_filters %w[all with_confirmed_hide without_confirmed_hide], only: :index
+  has_filters %w{all with_confirmed_hide without_confirmed_hide}, only: :index
 
   feature_flag :budgets
 
@@ -15,14 +15,14 @@ class Admin::HiddenBudgetInvestmentsController < Admin::BaseController
 
   def confirm_hide
     @investment.confirm_hide
-    redirect_with_query_params_to(action: :index)
+    redirect_to request.query_parameters.merge(action: :index)
   end
 
   def restore
-    @investment.restore(recursive: true)
+    @investment.restore
     @investment.ignore_flag
     Activity.log(current_user, :restore, @investment)
-    redirect_with_query_params_to(action: :index)
+    redirect_to request.query_parameters.merge(action: :index)
   end
 
   private
@@ -30,4 +30,5 @@ class Admin::HiddenBudgetInvestmentsController < Admin::BaseController
     def load_investment
       @investment = Budget::Investment.with_hidden.find(params[:id])
     end
+
 end

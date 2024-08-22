@@ -1,4 +1,4 @@
-class Milestone::Status < ApplicationRecord
+class Milestone::Status < ActiveRecord::Base
   acts_as_paranoid column: :hidden_at
 
   has_many :milestones

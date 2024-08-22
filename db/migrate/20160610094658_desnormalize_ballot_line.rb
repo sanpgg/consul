@@ -1,4 +1,4 @@
-class DesnormalizeBallotLine < ActiveRecord::Migration[4.2]
+class DesnormalizeBallotLine < ActiveRecord::Migration
   def change
     add_column :budget_ballot_lines, :budget_id, :integer, index: true
     add_column :budget_ballot_lines, :group_id, :integer, index: true

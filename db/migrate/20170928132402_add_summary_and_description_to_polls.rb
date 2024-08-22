@@ -1,4 +1,4 @@
-class AddSummaryAndDescriptionToPolls < ActiveRecord::Migration[4.2]
+class AddSummaryAndDescriptionToPolls < ActiveRecord::Migration
   def change
     add_column :polls, :summary, :text
     add_column :polls, :description, :text

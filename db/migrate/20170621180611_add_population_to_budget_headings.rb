@@ -1,4 +1,4 @@
-class AddPopulationToBudgetHeadings < ActiveRecord::Migration[4.2]
+class AddPopulationToBudgetHeadings < ActiveRecord::Migration
   def change
     add_column :budget_headings, :population, :integer, default: nil
   end

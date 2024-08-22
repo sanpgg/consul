@@ -1,4 +1,4 @@
-class AddKindToTags < ActiveRecord::Migration[4.2]
+class AddKindToTags < ActiveRecord::Migration
   def change
     add_column :tags, :kind, :string
   end

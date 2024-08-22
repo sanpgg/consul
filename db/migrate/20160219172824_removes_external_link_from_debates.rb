@@ -1,5 +1,5 @@
-class RemovesExternalLinkFromDebates < ActiveRecord::Migration[4.2]
+class RemovesExternalLinkFromDebates < ActiveRecord::Migration
   def change
-    remove_column :debates, :external_link, :string
+    remove_column :debates, :external_link
   end
 end

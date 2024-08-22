@@ -1,6 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   prepend_before_action :authenticate_scope!, only: [:edit, :update, :destroy, :finish_signup, :do_finish_signup]
-  before_action :configure_permitted_parameters
+  before_filter :configure_permitted_parameters
 
   invisible_captcha only: [:create], honeypot: :address, scope: :user
 
@@ -9,9 +9,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
       user.use_redeemable_code = true if params[:use_redeemable_code].present?
     end
   end
-
+  
+  
   def create
+
+    imported = User.find_by(username: "imported_#{params[:user][:email]}")
+
+    params[:user][:username] = params[:user][:email]
+
+    session[:user_email] = params[:user][:email]
+
+    return redirect_to new_user_registration_path, alert: "Tus datos ya fueron registrados en el Decide Fest el 17 de Julio del 2022, si piensas que esto fue un error comunicate a atención Ciudadana al 81 12 12 12 12. ¡Recuerdas que solo puedes votar en una modalidad!" if imported.present?
+
     build_resource(sign_up_params)
+
+    if params[:user][:colonium_ids].blank?
+      resource.errors.add(:colonium_ids, "Debes seleccionar tu colonia")
+      return render :new
+    end
+
     if resource.valid?
       super
     else
@@ -26,7 +42,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def delete
     current_user.erase(erase_params[:erase_reason])
     sign_out
-    redirect_to root_path, notice: t("devise.registrations.destroyed")
+    redirect_to root_url, notice: t("devise.registrations.destroyed")
   end
 
   def success
@@ -50,9 +66,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def check_username
     if User.find_by username: params[:username]
-      render json: { available: false, message: t("devise_views.users.registrations.new.username_is_not_available") }
+      render json: {available: false, message: t("devise_views.users.registrations.new.username_is_not_available")}
     else
-      render json: { available: true, message: t("devise_views.users.registrations.new.username_is_available") }
+      render json: {available: true, message: t("devise_views.users.registrations.new.username_is_available")}
     end
   end
 
@@ -60,15 +76,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     def sign_up_params
       params[:user].delete(:redeemable_code) if params[:user].present? && params[:user][:redeemable_code].blank?
-      params.require(:user).permit(:username, :email, :password,
+      params.require(:user).permit(:username, :email, :password, :born_names, :paternal_last_name, :maternal_last_name, :gender, :birthplace, :date_of_birth, :phone_number, :colonium_ids, :tutor,
                                    :password_confirmation, :terms_of_service, :locale,
                                    :redeemable_code)
     end
 
     def configure_permitted_parameters
-      devise_parameter_sanitizer.permit(:account_update, keys: [:email])
+      devise_parameter_sanitizer.for(:account_update).push(:email)
     end
-
+ 
     def erase_params
       params.require(:user).permit(:erase_reason)
     end
@@ -76,4 +92,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
     def after_inactive_sign_up_path_for(resource_or_scope)
       users_sign_up_success_path
     end
+
 end

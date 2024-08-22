@@ -1,17 +1,16 @@
 <% provide :title do %><%= t("devise_views.passwords.new.title") %><% end %>
-<h2><%= t("devise_views.passwords.new.title") %></h2>
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "shared/errors", resource: resource %>
-
-  <div class="row">
-    <div class="small-12 column">
-      <%= f.email_field :email, autofocus: true, placeholder: t("devise_views.passwords.new.email_label") %>
-
-      <div class="small-12 medium-6 small-centered">
-        <%= f.submit t("devise_views.passwords.new.send_submit"), class: "button expanded" %>
+<div class="content-form mt-5 mb-5">
+  <h2 class="mb-5"><%= t("devise_views.passwords.new.title").try(:html_safe)  %></h2>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+  <%= render 'shared/errors', resource: resource %>
+    <div class="w-60 mb-5">
+      <label>¿Cuál es tu correo electrónico?</label>
+      <p class="text-description mb-2">Utiliza el correo electrónico que has registrado en Decide San Pedro.</p>
+      <div class="mb-3">
+        <%= f.email_field :email, autofocus: true, label: false, placeholder: t("devise_views.passwords.new.email_label") %>
       </div>
+      <%= f.submit t("devise_views.passwords.new.send_submit") %>
     </div>
-  </div>
+    <%= link_to "Volver a intentar iniciar sesión", new_user_session_path, class: 'btn-default' %>
+</div>
 <% end %>
-
-<%= render "devise/shared/links" %>

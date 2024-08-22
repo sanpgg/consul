@@ -1,4 +1,4 @@
-class CreateSignatures < ActiveRecord::Migration[4.2]
+class CreateSignatures < ActiveRecord::Migration
   def change
     create_table :signatures do |t|
       t.references :signature_sheet

@@ -1,4 +1,4 @@
-class AdminNotification < ApplicationRecord
+class AdminNotification < ActiveRecord::Base
   include Notifiable
 
   translates :title, touch: true
@@ -25,25 +25,24 @@ class AdminNotification < ApplicationRecord
   end
 
   def list_of_recipients_count
-    list_of_recipients&.count || 0
+    list_of_recipients.try(:count) || 0
   end
 
   def deliver
     list_of_recipients.each { |user| Notification.add(user, self) }
-    update!(sent_at: Time.current, recipients_count: list_of_recipients.count)
+    self.update(sent_at: Time.current, recipients_count: list_of_recipients.count)
   end
 
   private
 
-    def validate_segment_recipient
-      errors.add(:segment_recipient, :invalid) unless valid_segment_recipient?
-    end
+  def validate_segment_recipient
+    errors.add(:segment_recipient, :invalid) unless valid_segment_recipient?
+  end
 
-    def complete_link_url
-      return unless link.present?
-
-      unless self.link[/\Ahttp:\/\//] || self.link[/\Ahttps:\/\//]
-        self.link = "http://#{self.link}"
-      end
+  def complete_link_url
+    return unless link.present?
+    unless self.link[/\Ahttp:\/\//] || self.link[/\Ahttps:\/\//]
+      self.link = "http://#{self.link}"
     end
+  end
 end

@@ -1,7 +1,9 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe DirectUpload do
+
   context "configurations" do
+
     it "is valid for different kind of combinations when attachment is valid" do
       expect(build(:direct_upload, :proposal, :documents)).to be_valid
       expect(build(:direct_upload, :proposal, :image)).to be_valid
@@ -34,17 +36,20 @@ describe DirectUpload do
   end
 
   context "save_attachment" do
+
     it "saves uploaded file" do
       proposal_document_direct_upload = build(:direct_upload, :proposal, :documents)
 
       proposal_document_direct_upload.save_attachment
 
       expect(File.exist?(proposal_document_direct_upload.relation.attachment.path)).to eq(true)
-      expect(proposal_document_direct_upload.relation.attachment.path).to include("cached_attachments")
+      expect(proposal_document_direct_upload.relation.attachment.path).to include('cached_attachments')
     end
+
   end
 
   context "destroy_attachment" do
+
     it "removes uploaded file" do
       proposal_document_direct_upload = build(:direct_upload, :proposal, :documents)
 
@@ -54,5 +59,7 @@ describe DirectUpload do
 
       expect(File.exist?(uploaded_path)).to eq(false)
     end
+
   end
+
 end

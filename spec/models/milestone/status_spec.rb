@@ -1,6 +1,7 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Milestone::Status do
+
   describe "Validations" do
     let(:status) { build(:milestone_status) }
 

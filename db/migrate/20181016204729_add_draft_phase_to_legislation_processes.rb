@@ -1,4 +1,4 @@
-class AddDraftPhaseToLegislationProcesses < ActiveRecord::Migration[4.2]
+class AddDraftPhaseToLegislationProcesses < ActiveRecord::Migration
   def change
     add_column :legislation_processes, :draft_start_date, :date
     add_index :legislation_processes, :draft_start_date

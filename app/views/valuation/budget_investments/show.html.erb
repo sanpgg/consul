@@ -1,29 +1,43 @@
 <%= back_link_to valuation_budget_budget_investments_path %>
 
-<br>
+<h2><%= t("valuation.budget_investments.show.title") %> <%= @investment.id %> </h2>
+<h1><%= @investment.title %></h1>
 
-<h2 class="inline-block"><%= t("admin.budget_investments.show.preview") %></h2>
-<% if can?(:valuate, @investment) %>
-  <div class="float-right">
-    <%= link_to t("admin.budget_investments.show.edit"),
-                edit_valuation_budget_budget_investment_path(
-                  @budget,
-                  @investment,
-                  Budget::Investment.filter_params(params)
-                ),
-                class: "button hollow" %>
-  </div>
-<% end %>
-
-<hr>
-<%= render "/budgets/investments/investment_detail", investment: @investment, preview: true %>
-</hr>
+<%= safe_html_with_links @investment.description %>
 
 <% if @investment.external_url.present? %>
-  <p><%= sanitize_and_auto_link @investment.external_url %></p>
+  <p><%= text_with_links @investment.external_url %></p>
 <% end %>
 
-<hr>
+<h2><%= t("valuation.budget_investments.show.info") %></h2>
+
+<p><strong><%= t("valuation.budget_investments.show.by") %>:</strong>
+  <%= link_to @investment.author.name, user_path(@investment.author) %>
+</p>
+
+<% if @budget.is_new? %>
+
+  <% sector = new_sectors.select {|e| e[:short_name] == @investment.author.colonium.first.sector}.first %>
+
+  <p><strong>Sector:</strong>
+    <%= sector[:short_name] %> - <%= sector[:large_name] %>
+  </p>
+
+  <p><strong>Tamaño:</strong>
+    <%= @investment.size == 'large' ? 'Grande (12.5MDP)' : 'Mediana (1MDP)' %>
+  </p>
+
+<% else %>
+
+  <p><strong><%= t("valuation.budget_investments.show.heading") %>:</strong>
+    <%= @investment&.heading&.name %>
+  </p>
+
+<% end %>
+
+<p><strong><%= t("valuation.budget_investments.show.sent") %>:</strong>
+  <%= l @investment.created_at, format: :datetime %>
+</p>
 
 <h2><%= t("valuation.budget_investments.show.responsibles") %></h2>
 
@@ -48,14 +62,10 @@
   </ul>
 </div>
 
-<hr>
-
 <h2><%= t("valuation.budget_investments.show.dossier") %></h2>
 <p>
   <%= link_to t("valuation.budget_investments.show.edit_dossier"), edit_valuation_budget_budget_investment_path(@budget, @investment) %>
 </p>
-<%= render "dossier" %>
+<%= render 'dossier' %>
 
-<hr>
-
-<%= render "valuation/budget_investments/valuation_comments" %>
+<%= render 'valuation/budget_investments/valuation_comments' %>

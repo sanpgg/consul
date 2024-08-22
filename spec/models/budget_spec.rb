@@ -1,55 +1,18 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Budget do
+
   let(:budget) { create(:budget) }
 
   it_behaves_like "sluggable", updatable_slug_trait: :drafting
-  it_behaves_like "reportable"
-  it_behaves_like "globalizable", :budget
-
-  describe "scopes" do
-    describe ".open" do
-      it "returns all budgets that are not in the finished phase" do
-        (Budget::Phase::PHASE_KINDS - ["finished"]).each do |phase|
-          budget = create(:budget, phase: phase)
-          expect(Budget.open).to include(budget)
-        end
-      end
-    end
-
-    describe ".valuating_or_later" do
-      it "returns budgets valuating or later" do
-        valuating = create(:budget, :valuating)
-        finished = create(:budget, :finished)
-
-        expect(Budget.valuating_or_later).to match_array([valuating, finished])
-      end
-
-      it "does not return budgets which haven't reached valuation" do
-        create(:budget, :drafting)
-        create(:budget, :selecting)
-
-        expect(Budget.valuating_or_later).to be_empty
-      end
-    end
-  end
 
   describe "name" do
     before do
-      budget.update(name_en: "object name")
+      create(:budget, name: 'object name')
     end
 
-    it "must not be repeated for a different budget and same locale" do
-      expect(build(:budget, name_en: "object name")).not_to be_valid
-    end
-
-    it "must not be repeated for a different budget and a different locale" do
-      expect(build(:budget, name_fr: "object name")).not_to be_valid
-    end
-
-    it "may be repeated for the same budget and a different locale" do
-      budget.update!(name_fr: "object name")
-      expect(budget.translations.last).to be_valid
+    it "is validated for uniqueness" do
+      expect(build(:budget, name: 'object name')).not_to be_valid
     end
   end
 
@@ -63,6 +26,7 @@ describe Budget do
         Budget::Phase::PHASE_KINDS.each do |phase_kind|
           budget.phase = phase_kind
           expect(budget.description).to eq(budget.send("description_#{phase_kind}"))
+          expect(budget.description).to be_html_safe
         end
       end
     end
@@ -71,7 +35,7 @@ describe Budget do
       before do
         budget.phases.each do |phase|
           phase.description = phase.kind.humanize
-          phase.save!
+          phase.save
         end
       end
 
@@ -91,7 +55,7 @@ describe Budget do
         expect(budget).to be_valid
       end
 
-      budget.phase = "inexisting"
+      budget.phase = 'inexisting'
       expect(budget).not_to be_valid
     end
 
@@ -124,84 +88,77 @@ describe Budget do
       expect(budget).to be_finished
     end
 
-    describe "#valuating_or_later?" do
-      it "returns false before valuating" do
-        budget.phase = "selecting"
-        expect(budget).not_to be_valuating_or_later
-      end
+    it "balloting_or_later?" do
+      budget.phase = "drafting"
+      expect(budget).not_to be_balloting_or_later
 
-      it "returns true while valuating" do
-        budget.phase = "valuating"
-        expect(budget).to be_valuating_or_later
-      end
+      budget.phase = "accepting"
+      expect(budget).not_to be_balloting_or_later
 
-      it "returns true after valuating" do
-        budget.phase = "publishing_prices"
-        expect(budget).to be_valuating_or_later
-      end
-    end
+      budget.phase = "reviewing"
+      expect(budget).not_to be_balloting_or_later
 
-    describe "#publishing_prices_or_later?" do
-      it "returns false before publishing prices" do
-        budget.phase = "valuating"
-        expect(budget).not_to be_publishing_prices_or_later
-      end
+      budget.phase = "selecting"
+      expect(budget).not_to be_balloting_or_later
 
-      it "returns true while publishing prices" do
-        budget.phase = "publishing_prices"
-        expect(budget).to be_publishing_prices_or_later
-      end
+      budget.phase = "valuating"
+      expect(budget).not_to be_balloting_or_later
 
-      it "returns true after publishing prices" do
-        budget.phase = "balloting"
-        expect(budget).to be_publishing_prices_or_later
-      end
-    end
+      budget.phase = "publishing_prices"
+      expect(budget).not_to be_balloting_or_later
 
-    describe "#balloting_or_later?" do
-      it "returns false before balloting" do
-        budget.phase = "publishing_prices"
-        expect(budget).not_to be_balloting_or_later
-      end
+      budget.phase = "balloting"
+      expect(budget).to be_balloting_or_later
 
-      it "returns true while balloting" do
-        budget.phase = "balloting"
-        expect(budget).to be_balloting_or_later
-      end
+      budget.phase = "reviewing_ballots"
+      expect(budget).to be_balloting_or_later
 
-      it "returns true after balloting" do
-        budget.phase = "finished"
-        expect(budget).to be_balloting_or_later
-      end
+      budget.phase = "finished"
+      expect(budget).to be_balloting_or_later
     end
   end
 
   describe "#current" do
-    it "returns nil if there is only one budget and it is still in drafting phase" do
-      create(:budget, :drafting)
 
-      expect(Budget.current).to eq(nil)
+    it "returns nil if there is only one budget and it is still in drafting phase" do
+      budget = create(:budget, phase: "drafting")
+
+      expect(described_class.current).to eq(nil)
     end
 
     it "returns the budget if there is only one and not in drafting phase" do
-      budget = create(:budget, :accepting)
+      budget = create(:budget, phase: "accepting")
 
-      expect(Budget.current).to eq(budget)
+      expect(described_class.current).to eq(budget)
     end
 
     it "returns the last budget created that is not in drafting phase" do
-      create(:budget, :finished,  created_at: 2.years.ago, name: "Old")
-      create(:budget, :accepting, created_at: 1.year.ago,  name: "Previous")
-      create(:budget, :accepting, created_at: 1.month.ago, name: "Current")
-      create(:budget, :drafting,  created_at: 1.week.ago,  name: "Next")
+      old_budget      = create(:budget, phase: "finished",  created_at: 2.years.ago)
+      previous_budget = create(:budget, phase: "accepting", created_at: 1.year.ago)
+      current_budget  = create(:budget, phase: "accepting", created_at: 1.month.ago)
+      next_budget     = create(:budget, phase: "drafting",  created_at: 1.week.ago)
 
-      expect(Budget.current.name).to eq "Current"
+      expect(described_class.current).to eq(current_budget)
     end
+
+  end
+
+  describe "#open" do
+
+    it "returns all budgets that are not in the finished phase" do
+      (Budget::Phase::PHASE_KINDS - ["finished"]).each do |phase|
+        budget = create(:budget, phase: phase)
+        expect(described_class.open).to include(budget)
+      end
+    end
+
   end
 
   describe "heading_price" do
+    let(:group) { create(:budget_group, budget: budget) }
+
     it "returns the heading price if the heading provided is part of the budget" do
-      heading = create(:budget_heading, price: 100, budget: budget)
+      heading = create(:budget_heading, price: 100, group: group)
       expect(budget.heading_price(heading)).to eq(100)
     end
 
@@ -212,35 +169,35 @@ describe Budget do
 
   describe "investments_orders" do
     it "is random when accepting and reviewing" do
-      budget.phase = "accepting"
-      expect(budget.investments_orders).to eq(["random"])
-      budget.phase = "reviewing"
-      expect(budget.investments_orders).to eq(["random"])
+      budget.phase = 'accepting'
+      expect(budget.investments_orders).to eq(['random'])
+      budget.phase = 'reviewing'
+      expect(budget.investments_orders).to eq(['random'])
     end
     it "is random and price when ballotting and reviewing ballots" do
-      budget.phase = "publishing_prices"
-      expect(budget.investments_orders).to eq(["random", "price"])
-      budget.phase = "balloting"
-      expect(budget.investments_orders).to eq(["random", "price"])
-      budget.phase = "reviewing_ballots"
-      expect(budget.investments_orders).to eq(["random", "price"])
+      budget.phase = 'publishing_prices'
+      expect(budget.investments_orders).to eq(['random', 'price'])
+      budget.phase = 'balloting'
+      expect(budget.investments_orders).to eq(['random', 'price'])
+      budget.phase = 'reviewing_ballots'
+      expect(budget.investments_orders).to eq(['random', 'price'])
     end
     it "is random and confidence_score in all other cases" do
-      budget.phase = "selecting"
-      expect(budget.investments_orders).to eq(["random", "confidence_score"])
-      budget.phase = "valuating"
-      expect(budget.investments_orders).to eq(["random", "confidence_score"])
+      budget.phase = 'selecting'
+      expect(budget.investments_orders).to eq(['random', 'confidence_score'])
+      budget.phase = 'valuating'
+      expect(budget.investments_orders).to eq(['random', 'confidence_score'])
     end
   end
 
-  describe "#has_winning_investments?" do
-    it "returns true if there is a winner investment" do
+  describe '#has_winning_investments?' do
+    it 'should return true if there is a winner investment' do
       budget.investments << build(:budget_investment, :winner, price: 3, ballot_lines_count: 2)
 
       expect(budget.has_winning_investments?).to eq true
     end
 
-    it "hould return false if there is not a winner investment" do
+    it 'hould return false if there is not a winner investment' do
       expect(budget.has_winning_investments?).to eq false
     end
   end
@@ -285,95 +242,36 @@ describe Budget do
   end
 
   describe "#formatted_amount" do
+    after do
+      I18n.locale = :en
+    end
+
     it "correctly formats Euros with Spanish" do
-      budget.update!(currency_symbol: "€")
+      budget.update(currency_symbol: '€')
       I18n.locale = :es
 
-      expect(budget.formatted_amount(1000.00)).to eq "1.000 €"
+      expect(budget.formatted_amount(1000.00)).to eq ('1.000 €')
     end
 
     it "correctly formats Dollars with Spanish" do
-      budget.update!(currency_symbol: "$")
+      budget.update(currency_symbol: '$')
       I18n.locale = :es
 
-      expect(budget.formatted_amount(1000.00)).to eq "1.000 $"
+      expect(budget.formatted_amount(1000.00)).to eq ('1.000 $')
     end
 
     it "correctly formats Dollars with English" do
-      budget.update!(currency_symbol: "$")
+      budget.update(currency_symbol: '$')
       I18n.locale = :en
 
-      expect(budget.formatted_amount(1000.00)).to eq "$1,000"
+      expect(budget.formatted_amount(1000.00)).to eq ('$1,000')
     end
 
     it "correctly formats Euros with English" do
-      budget.update!(currency_symbol: "€")
+      budget.update(currency_symbol: '€')
       I18n.locale = :en
 
-      expect(budget.formatted_amount(1000.00)).to eq "€1,000"
-    end
-  end
-
-  describe "#investments_milestone_tags" do
-    let(:investment1) { build(:budget_investment, :winner) }
-    let(:investment2) { build(:budget_investment, :winner) }
-    let(:investment3) { build(:budget_investment) }
-
-    it "returns an empty array if not investments milestone_tags" do
-      budget.investments << investment1
-
-      expect(budget.investments_milestone_tags).to eq([])
-    end
-
-    it "returns array of investments milestone_tags" do
-      investment1.milestone_tag_list = "tag1"
-      investment1.save!
-      budget.investments << investment1
-
-      expect(budget.investments_milestone_tags).to eq(["tag1"])
-    end
-
-    it "returns uniq list of investments milestone_tags" do
-      investment1.milestone_tag_list = "tag1"
-      investment1.save!
-      investment2.milestone_tag_list = "tag1"
-      investment2.save!
-      budget.investments << investment1
-      budget.investments << investment2
-
-      expect(budget.investments_milestone_tags).to eq(["tag1"])
-    end
-
-    it "returns tags only for winner investments" do
-      investment1.milestone_tag_list = "tag1"
-      investment1.save!
-      investment3.milestone_tag_list = "tag2"
-      investment3.save!
-      budget.investments << investment1
-      budget.investments << investment3
-
-      expect(budget.investments_milestone_tags).to eq(["tag1"])
-    end
-  end
-
-  describe "#voting_style" do
-    context "Validations" do
-      it { expect(build(:budget, :approval)).to be_valid }
-      it { expect(build(:budget, :knapsack)).to be_valid }
-      it { expect(build(:budget, voting_style: "Oups!")).not_to be_valid }
-    end
-
-    context "Related supportive methods" do
-      describe "#approval_voting?" do
-        it { expect(build(:budget, :approval).approval_voting?).to be true }
-        it { expect(build(:budget, :knapsack).approval_voting?).to be false }
-      end
-    end
-
-    context "Defaults" do
-      it "defaults to knapsack voting style" do
-        expect(build(:budget).voting_style).to eq "knapsack"
-      end
+      expect(budget.formatted_amount(1000.00)).to eq ('€1,000')
     end
   end
 end

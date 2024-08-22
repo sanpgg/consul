@@ -7,7 +7,7 @@ class Budget
     end
 
     def check_for_reclassification
-      if saved_change_to_heading?
+      if heading_changed?
         log_heading_change
         store_reclassified_votes("heading_changed")
         remove_reclassified_votes
@@ -17,16 +17,16 @@ class Budget
       end
     end
 
-    def saved_change_to_heading?
-      budget.balloting? && saved_change_to_heading_id?
+    def heading_changed?
+      budget.balloting? && heading_id_changed?
     end
 
     def marked_as_unfeasible?
-      budget.balloting? && saved_change_to_feasibility? && unfeasible?
+      budget.balloting? && feasibility_changed? && unfeasible?
     end
 
     def log_heading_change
-      update_column(:previous_heading_id, heading_id_before_last_save)
+      update_column(:previous_heading_id, heading_id_was)
     end
 
     def store_reclassified_votes(reason)
@@ -45,5 +45,6 @@ class Budget
     def ballot_lines_for_investment
       Budget::Ballot::Line.by_investment(id)
     end
+
   end
 end

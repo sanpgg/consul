@@ -1,6 +1,7 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Follow do
+
   let(:follow) { build(:follow, :followed_proposal) }
 
   it "is valid" do
@@ -21,4 +22,5 @@ describe Follow do
     follow.followable_type = nil
     expect(follow).not_to be_valid
   end
+
 end

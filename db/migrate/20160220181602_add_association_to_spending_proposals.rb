@@ -1,4 +1,4 @@
-class AddAssociationToSpendingProposals < ActiveRecord::Migration[4.2]
+class AddAssociationToSpendingProposals < ActiveRecord::Migration
   def change
     add_column :spending_proposals, :association_name, :string
   end

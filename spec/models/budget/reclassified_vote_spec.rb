@@ -1,6 +1,7 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Budget::ReclassifiedVote do
+
   describe "Validations" do
     let(:reclassified_vote) { build(:budget_reclassified_vote) }
 
@@ -35,4 +36,5 @@ describe Budget::ReclassifiedVote do
       expect(reclassified_vote).to be_valid
     end
   end
+
 end

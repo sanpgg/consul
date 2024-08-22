@@ -1,4 +1,4 @@
-class AddEmailDigestToUsers < ActiveRecord::Migration[4.2]
+class AddEmailDigestToUsers < ActiveRecord::Migration
   def change
     add_column :users, :email_digest, :boolean, default: true
   end

@@ -1,10 +1,9 @@
-#Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 sv:
   devise:
     password_expired:
       expire_password: "Lösenordet har gått ut"
       change_required: "Ditt lösenord har gått ut"
-      change_password: "Ändra ditt lösenord"
+      change_password: "Uppdatera ditt lösenord"
       new_password: "Nytt lösenord"
       updated: "Lösenordet har uppdaterats"
     confirmations:

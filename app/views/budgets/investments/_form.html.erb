@@ -1,106 +1,438 @@
-<%= translatable_form_for(@investment, url: form_url, html: { multipart: true }) do |f| %>
+<style>
+  .button.hollow {
+    font-size: 1rem !important;
+  }
 
-  <%= render "shared/errors", resource: @investment %>
+  .checkbox a {
+    color: black !important;
+  }
 
-  <div class="row column">
-    <div class="small-12 medium-8 column">
-      <%= f.select :heading_id, budget_heading_select_options(@budget), { include_blank: true, } %>
-    </div>
-    <div class="row">
-      <div class="small-12 column">
-        <%= render "shared/globalize_locales", resource: @investment %>
-      </div>
-    </div>
+  .checkbox a:hover {
+    color: #068400 !important;
+  }
 
-    <%= f.translatable_fields do |translations_form| %>
-      <div class="small-12 column">
-        <%= translations_form.text_field :title,
-              maxlength: Budget::Investment.title_max_length,
-              data: { js_suggest_result: "js_suggest_result",
-                      js_suggest: ".js-suggest",
-                      js_url: suggest_budget_investments_path(@budget) } %>
-      </div>
-      <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
+  #category_tags ul li {
+    list-style: none;
+    border: none;
+  }
 
-      <div class="small-12 column">
-        <%= translations_form.text_area :description,
-              maxlength: Budget::Investment.description_max_length,
-              class: "html-area" %>
-      </div>
-    <% end %>
+  #category_tags_new ul li {
+    list-style: none;
+    border: none;
+  }
 
-    <%= f.invisible_captcha :subtitle %>
+  #containertags li ul ol li {
+    list-style: circle !important;
+    font-weight: lighter !important;
+  }
 
-    <% if feature?(:allow_images) %>
-      <div class="images small-12 column">
-        <%= render "images/nested_image", imageable: @investment, f: f %>
-      </div>
-    <% end %>
+  .p1,
+  #containertags li ul p b,
+  #containertags li ul p i,
+  #containertags li ul p,
+  #containertags li ul ol .p1 {
+    font-size: 1rem;
+  }
 
-    <% if feature?(:allow_attached_documents) %>
-      <div class="documents small-12 column">
-        <%= render "documents/nested_documents", documentable: @investment, f: f %>
-      </div>
-    <% end %>
+  #containertags_new li ul ol li {
+    list-style: circle !important;
+    font-weight: lighter !important;
+  }
 
-    <% if feature?(:map) %>
-      <div class="small-12 column">
+  .p1,
+  #containertags_new li ul p b,
+  #containertags_new li ul p i,
+  #containertags_new li ul p,
+  #containertags_new li ul ol .p1 {
+    font-size: 1rem;
+  }
 
-        <%= render "map_locations/form_fields",
-                   form:     f,
-                   map_location: @investment.map_location || MapLocation.new,
-                   label:    t("budgets.investments.form.map_location"),
-                   help:     t("budgets.investments.form.map_location_instructions"),
-                   remove_marker_label: t("budgets.investments.form.map_remove_marker"),
-                   parent_class: "budget_investment",
-                   i18n_namespace: "budgets.investments" %>
+  .tags a.actives {
+    background-color: #068400 !important;
+    color: white !important;
+  }
 
-      </div>
-    <% end %>
+  #category_tags ul p b {
+    font-style: initial !important;
+  }
 
-    <div class="small-12 column">
-      <%= f.text_field :location %>
-    </div>
+  #budget-investment-new .small-12 {
+    margin-bottom: 1rem;
+  }
 
-    <div class="small-12 column">
-      <%= f.text_field :organization_name %>
-    </div>
+    .title {
+        font-weight: bold;
+        font-size: 22pt;
+        text-align: center;
+    }
 
-    <div class="small-12 column">
-      <%= f.label :tag_list, t("budgets.investments.form.tags_label") %>
-      <p class="help-text" id="tags-list-help-text"><%= t("budgets.investments.form.tags_instructions") %></p>
+    .size {
+        font-size: 16pt;
+        text-align: center;
+    }
 
-      <div id="category_tags" class="tags">
-        <%= f.label :category_tag_list, t("budgets.investments.form.tag_category_label") %>
-        <% @categories.each do |tag| %>
-          <a class="js-add-tag-link"><%= tag.name %></a>
-        <% end %>
-      </div>
+    .quantity {
+        font-size: 40pt;
+        color: #555;
+        text-align: center;
+    }
 
-      <br>
-      <%= f.text_field :tag_list, value: @investment.tag_list.to_s,
-                        label: false,
-                        placeholder: t("budgets.investments.form.tags_placeholder"),
-                        aria: { describedby: "tags-list-help-text" },
-                        class: "js-tag-list tag-autocomplete",
-                        data: { js_url: suggest_tags_path } %>
-    </div>
+    .unit {
+        font-size: 24pt;
+        color: #555;
+        text-align: center;
+    }
+</style>
+<div class="container mt-5 mb-5">
+    <div class="content-propuesta">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-7 col-xl-5">
+                <%= form_for(@investment, url: form_url, method: :post, html: { multipart: true }) do |f| %>
+                    <%= render 'shared/errors', resource: @investment %>
+                    <p class="text-center">
+                        <%= current_user.born_names %> perteneces al sector: 
+                        <b><%= current_user.colonium.first.sector %></b>
+                    </p>
 
-    <% unless current_user.manager? %>
+                    <% size = params[:size].present? ? params[:size] : flash[:size] %>
 
-      <div class="small-12 column">
-        <%= f.check_box :terms_of_service,
-          title: t("form.accept_terms_title"),
-          label: t("form.accept_terms",
-                   policy: link_to(t("form.policy"), "/privacy", target: "blank"),
-                   conditions: link_to(t("form.conditions"), "/conditions", target: "blank")
-                  ) %>
-      </div>
+                    <h1 class="text-center mb-4">¡Cuéntanos tu propuesta!</h1>
+                    <%= f.hidden_field :size, value: size %>
 
-    <% end %>
+                    <% if size == 'medium' %>
+                        <div class="project d-flex justify-content-between align-items-center">
+                            <div class="content-title">
+                                <p class="title">Proyecto Comunitario</p>
+                                <p class="size">Mediano</p>
+                            </div>
+                            <div class="presupuesto">
+                                <p class="quantity">$1</p>
+                                <p class="unit">mdp</p>
+                            </div>
+                        </div>  
+                    <% elsif size == 'large' %>
+                        <div class="project d-flex justify-content-between align-items-center">
+                            <div class="content-title">
+                                <p class="title">Proyecto Sectorial</p>
+                                <p class="size">Grande</p>
+                            </div>
+                            <div class="presupuesto">
+                                <p class="quantity">$12.5</p>
+                                <p class="unit">mdp</p>
+                            </div>
+                        </div>
+                    <% end %>
 
-    <div class="actions small-12 medium-6 large-4 end column">
-      <%= f.submit(nil, class: "button expanded") %>
-    </div>
-  </div>
-<% end %>
+                    <div class="row">
+
+                        <div class="col-md-12 mt-5">
+                            <div class="content-step pb-2">
+                                <span class="step float-start me-3">2º</span>
+                                <label for="budget_investment_title">Nombra tu propuesta :</label>
+                            </div>
+                            <%= f.text_field :title, maxlength: SpendingProposal.title_max_length, data: {
+                            js_suggest_result: "js_suggest_result" , js_suggest: "#js-suggest" , js_url:
+                            suggest_budget_investments_path(@budget) }, label: false,  placeholder: 'Introduce el título de tu propuesta' %>
+                        </div>
+
+                        <div class="col-md-12">
+                                
+                            <div class="content-step mt-3 pb-2">
+                                <span class="step float-start me-3">3º</span>
+                                <%= f.label :category_tag_list, "Escoge una de estas categorías y explora la lista de proyectos viables de esa categoría:" %>
+                            </div>
+
+                            <div id="category_tags-r" class="tags acordion">
+                                <% @categories.each do |tag| %>
+                                    <a id="selectags" data-id="<%= tag.id %>" href="#<%= tag.id %>" class="js-add-investment-tag-link">
+                                        <%= tag.name %>
+                                    </a>
+                                <% end %>
+
+                                <div id="category_tags_new" class="tags acordion">
+                                    <ul id="containertags_new">
+
+                                        <% @new_categories.each do |tag| %>
+                                            <li>
+                                                <ul id="<%= tag.tag_id %>_<%= tag.id %>" onclick="loadInfo('<%= tag.title %>', '<%= tag.description %>')">
+                                                    <%= sanitize tag.title %>
+                                                </ul>
+                                            </li>
+                                        <% end %>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <%= f.text_field :tag_list, value: @investment.tag_list.to_s, label: false, readonly: true, placeholder:
+                            t("budgets.investments.form.tags_placeholder"), aria: {describedby: "tags-list-help-text" },
+                            class: 'js-tag-list tag-autocomplete' , data: {js_url: suggest_tags_path} %>
+                        
+                            <div id="js-suggest"></div>
+
+                            <% large_text = "• ¿Qué problema público resuelve?<br>• ¿A cuántas personas estimas que beneficia?<br>• ¿Por qué esto es prioritario en este sector?<br>• ¿Qué necesita tu idea para ser funcional los siguientes 5 años?".html_safe if size == 'large' %>
+
+                            <%= f.invisible_captcha :subtitle %>
+
+                            <div class="ckeditor mt-4 mb-4">
+                                <div class="content-step pb-2">
+                                    <span class="step float-start me-3">4º</span>
+                                    <label for="budget_investment_description">Describe tu proyecto:</label>
+                                </div>
+                                <p class="help-text">
+                                    La descripción debe ser lo más específica posible. Recuerda que la información que nos des nos ayudará a
+                                    evaluar la factibilidad de tu propuesta.
+                                </p>
+                                <%= f.cktext_area :description, maxlength: SpendingProposal.description_max_length, ckeditor: { language: I18n.locale }, label: false, value: (f.object.description.present? ? f.object.description : (large_text.blank? ? "" : large_text)) %>
+                            </div>
+
+                            <script>
+                                var fLocation = '<%= f.object.location %>';
+                            </script>
+
+                            <% if feature?(:map) %>
+
+                                <div class="content-step pb-2 mb-3">
+                                    <span class="step float-start me-3">5º</span>
+                                    <label for="map">
+                                        Proporciona la ubicación de tú proyecto
+                                    </label>
+                                </div>
+
+                                <label class="ps-2" for="address">
+                                    • Escribe el nombre de la calle o colonia donde propones que esté localizado este proyecto:
+                                </label>
+
+                                <div class="mb-3">
+                                    <%= f.text_field :location, class: "form-control ui-autocomplete-input", id: "address", autocomplete: "off", label: false, placeholder: "Introduce dirección", required: true %>
+                                </div>
+                                <div id="map"></div>
+                            <% end %>
+
+                            <div class="content-step mt-4 mb-3">
+                                <span class="step float-start me-3">6º</span>
+                                <label>
+                                    Proporciona información adicional
+                                </label>
+                            </div>
+                            
+                            <% if feature?(:allow_images) %>
+                                <div class="images">
+                                    <%= render 'images/nested_image' , imageable: @investment, f: f %>
+                                </div>
+                            <% end %>
+
+                            <div class="mt-4 d-none">
+                                <%= link_to_add_association 'Añadir documento:' , f, :additional_images,
+                                class: 'btn-black py-2 px-3 font-16' , data: { association_insertion_node: '#dragon' ,
+                                association_insertion_method: :append} %>
+                            </div>
+
+                            <% if feature?(:allow_attached_documents) %>
+                                <div class="mt-4">
+                                    <%= render 'documents/nested_documents' , documentable: @investment, f: f %>
+                                </div>
+                            <% end %>
+                        </div>
+
+                        <div class="mt-4">
+                            <span class="mb-3 d-block">Si estas proponiendo en nombre de una organización o grupo de personas, escribe su
+                            nombre:</span>
+                            <div class="mb-3">
+                                <%= f.text_field :organization_name, label: false %>
+                            </div>
+                        </div>
+
+                        <div class="block margin_top">
+                            <% unless current_user.manager? %>
+                                <div class="small-12 column">
+                                    <%= f.label :terms_of_service do %>
+                                        <%= f.check_box :terms_of_service, title: t('form.accept_terms_title'), label: false,
+                                        checked: true %>
+                                        <span class="checkbox">
+                                            Al registrarte aceptas las <a title=" (se abre en ventana nueva)" target="_blank"
+                                            href="https://transparencia.sanpedro.gob.mx/documentosAvisosPrivacidad/ 5309/_2022328_80_Presupuesto Participativo Decide San Pedro.pdf">condiciones
+                                            de uso</a>
+                                        </span>
+                                    <% end %>
+                                </div>
+                            <% end %>
+                            <div class="actions small-12 medium-6 large-4 end column">
+                                <%= f.submit("Registrar propuesta", class: "btn-black px-4 py-2 d-inline-block" ) %>
+                            </div>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+        </div><!--.row-->
+    </div><!--.content-propuesta-->
+</div><!--.container-->
+<hr>
+<div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7 mb-5">
+    <%= link_to "< Volver", investment_create_step_path(current_budget), class: 'back' %>
+</div>
+
+<script>
+    var myIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/7606/7606169.png',
+        iconSize: [50, 50],
+        iconAnchor: [20, 50],
+    });
+
+    const map = L.map('map').setView([25.6538024, -100.4041566], 14);
+
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    let marker = null;
+
+    map.on('click', function(e) {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng, {icon: myIcon} ).addTo(map);
+        setAddress(e.latlng.lat, e.latlng.lng);
+    });
+
+    function setAddress(latitude, longitude){
+        $.get('<%= reverse_geocode_path %>', { latitude: latitude, longitude: longitude }, function(data) {
+            $('#address').val(data.address);
+        });
+    }
+    $('#dragon').on('cocoon:after-insert', function () {
+        check_to_hide_or_show_add_link();
+    });
+
+    $('#dragon').on('cocoon:after-remove', function () {
+        check_to_hide_or_show_add_link();
+    });
+
+    check_to_hide_or_show_add_link();
+
+    function check_to_hide_or_show_add_link() {
+        if ($('#dragon .nested-fields').length == 4) {
+            $('a.btn.btn-primary.add_fields').hide();
+        } else {
+            $('#add-category a').show();
+        }
+    }
+</script>
+<script>
+    function loadInfo(title, description)
+    {
+        $('#budget_investment_title').val(title);
+
+        $('#budget_investment_description').val(description);
+        CKEDITOR.instances['budget_investment_description'].setData(description)
+    }
+
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function (){
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if(content.style.maxHeight){
+                content.style.maxHeight = null;
+            }else{
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#containertags ul').hide();
+        $('#containertags_new ul').hide();
+        $('#containertags_new ul').hide();
+
+        $('.sectoriales').hide();
+        $('.descriptions').hide();
+        $('#price').hide();
+
+        $('#budget_investment_heading_id').on('change', function (){
+            var prices = $(this).find(':selected').data('price');
+            var texto = this.options[this.selectedIndex].textContent;
+            var second = texto.charAt(0) + texto.charAt(1);
+
+            $('#price').show();
+            $('#price').html('');
+            var f = typeof prices;
+            if (f != "undefined") {
+                if (prices >= 0) {
+                    var dinero = '$' + prices.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                    $('#price').html('Presupuesto disponible: ' + dinero);
+                } else {
+                    $('#price').show();
+                    $('#price').html('');
+                }
+            } else {
+                $('#price').show();
+                $('#price').html('');
+            }
+
+            let selected_heading_id = $("#budget_investment_heading_id option:selected").val();
+            $('.descriptions').hide();
+            $('#' + selected_heading_id).show();
+            if (texto.charAt(0) == "K") {
+                $('#' + second).show();
+                $('#category_tags-r').hide();
+                $('#budget_investment_tag_list').val("Proyectos sectoriales");
+            } else {
+                $('.sectoriales').hide();
+                $('#category_tags-r').show();
+                $('#budget_investment_tag_list').val("");
+            }
+        });
+
+        $("#category_tags-r a").on("click", function () {
+            var id = $(this).data("id");
+
+            if ($(this).hasClass('actives')) {
+                $("#" + id).toggle();
+                $(this).removeClass("actives");
+            } else {
+                $('#containertags ul').hide();
+                $('#containertags_new ul').hide();
+                // $("#" + id).slideToggle();
+                
+                $("[id^='" + id + "']").each(function() {
+                    $(this).slideToggle();
+                });
+
+                $('#category_tags-r a').removeClass("actives");
+                $(this).addClass("actives");
+            }
+            //$('html, body').animate({
+            //   'scrollTop':   $("#"+id).offset().top - 200
+            //}, 2000);
+        });
+
+        if(fLocation !== '')
+        {
+            $.get('<%= geocode_path %>', { address: fLocation }, function(data) {
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                marker = L.marker([data.latitude, data.longitude], {icon: myIcon}).addTo(map)
+                map.setView([data.latitude, data.longitude], 25)
+            });
+        }
+
+        $('#address').autocomplete({
+            source: '<%= autocomplete_investment_address_path %>',
+            minLength: 3,
+            select: function(event, ui) {
+            $(this).val(ui.item.value);
+            $.get('<%= geocode_path %>', { address: ui.item.value }, function(data) {
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                marker = L.marker([data.latitude, data.longitude], {icon: myIcon}).addTo(map)
+                map.setView([data.latitude, data.longitude], 25)
+            });
+            return false;
+            }
+        });
+    });
+</script>

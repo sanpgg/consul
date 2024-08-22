@@ -1,0 +1,491 @@
+<div class="box-ballot-fixed position-fixed hidden-md">
+	<p><strong>Cuentas con 2 votos (1 sectorial y 1 comunitario).</strong> Hasta el momento has votado por:</p>
+	<div class="d-flex justify-content-between align-items-center mt-4 ">
+		<% if has_line_by_investment_size('large') %>
+			<i class="fa-solid fa-check bg-green"></i>
+		<% else %>
+			<i class="fa-solid fa-ban bg-gray"></i>
+		<% end %>
+		<span><strong>Proyecto sectorial</strong></span>
+	</div>
+	<hr>
+	<div class="d-flex justify-content-between align-items-center mt-4">
+		<% if has_line_by_investment_size('medium') %>
+			<i class="fa-solid fa-check bg-lila"></i>
+		<% else %>
+			<i class="fa-solid fa-ban bg-gray"></i>
+		<% end %>
+		<span><strong>Proyectos comunitarios</strong></span>
+	</div>
+	<a href="/presupuestos/<%= current_budget.id %>/votes">Revisar mis votos</a>
+</div>
+
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-9 col-xl-5 text-center">
+		<h1>¡Vota por tus proyectos favoritos! </h1>
+		<div>
+			<% sector = new_sectors.select {|e| e[:short_name] == current_user.colonium.first.sector}.first %>
+			<p class="text-capitalize"><strong><%= current_user.born_names %></strong>, perteneces al sector <%= sector[:short_name] %> <%= sector[:large_name] %></p>
+		</div>
+	    <div class="content-search-nav position-relative filter-ballot">
+	        <form class="filter-ballot">
+	            <div class="mb-3">
+	                <span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+	                <%= form_tag budgets_path, method: :get, id: "search-form" do %>
+	                    <%= text_field_tag :query, nil, placeholder: "Buscar", class: "form-control" %>
+	                <% end %>
+	            </div>
+	        </form>
+	        <button class="setting" data-bs-toggle="modal" data-bs-target="#searchModal">
+	            <svg width="24px" height="18px" viewBox="0 0 24 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+	                        <g id="Buscador---1" transform="translate(-656.000000, -47.000000)" stroke="#071110">
+	                            <g id="Group-3" transform="translate(657.523810, 48.714286)">
+	                                <g id="Group-14" transform="translate(5.434783, 1.955556)" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+	                                    <line x1="0" y1="0.523809524" x2="14.4927536" y2="0.523809524" id="Path-19"></line>
+	                                </g>
+	                                <g id="Group-15" transform="translate(1.594203, 9.777778)">
+	                                    <line x1="0" y1="2.44444444" x2="14.5755694" y2="2.44444444" id="Path-19-Copy" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></line>
+	                                    <ellipse id="Oval-Copy-4" stroke-width="2" fill="#FFFFFF" cx="16.9668737" cy="2.44444444" rx="2.39130435" ry="2.44444444"></ellipse>
+	                                </g>
+	                                <ellipse id="Oval" stroke-width="2" fill="#FFFFFF" cx="2.39130435" cy="2.44444444" rx="2.39130435" ry="2.44444444"></ellipse>
+	                            </g>
+	                            <ellipse id="Oval" stroke-width="2" fill="#FFFFFF" cx="2.39130435" cy="2.44444444" rx="2.39130435" ry="2.44444444"></ellipse>
+	                        </g>
+	                    </g>
+	                </g>
+	            </svg>
+	        </button>
+	    </div>
+	</div>
+</div>
+
+<p class="d-none"><%= @texts %></p>
+
+<div class="container mt-5 mb-5">
+
+  <% filters = '' %>
+  <% filters = "Presupuesto participativo #{params[:ppy]}" if params[:ppy].present? %>
+  <% filters = "#{filters} - Sector: #{params[:s]}" if params[:s].present? %>
+  <% filters = "Presupuesto participativo #{current_budget.short_name}" if params[:s].present? && params[:s] == 'all' %>
+  <% filters = "#{filters} - Tamaño: #{params[:size] == 'large' ? '12.5 MDP' : '1 MDP'}" if params[:size].present? %>
+  <% filters = "#{filters} - Búsqueda: '#{params[:query]}'" if params[:query].present? %>
+
+  <p class="d-none">Propuestas: <%= @investments&.count %></p>
+<% if @investments.empty? %>
+  <div class="container mt-5 pb-5">
+    <div class="budget-investment-new">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center confetti">
+          <%= image_tag '/images/img-ayuda.png', alt: 'Confetti', class: 'mb-4' %>
+          <h1>No se encontraron propuestas con los filtros: <%= filters %></h1>
+          <p class="mb-5">Para ver otras propuestas, vuelve a realizar otra búsqueda, o bien, desliza hacia abajo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <h1 class="mb-5 d-none"><%= filters %></h1>
+<% end %>
+
+
+  <div class="row c-investments mb-5">
+  	<div class="row justify-content-center mb-5">
+  		<div class="col-md-12 col-lg-10 col-xl-8">
+				<div class="box-ballot-fixed hidden-lg p-4 box-shadown" style="max-width: initial;">
+					<p><strong>Cuentas con 2 votos (1 sectorial y 1 comunitario).</strong><br> Hasta el momento has votado por:</p>
+					<div class="d-flex align-items-center mt-4">
+						<% if has_line_by_investment_size('large') %>
+							<i class="fa-solid fa-check bg-green"></i>
+						<% else %>
+							<i class="fa-solid fa-ban bg-gray"></i>
+						<% end %>
+						<span><strong>Proyecto sectorial</strong></span>
+					</div>
+					<hr>
+					<div class="d-flex align-items-center mt-4">
+						<% if has_line_by_investment_size('medium') %>
+							<i class="fa-solid fa-check bg-lila"></i>
+						<% else %>
+							<i class="fa-solid fa-ban bg-gray"></i>
+						<% end %>
+						<span><strong>Proyectos comunitarios</strong></span>
+					</div>
+					<a href="/presupuestos/<%= current_budget.id %>/votes">Revisar mis votos</a>
+				</div>
+			</div>
+		</div>
+    <%= render partial: 'budgets/ballot/investment_to_vote', collection: @investments, as: :investment %>
+  </div>
+  <div id="loading" class="d-none text-center mt-3 mb-3">
+		<!-- Aquí se mostrará la animación de carga -->
+		<img src="/images/loading.gif" alt="Loading...">
+	</div>
+  <div class="gradient-white"></div>
+  <%#= paginate @investments, remote: true %>
+  <button id="btn-arriba" onclick="irArriba()"><i class="fa-solid fa-chevron-up"></i></button>
+  </div>
+
+<!-- Modal Explora -->
+<div class="modal fade" id="searchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header justify-content-end">
+				<button class="text-right" data-bs-dismiss="modal" aria-label="Close">
+					<svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+							<g id="Buscador---Filtros" transform="translate(-964.000000, -79.000000)" stroke="#FFFFFF" stroke-width="2">
+								<g id="Group" transform="translate(965.000000, 80.000000)">
+									<line x1="0" y1="19" x2="19" y2="0" id="Path-5-Copy-2"></line>
+									<line x1="0" y1="0" x2="19" y2="19" id="Path-5-Copy-3"></line>
+								</g>
+							</g>
+						</g>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="filters-form">
+					<div class="mb-3">
+						<input name="query" type="text" placeholder="Buscar proyecto">
+					</div>
+					<div class="title-desc pb-2">
+						<h3 class="mb-2">Sugerencias de busqueda</h3>
+						<p>Puedes realizar búsquedas por: número de <strong>ID de proyecto</strong>, nombre del <strong>ponente</strong>, localidad o <strong>sector</strong>.</p>
+					</div>
+					
+					<div class="content-filters">
+						<h3>Filtros</h3>
+						
+						<div id="sizes">
+							<h4 class="mt-4 mb-2">Filtrar por tipo de proyectos</h4>
+
+							<input type="hidden" name="size" id="size-filter">
+
+							<% new_sizes.each do |s| %>
+								<div class="mb-3">
+									<div class="d-flex justify-content-between align-items-center">
+										<label for="<%= s[:short_name] %>"><%= s[:large_name].html_safe %></label>
+										<div class="form-check form-switch">
+											<input class="form-check-input" type="checkbox" id="<%= s[:short_name] %>" data-size="<%= s[:short_name] %>">
+										</div>
+									</div>
+								</div>
+							<% end %>
+
+						</div>
+
+						<div id="status" style="display: none;">
+							<h4 class="mt-4">Filtrar por evaluación de proyecto:</h4>
+							<div class="mb-3">
+								<div class="d-flex justify-content-between align-items-center">
+									<label for="proyecto_ganador">Proyectos Ganadores</label>
+									<div class="form-check form-switch">
+										<input class="form-check-input status-cb" type="checkbox" value="w" id="proyecto_ganador">
+									</div>
+								</div>
+							</div>
+							<div class="mb-3">
+								<div class="d-flex justify-content-between align-items-center">
+									<label for="proyecto_factible">Proyectos Factibles</label>
+									<div class="form-check form-switch">
+										<input class="form-check-input status-cb" type="checkbox" value="f" id="proyecto_factible">
+									</div>
+								</div>
+							</div>
+							<div class="mb-3">
+								<div class="d-flex justify-content-between align-items-center">
+									<label for="proyecto_no_factible">Proyectos No Factibles</label>
+									<div class="form-check form-switch">
+										<input class="form-check-input status-cb" type="checkbox" value="uf" id="proyecto_no_factible">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<input type="hidden" name="status" value="">
+
+						<div class="mb-3">
+							<h4 class="mb-2">Categorías</h4>
+							<div class="content-categorias">
+								<input type="hidden" name="categorias">
+								<ul id="select-categories" class="d-flex flex-wrap">
+									<li>
+										<a data-cat="-Movilidad">Movilidad</a>
+									</li>
+									<li>
+										<a data-cat="-Inclusión">Inclusión</a>
+									</li>
+									<li>
+										<a data-cat="-Educación">Educación</a>
+									</li>
+									<li>
+										<a data-cat="-Medio ambiente">Medio ambiente</a>
+									</li>
+									<li>
+										<a data-cat="-Cultura y deportes">Cultura y deportes</a>
+									</li>
+									<li>
+										<a data-cat="-Seguridad">Seguridad</a>
+									</li>
+									<li>
+										<a data-cat="-Impulso económico">Impulso económico</a>
+									</li>
+									<li>
+										<a data-cat="-Parques y jardines">Parques y jardines</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="d-flex justify-content-between align-items-center">
+							<%# <a class="quit-filter" href="#">Quitar Filtros</a> %>
+							<button class="btn-black font-16 py-2 px-3" type="submit">Aplicar Filtros</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+<script>
+	window.onscroll = function() {scrollFunction()};
+
+	function scrollFunction() {
+		if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+			document.getElementById("btn-arriba").style.display = "block";
+		} else {
+			document.getElementById("btn-arriba").style.display = "none";
+		}
+	}
+
+	function irArriba() {
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+	}
+
+
+	document.addEventListener("DOMContentLoaded", function() {
+
+		// Obtener los elementos de los checkboxes
+		var checkboxes = $('.status-cb');
+
+		// Obtener el elemento del input oculto
+		var statusInput = $('input[name="status"]');
+
+		// Agregar el event listener a todos los checkboxes
+		checkboxes.on('change', function() {
+			// Desmarcar los demás checkboxes
+			checkboxes.not(this).prop('checked', false);
+
+			// Obtener el valor del checkbox seleccionado
+			var value = $(this).val();
+
+			// Establecer el valor del input oculto
+			statusInput.val(value);
+		});
+
+		// Quité temporalmente las categorías
+
+		$('.quit-filter').on('click', function(){
+			$("[name='periodo']").val('');
+			$('#select-periodo li a').removeClass('selected');
+
+			// $("[name='categorias']").val('');
+			// $('#select-categories li a').removeClass('selected');
+
+			$("input[type='checkbox']").each(function( index ) {
+				if ($(this).is(':checked')) {
+					$(this).prop('checked', false); 
+				}
+			});
+		});
+	
+		// $('#select-periodo li a').on('click', function(){
+		// 	var periodo = $(this).data('periodo');
+		
+		// 	$("[name='periodo']").val(periodo);
+		// 	$('#select-periodo li a').removeClass('selected');
+		// 	$(this).addClass('selected');
+
+		// });
+
+		$('#select-categories li a').on('click', function(){
+			var category = $(this).data('cat');
+		
+		 	$("[name='categorias']").val(category);
+		 	$('#select-categories li a').removeClass('selected');
+			$(this).addClass('selected');
+		});
+
+		const periodoInput = document.getElementById("ppy");
+		const links = document.querySelectorAll("a[data-periodo]");
+
+		function updateSelectedClass(target) {
+			links.forEach(link => {
+				if (link === target) {
+					link.classList.add("selected");
+				} else {
+					link.classList.remove("selected");
+				}
+			});
+		}
+
+		function updateSectorsVisibility() {
+			var sectors = $("#sectors");
+
+			if(periodoInput.value == '2019' || periodoInput.value == '2021')
+			{
+				$("input[type='checkbox']").each(function( index ) {
+					if ($(this).is(':checked')) {
+						$(this).prop('checked', false); 
+					}
+				});
+				
+				sectors.hide();
+			}
+			else
+			{
+				sectors.show();
+			}
+		}
+
+		function updateSizesVisibility() {
+			var sizes = $("#sizes");
+
+			if(periodoInput.value == '2019' || periodoInput.value == '2021' || periodoInput.value == '2022')
+			{
+				sizes.hide();
+			}
+			else
+			{
+				sizes.show();
+			}
+		}
+
+		function updateStatusVisibility() {
+			var status = $("#status");
+
+			if(periodoInput.value == '2019' || periodoInput.value == '2021' || periodoInput.value == '2022')
+			{
+				status.show();
+			}
+			else
+			{
+				status.hide();
+			}
+		}
+
+		links.forEach(link => {
+			link.addEventListener("click", (e) => {
+				e.preventDefault();
+				const periodo = e.target.getAttribute("data-periodo");
+				periodoInput.value = periodo;
+				updateSelectedClass(e.target);
+				updateSectorsVisibility();
+				updateSizesVisibility();
+				updateStatusVisibility();
+			});
+		});
+
+    	const sectorCheckboxes = document.querySelectorAll("#sectors .form-check .form-check-input");
+    	const sizesCheckboxes = document.querySelectorAll("#sizes .form-check .form-check-input");
+		const sectorInput = document.getElementById("sector-filter");
+		const sizeInput = document.getElementById("size-filter");
+
+		sectorCheckboxes.forEach(checkbox => {
+			checkbox.addEventListener("change", (e) => {
+				if (e.target.checked) {
+					sectorInput.value = e.target.getAttribute("data-short-name");
+				
+					sectorCheckboxes.forEach(otherCheckbox => {
+				
+						if (otherCheckbox !== e.target) {
+							otherCheckbox.checked = false;
+						}
+					});
+				}
+				else {
+          			sectorInput.value = "";
+        		}
+			});
+		});
+
+		sizesCheckboxes.forEach(checkbox => {
+			checkbox.addEventListener("change", (e) => {
+				if (e.target.checked) {
+					sizeInput.value = e.target.getAttribute("data-size");
+				
+					sizesCheckboxes.forEach(otherCheckbox => {
+				
+						if (otherCheckbox !== e.target) {
+							otherCheckbox.checked = false;
+						}
+					});
+				}
+				else {
+          			sizeInput.value = "";
+        		}
+			});
+		});
+	});
+
+	$(document).ready(function() {
+
+		// Obtener el elemento del formulario
+		var form = $('form');
+
+		// Agregar el event listener para antes del envío
+		form.on('submit', function(event) {
+		// Obtener todos los inputs en el formulario
+		var inputs = form.find('input[name]');
+
+		// Iterar sobre los inputs para eliminar los que tienen valor vacío
+		inputs.each(function() {
+			var value = $(this).val();
+
+			if (value === '') {
+			$(this).remove();
+			}
+		});
+		});
+
+  		var page = 2;
+  		var loading = false;
+
+		function loadMoreInvestments() {
+			if (!loading) {
+				loading = true;
+				$.ajax({
+					url: '<%= load_more_investments_b_path(current_budget.id, page: @investments.next_page, query: params[:query], categorias: params[:categorias], size: params[:size]) %>',
+					data: { page: page },
+					type: 'GET',
+					dataType: 'script',
+					beforeSend: function() {
+			        // setting a timeout
+							$("#loading").removeClass('d-none');
+			        $("#loading").addClass('d-block');
+			    },
+					success: function(response) {
+						loading = false;
+						page += 1;
+						$("#loading").addClass('d-none');
+					},
+					error: function(xhr, status, error) {
+						console.log(error);
+						$("#loading").addClass('d-none');
+					}
+				});
+			}
+		}
+
+		$(window).scroll(function() {
+			if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+				loadMoreInvestments();
+			}
+		});
+	});
+</script>

@@ -1,4 +1,4 @@
-class AddExtraCountersToTags < ActiveRecord::Migration[4.2]
+class AddExtraCountersToTags < ActiveRecord::Migration
   def change
     add_column :tags, :debates_count, :integer, default: 0
     add_column :tags, :proposals_count, :integer, default: 0

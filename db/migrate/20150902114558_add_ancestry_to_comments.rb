@@ -1,4 +1,4 @@
-class AddAncestryToComments < ActiveRecord::Migration[4.2]
+class AddAncestryToComments < ActiveRecord::Migration
   def change
     add_column :comments, :ancestry, :string
 

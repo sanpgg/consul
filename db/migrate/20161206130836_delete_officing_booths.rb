@@ -1,9 +1,8 @@
-class DeleteOfficingBooths < ActiveRecord::Migration[4.2]
-  def up
+class DeleteOfficingBooths < ActiveRecord::Migration
+  def self.up
     drop_table :poll_officing_booths
   end
 
-  def down
-    fail ActiveRecord::IrreversibleMigration
+  def self.down
   end
 end

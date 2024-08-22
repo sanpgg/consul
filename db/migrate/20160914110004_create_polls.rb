@@ -1,4 +1,4 @@
-class CreatePolls < ActiveRecord::Migration[4.2]
+class CreatePolls < ActiveRecord::Migration
   def change
     create_table :polls do |t|
       t.string :name

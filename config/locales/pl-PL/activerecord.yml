@@ -1,29 +1,14 @@
 pl:
-  attributes:
-    geozone_id: "Zakres działania"
-    results_enabled: "Pokaż wyniki"
-    stats_enabled: "Pokaż statystyki"
-    advanced_stats_enabled: "Pokaż zaawansowane statystyki"
   activerecord:
     models:
-      activity:
-        one: "aktywność"
-        few: "aktywności"
-        many: "aktywności"
-        other: "aktywności"
-      budget:
-        one: "Budżet"
-        few: "Budżety"
-        many: "Budżety"
-        other: "Budżety"
       budget/investment:
         one: "Inwestycja"
         few: "Inwestycje"
-        many: "Inwestycje"
-        other: "Inwestycje"
+        many: "Inwestycji"
+        other: "Inwestycji"
       milestone:
         one: "kamień milowy"
-        few: "kamieni milowych"
+        few: "kamienie milowe"
         many: "kamieni milowych"
         other: "kamieni milowych"
       milestone/status:
@@ -34,63 +19,43 @@ pl:
       comment:
         one: "Komentarz"
         few: "Komentarze"
-        many: "Komentarze"
-        other: "Komentarze"
+        many: "Komentarzy"
+        other: "Komentarzy"
       debate:
         one: "Debata"
         few: "Debaty"
-        many: "Debaty"
-        other: "Debaty"
+        many: "Debat"
+        other: "Debat"
       tag:
         one: "Znacznik"
-        few: "Tagi"
-        many: "Tagi"
-        other: "Tagi"
+        few: "Znaczniki"
+        many: "Znaczników"
+        other: "Znaczników"
       user:
         one: "Użytkownik"
         few: "Użytkownicy"
-        many: "Użytkownicy"
-        other: "Użytkownicy"
-      moderator:
-        one: "Moderator"
-        few: "Moderatorzy"
-        many: "Moderatorzy"
-        other: "Moderatorzy"
+        many: "Użytkowników"
+        other: "Użytkowników"
       administrator:
         one: "Administrator"
-        few: "Administrator"
-        many: "Administrator"
-        other: "Administrator"
-      valuator:
-        one: "Wyceniający"
-        few: "Wyceniający"
-        many: "Wyceniający"
-        other: "Wyceniający"
-      valuator_group:
-        one: "Grupa weryfikująca"
-        few: "Grupy Wyceniające"
-        many: "Grupy Wyceniające"
-        other: "Grupy Wyceniające"
-      manager:
-        one: "Kierownik"
-        few: "Kierownicy"
-        many: "Kierownicy"
-        other: "Kierownicy"
+        few: "Administratorzy"
+        many: "Administratorów"
+        other: "Administratorów"
       newsletter:
         one: "Newsletter"
-        few: "Biuletyny"
-        many: "Biuletyny"
-        other: "Biuletyny"
+        few: "Newslettery"
+        many: "Newsletterów"
+        other: "Newsletterów"
       vote:
         one: "Głos"
         few: "Głosy"
-        many: "Głosy"
-        other: "Głosy"
+        many: "Głosów"
+        other: "Głosów"
       organization:
         one: "Organizacja"
         few: "Organizacje"
-        many: "Organizacje"
-        other: "Organizacje"
+        many: "Organizacji"
+        other: "Organizacji"
       poll/booth:
         one: "kabina wyborcza"
         few: "kabiny wyborcze"
@@ -101,46 +66,51 @@ pl:
         few: "Propozycje obywatelskie"
         many: "Propozycji obywatelskich"
         other: "Propozycji obywatelskich"
+      spending_proposal:
+        one: "Projekt inwestycyjny"
+        few: "Projekty inwestycyjne"
+        many: "Projektów inwestycyjnych"
+        other: "Projektów inwestycyjnych"
       site_customization/page:
         one: Niestandardowa strona
-        few: Strony niestandardowe
-        many: Strony niestandardowe
-        other: Strony niestandardowe
+        few: Niestandardowe strony
+        many: Niestandardowych stron
+        other: Niestandardowych stron
       site_customization/image:
         one: Niestandardowy obraz
         few: Niestandardowe obrazy
-        many: Niestandardowe obrazy
-        other: Niestandardowe obrazy
+        many: Niestandardowych obrazów
+        other: Niestandardowych obrazów
       site_customization/content_block:
         one: Niestandardowy blok
-        few: Niestandardowe bloki zawartości
-        many: Niestandardowe bloki zawartości
-        other: Niestandardowe bloki zawartości
+        few: Niestandardowe bloki
+        many: Niestandardowych bloków
+        other: Niestandardowych bloków
       legislation/process:
         one: "Proces"
         few: "Procesy"
-        many: "Procesy"
-        other: "Procesy"
-      legislation/proposal:
-        one: "Wniosek"
-        few: "Wnioski"
-        many: "Wnioski"
-        other: "Wnioski"
+        many: "Procesów"
+        other: "Procesów"
       legislation/draft_versions:
         one: "Wersja robocza"
         few: "Wersje robocze"
-        many: "Wersje robocze"
-        other: "Wersje robocze"
+        many: "Wersji roboczych"
+        other: "Wersji roboczych"
+      legislation/draft_texts:
+        one: "Projekt"
+        few: "Projekty"
+        many: "Projektów"
+        other: "Projektów"
       legislation/questions:
         one: "Pytanie"
         few: "Pytania"
-        many: "Pytania"
-        other: "Pytania"
+        many: "Pytań"
+        other: "Pytań"
       legislation/question_options:
         one: "Opcja pytania"
         few: "Opcje pytania"
-        many: "Opcje pytania"
-        other: "Opcje pytania"
+        many: "Opcji pytania"
+        other: "Opcji pytania"
       legislation/answers:
         one: "Odpowiedź"
         few: "Odpowiedzi"
@@ -149,25 +119,20 @@ pl:
       documents:
         one: "Dokument"
         few: "Dokumenty"
-        many: "Dokumenty"
-        other: "Dokumenty"
+        many: "Dokumentów"
+        other: "Dokumentów"
       images:
         one: "Obraz"
         few: "Obrazy"
-        many: "Obrazy"
-        other: "Obrazy"
+        many: "Obrazów"
+        other: "Obrazów"
       topic:
         one: "Temat"
         few: "Tematy"
-        many: "Tematy"
-        other: "Tematy"
-      poll:
-        one: "Głosowanie"
-        few: "Ankiety"
-        many: "Ankiety"
-        other: "Ankiety"
+        many: "Tematów"
+        other: "Tematów"
       proposal_notification:
-        one: "Zgłoszenie propozycji"
+        one: "Powiadomienie o wniosku"
         few: "Powiadomienie o wnioskach"
         many: "Powiadomienie o wnioskach"
         other: "Powiadomienie o wnioskach"
@@ -183,8 +148,6 @@ pl:
         description_finished: "Opis po zakończeniu budżetu"
         phase: "Etap"
         currency_symbol: "Waluta"
-      budget/translation:
-        name: "Nazwisko"
       budget/investment:
         heading_id: "Nagłówek"
         title: "Tytuł"
@@ -195,13 +158,6 @@ pl:
         organization_name: "Jeśli wnioskujesz w imieniu zespołu/organizacji, lub w imieniu większej liczby osób, wpisz ich nazwę"
         image: "Opisowy obraz wniosku"
         image_title: "Tytuł obrazu"
-        duration: "Zakres czasu"
-        feasibility_feasible: "Wykonalne"
-      geozone:
-        name: Nazwa
-        external_code: "Zewnętrzny kod (opcjonalnie)"
-        census_code: "Kod ze spisu (opcjonalnie)"
-        html_map_coordinates: "współrzędne (opcjonalnie) HTML <map>"
       milestone:
         status_id: "Bieżący stan inwestycji (opcjonalnie)"
         title: "Tytuł"
@@ -210,13 +166,6 @@ pl:
       milestone/status:
         name: "Nazwa"
         description: "Opis (opcjonalnie)"
-      progress_bar:
-        kind: "Typ"
-        title: "Tytuł"
-        percentage: "Aktualny etap"
-      progress_bar/kind:
-        primary: "Główny"
-        secondary: "Dodatkowy"
       budget/heading:
         name: "Nazwa nagłówka"
         price: "Koszt"
@@ -227,28 +176,35 @@ pl:
       debate:
         author: "Autor"
         description: "Opinia"
-        terms_of_service: "Warunki użytkowania"
+        terms_of_service: "Regulamin"
         title: "Tytuł"
       proposal:
         author: "Autor"
         title: "Tytuł"
         question: "Pytanie"
         description: "Opis"
-        terms_of_service: "Regulamin"
+        terms_of_service: "Warunki użytkowania"
       user:
         login: "E-mail lub nazwa użytkownika"
         email: "E-mail"
         username: "Nazwa użytkownika"
         password_confirmation: "Potwierdzenie hasła"
         password: "Hasło"
-        current_password: "Stare hasło"
+        current_password: "Obecne hasło"
+        phone_number: "Numer telefonu"
         official_position: "Oficjalne stanowisko"
         official_level: "Oficjalny poziom"
-        phone_number: "Numer telefonu"
         redeemable_code: "Kod weryfikacyjny otrzymany za pośrednictwem poczty e-mail"
       organization:
         name: "Nazwa organizacji"
         responsible_name: "Osoba odpowiedzialna za grupę"
+      spending_proposal:
+        administrator_id: "Administrator"
+        association_name: "Nazwa stowarzyszenia"
+        description: "Opis"
+        external_url: "Link do dodatkowej dokumentacji"
+        geozone_id: "Zakres operacji"
+        title: "Tytuł"
       poll:
         name: "Nazwa"
         starts_at: "Data Rozpoczęcia"
@@ -256,17 +212,11 @@ pl:
         geozone_restricted: "Ograniczone przez geozone"
         summary: "Podsumowanie"
         description: "Opis"
-      poll/translation:
-        name: "Nazwa"
-        summary: "Podsumowanie"
-        description: "Opis"
       poll/question:
         title: "Pytanie"
         summary: "Podsumowanie"
         description: "Opis"
         external_url: "Link do dodatkowej dokumentacji"
-      poll/question/translation:
-        title: "Pytanie"
       signature_sheet:
         signable_type: "Rodzaj podpisywalny"
         signable_id: "Podpisywalny identyfikator"
@@ -276,26 +226,19 @@ pl:
         created_at: Utworzony w
         subtitle: Napis
         slug: Ścieżka
-        status: Status
+        status: Stan
         title: Tytuł
         updated_at: Aktualizacja w
         more_info_flag: Pokaż na stronie pomocy
         print_content_flag: Przycisk Drukuj zawartość
         locale: Język
-      site_customization/page/translation:
-        title: Tytuł
-        subtitle: Napis
-        content: Zawartość
       site_customization/image:
         name: Nazwa
         image: Obraz
       site_customization/content_block:
         name: Nazwa
         locale: ustawienia regionalne
-        body: Zawartość
-      banner:
-        background_color: Kolor tła
-        font_color: Kolor czcionki
+        body: Ciało
       legislation/process:
         title: Tytuł procesu
         summary: Podsumowanie
@@ -305,32 +248,16 @@ pl:
         end_date: Data zakończenia
         debate_start_date: Data rozpoczęcia debaty
         debate_end_date: Data zakończenia debaty
-        draft_start_date: Początek
-        draft_end_date: Koniec
         draft_publication_date: Data publikacji projektu
         allegations_start_date: Data rozpoczęcia zarzutów
         allegations_end_date: Data zakończenia zarzutów
-        proposals_phase_start_date: Początek
-        proposals_phase_end_date: Koniec
         result_publication_date: Data publikacji wyniku końcowego
-        background_color: Kolor tła
-        font_color: Kolor czcionki
-      legislation/process/translation:
-        title: Tytuł procesu
-        summary: Podsumowanie
-        description: Opis
-        additional_info: Informacje dodatkowe
-        milestones_summary: Podsumowanie
       legislation/draft_version:
         title: Tytuł w wersji
         body: Tekst
         changelog: Zmiany
-        status: Status
+        status: Stan
         final_version: Wersja ostateczna
-      legislation/draft_version/translation:
-        title: Tytuł w wersji
-        body: Tekst
-        changelog: Zmiany
       legislation/question:
         title: Tytuł
         question_options: Opcje
@@ -340,14 +267,11 @@ pl:
         text: Komentarz
       document:
         title: Tytuł
-        attachment: "Załącznik"
+        attachment: Załącznik
       image:
         title: Tytuł
-        attachment: "Załącznik"
+        attachment: Załącznik
       poll/question/answer:
-        title: Odpowiedź
-        description: Opis
-      poll/question/answer/translation:
         title: Odpowiedź
         description: Opis
       poll/question/answer/video:
@@ -356,28 +280,14 @@ pl:
       newsletter:
         segment_recipient: Adresaci
         subject: Temat
-        from: "Od"
+        from: Od
         body: Treść wiadomości e-mail
-      admin_notification:
-        segment_recipient: Adresaci
-        title: Tytuł
-        link: Link
-        body: Tekst
-      admin_notification/translation:
-        title: Tytuł
-        body: Tekst
       widget/card:
         label: Etykieta (opcjonalnie)
         title: Tytuł
         description: Opis
         link_text: Tekst łącza
         link_url: Łącze URL
-        columns: Liczba kolumn
-      widget/card/translation:
-        label: Etykieta (opcjonalnie)
-        title: Tytuł
-        description: Opis
-        link_text: Tekst łącza
       widget/feed:
         limit: Liczba elementów
     errors:
@@ -389,7 +299,7 @@ pl:
         debate:
           attributes:
             tag_list:
-              less_than_or_equal_to: "liczba tagów musi być mniejsza lub równa %{count}"
+              less_than_or_equal_to: "tagów może być najwyżej %{count}"
         direct_message:
           attributes:
             max_per_day:
@@ -415,24 +325,23 @@ pl:
           attributes:
             document_number:
               not_in_census: "Brak dokumentu w spisie"
+              has_voted: "Użytkownik już zagłosował"
         legislation/process:
           attributes:
             end_date:
               invalid_date_range: musi być nie wcześniej niż data rozpoczęcia
             debate_end_date:
               invalid_date_range: musi być nie wcześniej niż data rozpoczęcia debaty
-            draft_end_date:
-              invalid_date_range: musi być w dniu lub po dacie rozpoczęcia draftu
             allegations_end_date:
               invalid_date_range: musi być w dniu lub po dacie rozpoczęcia zarzutów
         proposal:
           attributes:
             tag_list:
-              less_than_or_equal_to: "tagów może być najwyżej %{count}"
+              less_than_or_equal_to: "liczba tagów musi być mniejsza lub równa %{count}"
         budget/investment:
           attributes:
             tag_list:
-              less_than_or_equal_to: "tagów może być najwyżej %{count}"
+              less_than_or_equal_to: "liczba tagów musi być mniejsza lub równa %{count}"
         proposal_notification:
           attributes:
             minimum_interval:
@@ -440,8 +349,8 @@ pl:
         signature:
           attributes:
             document_number:
-              not_in_census: "Niezweryfikowane z rejestrem mieszkańców"
-              already_voted: "Już zagłosowano na tę propozycję"
+              not_in_census: 'Niezweryfikowane z rejestrem mieszkańców'
+              already_voted: 'Już zagłosowano na tę propozycję'
         site_customization/page:
           attributes:
             slug:
@@ -454,9 +363,9 @@ pl:
         comment:
           attributes:
             valuation:
-              cannot_comment_valuation: "Nie możesz komentować wyceny"
+              cannot_comment_valuation: 'Nie możesz komentować wyceny'
       messages:
-        record_invalid: "Sprawdzanie poprawności nie powiodło się: %{errors}"
+        record_invalid: "Walidacja nie powiodła się: %{errors}"
         restrict_dependent_destroy:
           has_one: "Nie można usunąć zapisu, ponieważ istnieje zależny %{record}"
           has_many: "Nie można usunąć zapisu, ponieważ istnieją zależne %{record}"

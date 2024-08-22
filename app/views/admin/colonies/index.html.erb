@@ -1,0 +1,25 @@
+<h1>Colonias</h1>
+
+<%= link_to "Nueva colonia", new_admin_colony_path, class: "button float-right" %>
+
+<table>
+    <thead>
+        <th>Sector</th>
+        <th>Colonia</th>
+        <th>Acciones</th>
+    </thead>
+    <tbody>
+        <% @colonies.each do |colony| %>
+
+            <tr>
+                <td><%= colony.sector %></td>
+                <td><%= colony.junta_nom %></td>
+                <td>
+                    <%= link_to "Editar", edit_admin_colony_path(colony.id) %>
+                    <%= link_to "Eliminar", admin_colony_path(colony.id), method: :delete %>
+                </td>
+            </tr>
+
+        <% end %>
+    </tbody>
+</table>

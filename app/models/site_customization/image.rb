@@ -1,18 +1,17 @@
-class SiteCustomization::Image < ApplicationRecord
+class SiteCustomization::Image < ActiveRecord::Base
   VALID_IMAGES = {
     "logo_header" => [260, 80],
     "social_media_icon" => [470, 246],
     "social_media_icon_twitter" => [246, 246],
     "apple-touch-icon-200" => [200, 200],
     "budget_execution_no_image" => [800, 600],
-    "map" => [420, 500],
-    "logo_email" => [400, 80]
-  }.freeze
+    "map_image" => [304, 361]
+  }
 
   has_attached_file :image
 
   validates :name, presence: true, uniqueness: true, inclusion: { in: VALID_IMAGES.keys }
-  validates_attachment_content_type :image, content_type: ["image/png", "image/jpeg"]
+  validates_attachment_content_type :image, content_type: ["image/png"]
   validate :check_image
 
   def self.all_images
@@ -29,11 +28,11 @@ class SiteCustomization::Image < ApplicationRecord
   end
 
   def required_width
-    VALID_IMAGES[name]&.first
+    VALID_IMAGES[name].try(:first)
   end
 
   def required_height
-    VALID_IMAGES[name]&.second
+    VALID_IMAGES[name].try(:second)
   end
 
   private
@@ -46,4 +45,5 @@ class SiteCustomization::Image < ApplicationRecord
       errors.add(:image, :image_width, required_width: required_width) unless dimensions.width == required_width
       errors.add(:image, :image_height, required_height: required_height) unless dimensions.height == required_height
     end
+
 end

@@ -1,5 +1,5 @@
-class RemovePhysicalVotesFromProposals < ActiveRecord::Migration[4.2]
+class RemovePhysicalVotesFromProposals < ActiveRecord::Migration
   def change
-    remove_column :proposals, :physical_votes, :integer, default: 0
+    remove_column :proposals, :physical_votes
   end
 end

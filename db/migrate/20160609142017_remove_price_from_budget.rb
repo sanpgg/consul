@@ -1,4 +1,4 @@
-class RemovePriceFromBudget < ActiveRecord::Migration[4.2]
+class RemovePriceFromBudget < ActiveRecord::Migration
   def change
     remove_column :budgets, :price, :integer
   end

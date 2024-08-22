@@ -1,15 +1,55 @@
+<style media="screen">
+  .color_button{
+    color: #44c1c7 !important;
+    font-size: large;
+  }
+  .progress-votes h3,
+  .progress-votes h2 {
+    font-size: 2rem !important;
+    width: max-content;
+  }
+  .back_ghost {
+    background: ghostwhite;
+  }
+  .progress-votes span{
+    font-size: 1.5rem !important;
+  }
+  .top-bar .menu > li .button {
+    background: #606060 !important;
+  }
+.progress-votes .spent-amount-text,
+  .progress-votes .total-amount {
+    color: black;
+  }
+  .progress-votes .progress {
+    background: white;
+	height: 3rem;
+  }
+  .progress-bar-nav {
+    background: whitesmoke;
+  }
+</style>
 <% if @heading.present? %>
-  <section class="no-margin-top margin-bottom">
+<% if @heading.name.include?("Revoluicion") %>
+  <%  @heading.name.sub! 'Revoluicion', 'Revolución' %>
+<% end %>
+
+  <section class="no-margin-top margin-bottom" style="background: #ecf0f1;">
     <div class="expanded jumbo-budget budget-heading padding">
 
       <div class="row">
         <div class="small-12 column">
-          <%= back_link_to budgets_path %>
+	<% if current_budget&.phase == 'balloting' %>	
+          <%= back_link_to budget_ballot_path(@budget) %>
+	<% else %>
+	<%= back_link_to budgets_path %>			
+	<% end %>
+
 
           <% if can? :show, @ballot %>
             <%= link_to t("budgets.investments.header.check_ballot"),
                         budget_ballot_path(@budget),
-                        class: "button float-right" %>
+                        class: "button float-right color_button" %>
           <% end %>
         </div>
       </div>
@@ -27,7 +67,7 @@
                   <%= t("budgets.investments.index.by_heading", heading: @heading.name) %>
                 </h2>
                 <div id="progress_bar" class="no-margin-top">
-                  <%= render "budgets/ballot/progress_bar", ballot: @ballot, heading: @heading %>
+                  <%= render 'budgets/ballot/progress_bar' %>
                 </div>
               </div>
             <% else %>
@@ -36,13 +76,13 @@
               </h2>
               <div class="small-12 medium-9">
                 <div class="callout warning margin-top">
-                  <%= sanitize(t("budgets.investments.header.different_heading_assigned",
-                        heading_link: heading_link(@assigned_heading, @budget))) %>
+                  <%= t("budgets.investments.header.different_heading_assigned_html",
+                        heading_link: heading_link(@assigned_heading, @budget)) %>
                   <br>
                   <small>
-                    <%= sanitize(t("budgets.investments.header.change_ballot",
+                    <%= t("budgets.investments.header.change_ballot",
                         check_ballot: link_to(t("budgets.investments.header.check_ballot_link"),
-                                      budget_ballot_path(@budget)))) %>
+                                      budget_ballot_path(@budget))).html_safe %>
                   </small>
                 </div>
               </div>
@@ -53,8 +93,8 @@
             </h2>
             <h3>
               <span class="tagline"><%= t("budgets.investments.header.price") %></span>
-              <%= @budget.formatted_heading_price(@heading) %>
             </h3>
+            <h3 class="back_ghost"><%= @budget.formatted_heading_price(@heading) %></h3>
           <% end %>
         </div>
       </div>
@@ -64,7 +104,7 @@
   <div class="expanded jumbo-budget padding no-margin-top margin-bottom">
     <div class="row">
       <div class="small-12 column">
-        <%= back_link_to budget_path(@budget) %>
+        <%= back_link_to budgets_path %>
 
         <h2 class="margin-top">
           <%= t("budgets.investments.index.title") %>

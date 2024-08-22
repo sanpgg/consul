@@ -1,5 +1,5 @@
-class RemoveGeozoneIdFromBudgetHeadings < ActiveRecord::Migration[4.2]
+class RemoveGeozoneIdFromBudgetHeadings < ActiveRecord::Migration
   def change
-    remove_column :budget_headings, :geozone_id, :integer
+    remove_column :budget_headings, :geozone_id
   end
 end

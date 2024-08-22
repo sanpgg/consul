@@ -1,10 +1,11 @@
-class Document < ApplicationRecord
+class Document < ActiveRecord::Base
   include DocumentsHelper
   include DocumentablesHelper
   has_attached_file :attachment, url: "/system/:class/:prefix/:style/:hash.:extension",
                                  hash_data: ":class/:style/:custom_hash_data",
                                  use_timestamp: false,
                                  hash_secret: Rails.application.secrets.secret_key_base
+                                 
   attr_accessor :cached_attachment, :remove, :original_filename
 
   belongs_to :user
@@ -24,8 +25,6 @@ class Document < ApplicationRecord
   before_save :set_attachment_from_cached_attachment, if: -> { cached_attachment.present? }
   after_save :remove_cached_attachment,               if: -> { cached_attachment.present? }
 
-  scope :admin, -> { where(admin: true) }
-
   def set_cached_attachment_from_attachment
     self.cached_attachment = if Paperclip::Attachment.default_options[:storage] == :filesystem
                                attachment.path
@@ -38,7 +37,7 @@ class Document < ApplicationRecord
     self.attachment = if Paperclip::Attachment.default_options[:storage] == :filesystem
                         File.open(cached_attachment)
                       else
-                        URI.parse(cached_attachment)
+                        open("https:#{cached_attachment}")
                       end
   end
 
@@ -60,11 +59,11 @@ class Document < ApplicationRecord
 
   def custom_hash_data(attachment)
     original_filename = if !attachment.instance.persisted? && attachment.instance.remove
-                          attachment.instance.original_filename
+      attachment.instance.original_filename
                         elsif !attachment.instance.persisted?
-                          attachment.instance.attachment_file_name
+      attachment.instance.attachment_file_name
                         else
-                          attachment.instance.title
+      attachment.instance.title
                         end
     "#{attachment.instance.user_id}/#{original_filename}"
   end
@@ -82,26 +81,24 @@ class Document < ApplicationRecord
     def validate_attachment_size
       if documentable_class.present? &&
          attachment_file_size > documentable_class.max_file_size
-        errors.add(:attachment, I18n.t("documents.errors.messages.in_between",
+        errors[:attachment] = I18n.t("documents.errors.messages.in_between",
                                       min: "0 Bytes",
-                                      max: "#{max_file_size(documentable_class)} MB"))
+                                      max: "#{max_file_size(documentable_class)} MB")
       end
     end
 
     def validate_attachment_content_type
       if documentable_class &&
          !accepted_content_types(documentable_class).include?(attachment_content_type)
-        accepted_content_types = documentable_humanized_accepted_content_types(documentable_class)
-        message = I18n.t("documents.errors.messages.wrong_content_type",
-                         content_type: attachment_content_type,
-                         accepted_content_types: accepted_content_types)
-        errors.add(:attachment, message)
+        errors[:attachment] = I18n.t("documents.errors.messages.wrong_content_type",
+                                      content_type: attachment_content_type,
+                                      accepted_content_types: documentable_humanized_accepted_content_types(documentable_class))
       end
     end
 
     def attachment_presence
       if attachment.blank? && cached_attachment.blank?
-        errors.add(:attachment, I18n.t("errors.messages.blank"))
+        errors[:attachment] = I18n.t("errors.messages.blank")
       end
     end
 
@@ -114,4 +111,5 @@ class Document < ApplicationRecord
       document.set_attachment_from_cached_attachment
       document.attachment.destroy
     end
+
 end

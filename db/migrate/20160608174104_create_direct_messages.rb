@@ -1,4 +1,4 @@
-class CreateDirectMessages < ActiveRecord::Migration[4.2]
+class CreateDirectMessages < ActiveRecord::Migration
   def change
     create_table :direct_messages do |t|
       t.integer :sender_id

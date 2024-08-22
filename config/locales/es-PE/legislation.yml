@@ -2,25 +2,28 @@ es-PE:
   legislation:
     annotations:
       comments:
-        see_all: Ver todas
+        see_all: Ver todos
         see_complete: Ver completo
         comments_count:
           one: "%{count} comentario"
-          other: "%{count} Comentarios"
+          other: "%{count} comentarios"
         replies_count:
           one: "%{count} respuesta"
           other: "%{count} respuestas"
         cancel: Cancelar
         publish_comment: Publicar Comentario
       form:
-        phase_not_open: Esta fase no está abierta
+        phase_not_open: Esta fase del proceso no está abierta
+        login_to_comment: Necesitas %{signin} o %{signup} para comentar.
+        signin: iniciar sesión
+        signup: registrarte
       index:
         title: Comentarios
         comments_about: Comentarios sobre
         see_in_context: Ver en contexto
         comments_count:
           one: "%{count} comentario"
-          other: "%{count} Comentarios"
+          other: "%{count} comentarios"
       show:
         title: Comentario
       version_chooser:
@@ -43,29 +46,25 @@ es-PE:
         text_body: Texto
         text_comments: Comentarios
     processes:
-      header:
-        description: Descripción detallada
-        more_info: Más información y contexto
       proposals:
         empty_proposals: No hay propuestas
-        filters:
-          winners: Seleccionada
       debate:
         empty_questions: No hay preguntas
         participate: Realiza tus aportaciones al debate previo participando en los siguientes temas.
       index:
-        filter: Filtrar
         filters:
           open: Procesos activos
+          next: Próximamente
           past: Terminados
         no_open_processes: No hay procesos activos
+        no_next_processes: No hay procesos planeados
         no_past_processes: No hay procesos terminados
         section_header:
-          icon_alt: Icono de Procesos legislativos
-          title: Procesos legislativos
-          help: Ayuda sobre procesos legislativos
+          icon_alt: Icono de Procesos reglamentarios
+          title: Procesos reglamentarios
+          help: Ayuda sobre Procesos reglamentarios
         section_footer:
-          title: Ayuda sobre procesos legislativos
+          title: Ayuda sobre Procesos reglamentarios
       phase_not_open:
         not_open: Esta fase del proceso todavía no está abierta
       phase_empty:
@@ -74,12 +73,10 @@ es-PE:
         see_latest_comments: Ver últimas aportaciones
         see_latest_comments_title: Aportar a este proceso
       shared:
-        key_dates: Fases de participación
-        debate_dates: el debate
+        key_dates: Fechas clave
+        debate_dates: Debate previo
         draft_publication_date: Publicación borrador
-        allegations_dates: Comentarios
         result_publication_date: Publicación resultados
-        milestones_date: Siguiendo
         proposals_dates: Propuestas
     questions:
       comments:
@@ -92,8 +89,7 @@ es-PE:
         comments:
           zero: Sin comentarios
           one: "%{count} comentario"
-          other: "%{count} Comentarios"
-        debate: el debate
+          other: "%{count} comentarios"
       show:
         answer_question: Enviar respuesta
         next_question: Siguiente pregunta
@@ -103,8 +99,11 @@ es-PE:
       participation:
         phase_not_open: Esta fase no está abierta
         organizations: Las organizaciones no pueden participar en el debate
-        unauthenticated: Necesitas %{signin} o %{signup} para participar.
+        signin: iniciar sesión
+        signup: registrarte
+        unauthenticated: Necesitas %{signin} o %{signup} para participar en el debate.
         verified_only: Solo los usuarios verificados pueden participar en el debate, %{verify_account}.
+        verify_account: verifica tu cuenta
         debate_phase_not_open: La fase de debate previo ya ha finalizado y en este momento no se aceptan respuestas
     shared:
       share: Compartir

@@ -1,0 +1,35 @@
+<div class="col-md-6 col-lg-4 mb-5">
+  <div class="content-proyecto pp<%= Budget.find(investment.budget_id).short_name %>">
+    <span class="periodo">PP<%= Budget.find(investment.budget_id).short_name %></span>
+
+    <% if investment.image.present? %>
+      <% image_source = investment.image_url(:large) %>
+    <% else %>
+      <% image_source = 'assets/budget_execution_no_image.jpg' %>
+    <% end %>
+    <%= link_to budget_investment_path(investment.budget_id, investment.id) do %>
+      <img class="img-project" src="<%= image_source %>">
+    <% end %>
+    <div class="title-content d-flex mt-3 justify-content-between">
+      <%= link_to budget_investment_path(investment.budget_id, investment.id) do %>
+        <h2><%= investment.title %></h2>
+      <% end %>
+      <%= link_to budget_investment_path(investment.budget_id, investment.id), class: "btn-style-3 d-block py-1 px-1"  do %>
+        Ver propuesta: <span class="project_id">#<%= investment.id %></span>
+      <% end %>
+    </div>
+    <div class="data-project">
+      <p><%= investment.author.name %></p>
+      <% sector = new_sectors.select {|e| e[:short_name] == investment.author.colonium.first.sector}.first %>
+      <span><%= investment.created_at.to_date %> ·  <%= investment.size.present? ? "#{sector[:short_name]} - #{sector[:large_name]}" : investment.heading.name %></span>
+      <br/><span><%= investment.author.colonium.first.junta_nom %></span>
+      
+      <% if investment.size.present? %>
+        <span class="d-block tipo">- <%= investment.size == 'large' ? "Proyecto sectorial 12.5 mdp" : "Proyecto comunitario 1 mdp" %></span>
+      <% else %>
+        
+      <% end %>
+      
+    </div>
+  </div>
+</div>

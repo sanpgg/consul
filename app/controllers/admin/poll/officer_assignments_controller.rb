@@ -1,4 +1,5 @@
 class Admin::Poll::OfficerAssignmentsController < Admin::Poll::BaseController
+
   before_action :load_poll
   before_action :redirect_if_blank_required_params, only: [:by_officer]
   before_action :load_booth_assignment, only: [:create]
@@ -6,7 +7,7 @@ class Admin::Poll::OfficerAssignmentsController < Admin::Poll::BaseController
   def index
     @officers = ::Poll::Officer.
                   includes(:user).
-                  order("users.username").
+                  order('users.username').
                   where(
                     id: @poll.officer_assignments.select(:officer_id).distinct.map(&:officer_id)
                   ).page(params[:page]).per(50)
@@ -65,4 +66,5 @@ class Admin::Poll::OfficerAssignmentsController < Admin::Poll::BaseController
     def load_search
       @search = search_params[:search]
     end
+
 end

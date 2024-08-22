@@ -1,4 +1,4 @@
-class CreateOfficingBooths < ActiveRecord::Migration[4.2]
+class CreateOfficingBooths < ActiveRecord::Migration
   def change
     create_table :poll_officing_booths do |t|
       t.belongs_to :officer

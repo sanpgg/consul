@@ -14,6 +14,9 @@ en:
         publish_comment: Publish Comment
       form:
         phase_not_open: This phase is not open
+        login_to_comment: You must %{signin} or %{signup} to leave a comment.
+        signin: Sign in
+        signup: Sign up
       index:
         title: Comments
         comments_about: Comments about
@@ -59,26 +62,27 @@ en:
         filter: Filter
         filters:
           open: Open processes
+          next: Next
           past: Past
         no_open_processes: There aren't open processes
+        no_next_processes: There aren't planned processes
         no_past_processes: There aren't past processes
         section_header:
-          icon_alt: Collaborative legislation icon
-          title: Collaborative legislation
-          help: Help about collaborative legislation
+          icon_alt: Legislation processes icon
+          title: Legislation processes
+          help: Help about legislation processes
         section_footer:
-          title: Help about collaborative legislation
-          description: Participate in the debates and processes prior to the approval of new regulations or strategies. Your opinion will be considered.
+          title: Help about legislation processes
+          description: Participate in the debates and processes prior to the approval of a ordinance or a municipal action. Your opinion will be considered by the City Council.
       phase_not_open:
         not_open: This phase is not open yet
       phase_empty:
-        empty: Nothing published yet
+          empty: Nothing published yet
       process:
         see_latest_comments: See latest comments
         see_latest_comments_title: Comment on this process
       shared:
-        key_dates: Participation phases
-        homepage: Homepage
+        key_dates: Key dates
         debate_dates: Debate
         draft_publication_date: Draft publication
         allegations_dates: Comments
@@ -107,8 +111,11 @@ en:
       participation:
         phase_not_open: This phase is not open
         organizations: Organisations are not permitted to participate in the debate
+        signin: Sign in
+        signup: Sign up
         unauthenticated: You must %{signin} or %{signup} to participate.
         verified_only: Only verified users can participate, %{verify_account}.
+        verify_account: verify your account
         debate_phase_not_open: Debate phase has finished and answers are not accepted anymore
     shared:
       share: Share
@@ -117,33 +124,3 @@ en:
       form:
         tags_label: "Categories"
       not_verified: "For vote proposals %{verify_account}."
-      process_title: Collaborative legislation process
-    summary:
-      title: "Summary"
-      votes:
-        zero: "%{count} votes"
-        one: "%{count} vote"
-        other: "%{count} votes"
-      debate_phase: "Debate phase"
-      proposals_phase: "Proposals phase"
-      allegations_phase: "Comments phase"
-      debates:
-        zero: "No debates"
-        one: "%{count} debate"
-        other: "%{count} debates"
-      proposals:
-        zero: "No proposals"
-        one: "%{count} proposal"
-        other: "%{count} proposals"
-      comments:
-        zero: "No comments"
-        one: "%{count} comment"
-        other: "%{count} comments"
-      download: "Download summary"
-      top_comments:
-        zero: "No comments"
-        one: "%{count} comment"
-        other: "Top comments"
-      most_voted_comments: "Most voted comments"
-      no_allegation: "There are no comments"
-      process_empty: "This process didn't have any participation phases"

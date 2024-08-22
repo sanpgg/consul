@@ -1,0 +1,123 @@
+<head>
+    <meta charset="utf-8">
+    <title>Decide San Pedro</title>
+    <!-- Mobile Specific Metas
+    ================================================== -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="description" content="Decide San Pedro 2023  es la nueva plataforma del Programa de Presupuesto Participativo municipal, donde tú propones y decides qué proyectos se van a llevar a cabo en tu comunidad">
+    <meta name="keywords" content="decide san pedro garza participacion votacion gobierno presupuesto participativo">
+    <link rel="profile" href="http://gmpg.org/xfn/11">
+
+    <!--CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- <script src="js/utils.js"></script> -->
+</head>
+<body>
+<header class="br-btm-shadow mb-2">
+    <div class="top-header header-explora">
+        <div class="container-xxl">
+            <div class="row">
+                <div class="col-3 order-lg-1 col-lg-2">
+                    <div class="logo mt-4">
+                        <a href="/" title="Decide San Pedro">
+                            <%= link_to root_path, accesskey: "0" do %>
+                            <%= image_tag(image_path_for('logo-dark.png'), id: 'logo-sp', alt: "Decide San Pedro") %>
+                             <% end %>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-9 order-lg-3 col-lg-7 pt-30 pb-50 text-end text-sm-end mtext-md-end">
+                    <%= render partial:"shared/nav_menu", locals: { myclass: 'nav-color' } %>
+                </div>
+                <div class="col-12 order-lg-2 col-lg-3">
+                    <div class="content-search-nav position-relative">
+                        <form>
+                            <div class="mb-3">
+                                <span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <%= form_tag budgets_path, method: :get, id: "search-form" do %>
+                                    <%= text_field_tag :query, nil, placeholder: "Buscar", class: "form-control" %>
+                                <% end %>
+                            </div>
+                        </form>
+                        <button class="setting" data-bs-toggle="modal" data-bs-target="#searchModal">
+                            <svg width="24px" height="18px" viewBox="0 0 24 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="Buscador---1" transform="translate(-656.000000, -47.000000)" stroke="#071110">
+                                            <g id="Group-3" transform="translate(657.523810, 48.714286)">
+                                                <g id="Group-14" transform="translate(5.434783, 1.955556)" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+                                                    <line x1="0" y1="0.523809524" x2="14.4927536" y2="0.523809524" id="Path-19"></line>
+                                                </g>
+                                                <g id="Group-15" transform="translate(1.594203, 9.777778)">
+                                                    <line x1="0" y1="2.44444444" x2="14.5755694" y2="2.44444444" id="Path-19-Copy" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></line>
+                                                    <ellipse id="Oval-Copy-4" stroke-width="2" fill="#FFFFFF" cx="16.9668737" cy="2.44444444" rx="2.39130435" ry="2.44444444"></ellipse>
+                                                </g>
+                                                <ellipse id="Oval" stroke-width="2" fill="#FFFFFF" cx="2.39130435" cy="2.44444444" rx="2.39130435" ry="2.44444444"></ellipse>
+                                            </g>
+                                            <ellipse id="Oval" stroke-width="2" fill="#FFFFFF" cx="2.39130435" cy="2.44444444" rx="2.39130435" ry="2.44444444"></ellipse>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <% if !params[:id].present? %>
+            <div class="row pb-3 d-none d-xl-block">
+                <div class="col-md-12">
+                    <div class="controls-btn-filters">
+                        <ul class="d-flex justify-content-between">
+                            <li>
+                                <%= link_to budgets_path(s: 'all'), title: 'Todas' do %>
+                                    <span class="btn-filter"><i class="fa-solid fa-list-ul"></i></span>
+                                    <span class="title">Todas</span>
+                                <% end %>
+                            </li>
+                            <% new_sectors.each do |s| %>
+                                <li class="<%= (params[:s] == s[:short_name]) ? 'active' : '' %>">
+                                    <%= link_to budgets_path(s: s[:short_name]) do %>
+                                    <span class="btn-filter"><%= s[:short_name] %></span>
+                                    <span class="title"><%= s[:large_name] %></span>
+                                    <% end %>
+                                </li>
+                            <% end %>
+                            <li>
+                                <%= link_to budgets_path(size: 'large'), title: 'Grandes' do %>
+                                    <span class="btn-filter format-mdp">$12.5 mdp</span>
+                                    <span class="title">Proyecto Sectorial</span>
+                                <% end %>
+                            </li>
+                            <li>
+                                <%= link_to budgets_path(size: 'medium'), title: 'Medianos' do %>
+                                    <span class="btn-filter format-mdp">$1 mdp</span>
+                                    <span class="title">Proyecto Comunitario</span>
+                                <% end %>
+                            </li>
+                            <!-- <li class="position-relative">
+                                <button class="btn-filter-cat py-3 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategories" aria-expanded="false" aria-controls="collapseCategories">
+                                    Categorias
+                                </button>
+                                <ul id="collapseCategories" class="nav-categories collapse multi-collapse position-absolute">
+                                    <li><a href="#">Movilidad</a></li>
+                                    <li><a href="#">Inclusión</a></li>
+                                    <li><a href="#">Educación</a></li>
+                                    <li><a href="#">Medio Ambiente</a></li>
+                                    <li><a href="#">Cultura y deportes</a></li>
+                                    <li><a href="#">Seguridad</a></li>
+                                    <li><a href="#">Impulso económico</a></li>
+                                    <li><a href="#">Parques y Jardínes</a></li>
+                                </ul>
+                            </li> -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <% end %>
+        </div>
+    </div>
+</header>

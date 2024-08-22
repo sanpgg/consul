@@ -1,35 +1,51 @@
-<%= render "shared/filter_subnav", i18n_namespace: "admin.users.index" %>
-
 <% if @users.any? %>
   <h3 class="margin"><%= page_entries_info @users %></h3>
 
   <table>
     <thead>
       <tr>
-        <% if @current_filter == "erased" %>
-          <th scope="col"><%= t("admin.users.columns.id") %></th>
-          <th scope="col"><%= t("admin.users.columns.erase_reason") %></th>
-        <% else %>
-          <th scope="col"><%= t("admin.users.columns.name") %></th>
-          <th scope="col"><%= t("admin.users.columns.email") %></th>
-          <th scope="col"><%= t("admin.users.columns.document_number") %></th>
-          <th scope="col"><%= t("admin.users.columns.roles") %></th>
-          <th scope="col"><%= t("admin.users.columns.verification_level") %></th>
-        <% end %>
+        <th scope="col"><%= t("admin.users.columns.name") %></th>
+        <th scope="col"><%= t("admin.users.columns.email") %></th>
+        <th scope="col">Num Catastral</th>
+        <th scope="col"><%= t("admin.users.columns.roles") %></th>
+        <th scope="col">Junta Vecinal</th>
+        <th scope="col">Sector</th>
+        <th scope="col">INE</th>
+        <th scope="col">CURP</th>
+        <th scope="col">Fecha de Registro</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col"><%= t("admin.users.columns.verification_level") %></th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
-      <% @users.each do |user| %>
+      <% @users.order('created_at DESC').each do |user| %>
         <tr>
-          <% if @current_filter == "erased" %>
-            <td><%= link_to user.id, user_path(user), target: "_blank" %></td>
-            <td><%= user.erase_reason %></td>
+          <td><%= link_to user.name, user_path(user), target: "_blank" %></td>
+          <td><%= user.email %></td>
+          <td><%= user.document_number %></td>
+          <td><%= display_user_roles(user) %></td>
+          <% if user.level_two_verified? %>
+            <td><%= user.colonium.first.junta_nom %></td>
+            <td><%= user.sector %></td>
           <% else %>
-            <td><%= link_to user.name, user_path(user), target: "_blank" %></td>
-            <td><%= user.email %></td>
-            <td><%= user.document_number %></td>
-            <td><%= display_user_roles(user) %></td>
-            <td><%= user.user_type %></td>
+            <td></td>
+            <td></td>
+          <% end %>
+          <% if user.level_three_verified? %>
+            <td><a href="<%= user.ife.url %>">Descargar</a></td>
+            <td><%= user.curp %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+          <% end %>
+          <td><%= user.created_at.strftime("%Y-%m-%d") %></td>
+          <td><%= user.phone_number %></td>
+          <td><%= user.user_type %></td>
+          <% if user.user_type == :level_3_user %>
+            <td><%= link_to "Editar", edit_admin_user_path(user), :class => "btn btn-primary" %></td>
+          <% else %>
+            <td></td>
           <% end %>
         </tr>
       <% end %>

@@ -5,14 +5,15 @@
     </button>
 
     <strong>
-      <% errors_count = resource.errors.messages.reject { |attribute| attribute == :base }.count %>
-
-      <%= pluralize errors_count, t("form.error"), t("form.errors") %>
+      <%= pluralize resource.errors.count, t("form.error"), t("form.errors") %>
 
       <% if local_assigns[:message].present? %>
         <%= message %>
       <% else %>
-        <%= sanitize(t("form.not_saved", resource: t("form.#{resource.class.to_s.underscore}"))) %>
+        <%= t("form.not_saved_html", resource: t("form.#{resource.class.to_s.underscore}")) %>
+      <% end %>
+      <% resource.errors.full_messages.each do |message| %>
+        <li class="mt-1"><%= message %></li>
       <% end %>
     </strong>
   </div>

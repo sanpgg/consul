@@ -1,4 +1,4 @@
-class RemoveParentIdFromComments < ActiveRecord::Migration[4.2]
+class RemoveParentIdFromComments < ActiveRecord::Migration
   def change
     Comment.build_ancestry_from_parent_ids! rescue nil
 

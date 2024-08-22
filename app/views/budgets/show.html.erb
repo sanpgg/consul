@@ -1,6 +1,11 @@
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: budget_url(@budget, filter: @current_filter) %>
 <% end %>
+ 
+<div class="container mt-5 pb-5">
+  <div class="budget-investment-new">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
 
 <div class="expanded budget no-margin-top">
   <div class="row" data-equalizer data-equalizer-on="medium">
@@ -9,35 +14,38 @@
 
       <h1><%= @budget.name %></h1>
 
-      <%= auto_link_already_sanitized_html wysiwyg(@budget.description) %>
+      <%= safe_html_with_links(@budget.description) %>
     </div>
     <div class="small-12 medium-3 column info padding" data-equalizer-watch>
       <p>
-        <strong><%= t("budgets.show.phase") %></strong>
+        <strong><%= t('budgets.show.phase') %></strong>
       </p>
       <h2><%= t("budgets.phase.#{@budget.phase}") %></h2>
 
       <% if @budget.accepting? %>
         <% if current_user %>
-          <% if current_user.level_two_or_three_verified? %>
-            <%= link_to t("budgets.investments.index.sidebar.create"), new_budget_investment_path(@budget), class: "button margin-top expanded" %>
+          <% if current_user.level_two_and_three_verified? %>
+                <%= link_to t("budgets.investments.index.sidebar.create"), new_budget_investment_path(@budget), class: "button margin-top expanded" %>
           <% else %>
-            <div class="callout warning margin-top">
-              <%= sanitize(t("budgets.investments.index.sidebar.verified_only",
-                  verify: link_to_verify_account)) %>
+          <div class="callout warning margin-top">
+            <%= t("budgets.investments.index.sidebar.verified_only",
+              verify: link_to(t("budgets.investments.index.sidebar.verify_account"), verification_path)).html_safe %>
             </div>
+
+
           <% end %>
         <% else %>
           <div class="callout primary margin-top">
-            <%= sanitize(t("budgets.investments.index.sidebar.not_logged_in",
-                  sign_in: link_to_signin, sign_up: link_to_signup)) %>
+            <%= t("budgets.investments.index.sidebar.not_logged_in",
+                  sign_in: link_to(t("budgets.investments.index.sidebar.sign_in"), new_user_session_path),
+                  sign_up: link_to(t("budgets.investments.index.sidebar.sign_up"), new_user_registration_path)).html_safe %>
           </div>
         <% end %>
       <% end %>
 
-      <% if can?(:read_results, @budget) %>
+      <% if @budget.finished? %>
         <%= link_to t("budgets.show.see_results"),
-                    budget_results_path(@budget),
+                    budget_results_path(@budget, heading_id: @budget.headings.first),
                     class: "button margin-top expanded" %>
       <% end %>
     </div>
@@ -53,7 +61,7 @@
     <% end %>
     <table class="table-fixed">
       <thead>
-        <th><%= t("budgets.show.group") %></th>
+        <th><%= t('budgets.show.group') %></th>
       </thead>
       <tbody>
         <% @budget.groups.each do |group| %>
@@ -64,7 +72,7 @@
                             budget_investments_path(@budget,
                               heading_id: group.headings.first.id,
                               filter: @current_filter),
-                            data: { turbolinks: false } %>
+                            data: { no_turbolink: true } %>
               <% else %>
                 <%= link_to group.name,
                             budget_group_path(@budget, group,
@@ -102,3 +110,7 @@
     </div>
   <% end %>
 <% end %>
+</div>
+</div>
+</div>
+</div>

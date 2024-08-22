@@ -1,12 +1,13 @@
 class Admin::Poll::ShiftsController < Admin::Poll::BaseController
+
   before_action :load_booth
   before_action :load_officer
 
   def new
     load_shifts
     @shift = ::Poll::Shift.new
-    @voting_polls = @booth.polls.current
-    @recount_polls = @booth.polls.current_or_recounting
+    @voting_polls = @booth.polls.current_or_incoming
+    @recount_polls = @booth.polls.current_or_recounting_or_incoming
   end
 
   def create
@@ -25,18 +26,13 @@ class Admin::Poll::ShiftsController < Admin::Poll::BaseController
 
   def destroy
     @shift = Poll::Shift.find(params[:id])
-    if @shift.unable_to_destroy?
-      alert = t("admin.poll_shifts.flash.unable_to_destroy")
-      redirect_to new_admin_booth_shift_path(@booth), alert: alert
-    else
-      @shift.destroy!
-      notice = t("admin.poll_shifts.flash.destroy")
-      redirect_to new_admin_booth_shift_path(@booth), notice: notice
-    end
+    @shift.destroy
+    notice = t("admin.poll_shifts.flash.destroy")
+    redirect_to new_admin_booth_shift_path(@booth), notice: notice
   end
 
   def search_officers
-    @officers = User.search(params[:search]).order(username: :asc).select(&:poll_officer?)
+    @officers = User.search(params[:search]).order(username: :asc).select { |o| o.poll_officer? }
   end
 
   private

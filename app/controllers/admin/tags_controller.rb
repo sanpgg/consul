@@ -1,31 +1,46 @@
 class Admin::TagsController < Admin::BaseController
-  before_action :find_tag, only: [:update, :destroy]
+  before_action :find_tag, only: [:edit, :update, :destroy]
 
   respond_to :html, :js
 
   def index
-    @tags = Tag.category.page(params[:page])
-    @tag  = Tag.category.new
+    @success_button = "Crear tema"
+    @tags = ActsAsTaggableOn::Tag.category.page(params[:page])
+    @tag  = ActsAsTaggableOn::Tag.category.new
   end
 
   def create
-    Tag.find_or_create_by!(name: tag_params["name"]).update!(kind: "category")
-
+    ActsAsTaggableOn::Tag.category.create(tag_params)
     redirect_to admin_tags_path
   end
 
+  def edit
+    @success_button = "Editar tema"
+  end
+
+  def update
+
+    if @tag.update(tag_params)
+      redirect_to admin_tags_path, notice: 'Tema actualizado correctamente.'
+    else
+      render :edit
+    end
+
+  end
+
   def destroy
-    @tag.destroy!
+    @tag.destroy
     redirect_to admin_tags_path
   end
 
   private
 
     def tag_params
-      params.require(:tag).permit(:name)
+      params.require(:tag).permit(:name, :description)
     end
 
     def find_tag
-      @tag = Tag.category.find(params[:id])
+      @tag = ActsAsTaggableOn::Tag.category.find(params[:id])
     end
+
 end

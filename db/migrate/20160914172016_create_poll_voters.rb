@@ -1,4 +1,4 @@
-class CreatePollVoters < ActiveRecord::Migration[4.2]
+class CreatePollVoters < ActiveRecord::Migration
   def change
     create_table :poll_voters do |t|
       t.integer :booth_id

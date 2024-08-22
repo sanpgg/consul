@@ -1,0 +1,15 @@
+<div class="container mt-5 pb-5">
+  <div class="budget-investment-new">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center confetti">
+        <%= image_tag '/images/investment_created.png', alt: 'Confetti' %>
+
+        <h1>¡Tu propuesta ha sido publicada!</h1>
+        
+        <p class="mb-5">Consulta y comparte tu propuesta con tus vecinos.</p>
+      
+        <a rel="nofollow" class="btn-style-3 d-block py-3 mt-3 mb-5" href="<%= budget_investment_path(params[:budget_id], params[:investment_id]) %>">Ver publicación</a>
+
+      </div>
+  </div>
+</div>

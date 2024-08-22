@@ -1,4 +1,4 @@
-class CreatePollWhiteResults < ActiveRecord::Migration[4.2]
+class CreatePollWhiteResults < ActiveRecord::Migration
   def change
     create_table :poll_white_results do |t|
       t.integer :author_id

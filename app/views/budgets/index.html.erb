@@ -1,153 +1,528 @@
-<%= render "shared/banner" %>
+<style>
+	.pagination { display: none; }
+</style>
 
-<% provide :title do %><%= t("budgets.index.title") %><% end %>
+<% if params[:map].present? %>
+<div class="container-fluid g-0 position-relative">
+	<div id="map" style="width: 100%; height: 700px;"></div>
 
-<% content_for :canonical do %>
-  <%= render "shared/canonical", href: budgets_url %>
-<% end %>
+	<a href="/presupuestos" class="btn-view position-absolute font-20 py-2 px-4">
+		Mostrar Lista <i class="fa-solid fa-list-ul"></i>
+	</a>
+</div>
+<% else %>
+	<div class="container mt-5 mb-5">
+	
 
-<% if current_budget.present? %>
-  <div id="budget_heading" class="expanded budget">
-    <div class="row" data-equalizer data-equalizer-on="medium">
-      <div class="small-12 medium-9 column padding" data-equalizer-watch>
+<% if @investments.count>0 %>
+     <a href="/presupuestos?map=1" class="btn-view font-16 py-2 px-3 float-end">
+			Mostrar mapa  <i class="fa-solid fa-map-location-dot"></i>
+		</a>
 
-          <h1><%= current_budget.name %></h1>
-          <div class="description">
-            <%= auto_link_already_sanitized_html wysiwyg(current_budget.description) %>
-          </div>
-          <p>
-            <%= link_to t("budgets.index.section_header.help"), "#section_help" %>
-          </p>
-        </div>
-        <div class="small-12 medium-3 column info padding" data-equalizer-watch>
-          <p>
-            <strong><%= t("budgets.show.phase") %></strong>
-          </p>
-          <h2><%= t("budgets.phase.#{current_budget.phase}") %></h2>
+ <% end %>
 
-          <%= link_to t("budgets.index.section_header.all_phases"), "#all_phases" %>
+		<% filters = '' %>
+		<% filters = "Presupuesto participativo #{params[:ppy]}" if params[:ppy].present? %>
+		<% filters = "#{filters} - Sector: #{params[:s]}" if params[:s].present? %>
+		<% filters = "Presupuesto participativo #{current_budget.short_name}" if params[:s].present? && params[:s] == 'all' %>
+		<% filters = "#{filters} - Tamaño: #{params[:size] == 'large' ? '12.5 MDP' : '1 MDP'}" if params[:size].present? %>
+		<% filters = "#{filters} - Búsqueda: '#{params[:query]}'" if params[:query].present? %>
 
-          <% if current_budget.accepting? %>
-            <% if current_user %>
-              <% if current_user.level_two_or_three_verified? %>
-                <%= link_to t("budgets.investments.index.sidebar.create"),
-                            new_budget_investment_path(current_budget),
-                            class: "button margin-top expanded" %>
-              <% else %>
-                <div class="callout warning margin-top">
-                  <%= sanitize(t("budgets.investments.index.sidebar.verified_only",
-                        verify: link_to_verify_account)) %>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="callout primary margin-top">
-                <%= sanitize(t("budgets.investments.index.sidebar.not_logged_in",
-                      sign_in: link_to_signin, sign_up: link_to_signup)) %>
-              </div>
-            <% end %>
+
+		<% if @investments.empty? %>
+		
+  <div class="container mt-5 pb-5">
+    <div class="budget-investment-new">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center confetti">
+          <%= image_tag '/images/img-ayuda.png', alt: 'Confetti' %>
+          <% unless current_budget.informing? %>
+            <h1>No se encontraron propuestas con los filtros: <%= filters %></h1>
+            <p class="mb-5">Para ver otras propuestas, vuelve a realizar otra búsqueda, o bien, desliza hacia abajo.</p>
+          <% else %>
+            <h1>El Presupuesto Participativo <%= current_budget.short_name %> está en fase de Información.</h1>
+           <p class="mb-5">Si quieres ver otras propuestas, puedes usar los filtros.</p>
           <% end %>
-
-        <% if can?(:read_results, current_budget) %>
-          <%= link_to t("budgets.show.see_results"),
-                      budget_results_path(current_budget, heading_id: current_budget.headings.first),
-                      class: "button margin-top expanded" %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <div id="budget_info" class="budget-info">
-    <div class="row margin-top">
-      <div class="small-12 column">
-
-        <div id="groups_and_headings" class="groups-and-headings">
-          <% current_budget.groups.each do |group| %>
-            <h2 id="<%= group.name.parameterize %>"><%= group.name %></h2>
-            <ul class="no-bullet" data-equalizer data-equalizer-on="medium">
-              <% group.headings.sort_by_name.each do |heading| %>
-                <li class="heading small-12 medium-4 large-2" data-equalizer-watch>
-                  <% unless current_budget.informing? || current_budget.finished? %>
-                    <%= link_to budget_investments_path(current_budget.id,
-                                                        heading_id: heading.id) do %>
-                      <%= heading_name_and_price_html(heading, current_budget) %>
-                    <% end %>
-                  <% else %>
-                    <div class="heading-name">
-                      <%= heading_name_and_price_html(heading, current_budget) %>
-                    </div>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-          <% end %>
-        </div>
-
-        <% unless current_budget.informing? %>
-          <div class="map inline">
-            <h3><%= t("budgets.index.map") %></h3>
-            <%= render_map(nil, "budgets", false, nil, @budgets_coordinates) %>
-          </div>
-
-          <ul class="no-bullet margin-top">
-            <% show_links = show_links_to_budget_investments(current_budget) %>
-            <% if show_links %>
-              <li>
-                <%= link_to budget_path(current_budget) do %>
-                  <small><%= t("budgets.index.investment_proyects") %></small>
-                <% end %>
-              </li>
-            <% end %>
-            <li>
-              <%= link_to budget_path(current_budget, filter: "unfeasible") do %>
-                <small><%= t("budgets.index.unfeasible_investment_proyects") %></small>
-              <% end %>
-            </li>
-            <% if show_links %>
-              <li>
-                <%= link_to budget_path(current_budget, filter: "unselected") do %>
-                  <small><%= t("budgets.index.not_selected_investment_proyects") %></small>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-
-        <div id="all_phases">
-          <h2><%= t("budgets.index.all_phases") %></h2>
-          <%= render "phases", budget: current_budget %>
         </div>
       </div>
     </div>
-
-    <% if @finished_budgets.present? %>
-      <%= render "finished", budgets: @finished_budgets %>
-    <% end %>
   </div>
 <% else %>
-  <div class="expanded budget no-margin-top margin-bottom">
-    <div class="row">
-      <div class="small-12 medium-9 column padding">
-          <h1><%= t("budgets.index.title") %></h1>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-12 column">
-      <div class="callout primary">
-        <%= t("budgets.index.empty_budgets") %>
-      </div>
-    </div>
-  </div>
+  <h1 class="mb-5"><%= filters %></h1>
 <% end %>
 
-<div class="row">
-  <div class="small-12 column">
-    <div id="section_help" class="margin" data-magellan-target="section_help">
-      <p class="lead">
-        <strong><%= t("budgets.index.section_footer.title") %></strong>
-      </p>
-      <p><%= t("budgets.index.section_footer.description") %></p>
+		<div class="row c-investments mb-5">
+			<%= render partial: 'investment', collection: @investments %>
+		</div>
+		<div class="gradient-white"></div>
+		<%= paginate @investments, remote: true %>
+
+		<button id="btn-arriba" onclick="irArriba()"><i class="fa-solid fa-chevron-up"></i></button>
+  	</div>
+<% end %>
+<!-- Modal Explora -->
+<div class="modal fade" id="searchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header justify-content-end">
+        <button class="text-right" data-bs-dismiss="modal" aria-label="Close">
+          <svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Buscador---Filtros" transform="translate(-964.000000, -79.000000)" stroke="#FFFFFF" stroke-width="2">
+                <g id="Group" transform="translate(965.000000, 80.000000)">
+                  <line x1="0" y1="19" x2="19" y2="0" id="Path-5-Copy-2"></line>
+                  <line x1="0" y1="0" x2="19" y2="19" id="Path-5-Copy-3"></line>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+     <form id="filters-form" action="<%= budgets_path %>" method="get">
+  <div class="mb-3">
+    <input name="query" type="text" placeholder="Buscar proyecto" value="<%= params[:query] %>">
+  </div>
+  <div class="title-desc">
+    <h3>Sugerencias de búsqueda</h3>
+    <p>Puedes realizar búsquedas por: número de <strong>ID de proyecto</strong>, nombre del <strong>ponente</strong>, localidad o <strong>sector</strong>.</p>
+  </div>
+
+  <div class="content-filters">
+    <h3>Filtros</h3>
+    <div class="mb-3">
+      <label>Presupuestos participativos por años</label>
+      <div class="content-periodo">
+        <input type="hidden" name="ppy" id="ppy" value="<%= params[:ppy].presence || current_budget.short_name %>">
+        <ul class="d-flex flex-container">
+  <% Budget.all.reject { |b| b.drafting? }.sort_by(&:id).each_slice(6).with_index do |group, index| %>
+    <div class="flex-wrapper">
+      <% group.each do |b| %>
+        <li>
+          <a class="<%= params[:ppy] == b.short_name || (!params[:ppy] && current_budget == b) ? "selected" : "" %>" href="#" data-periodo="<%= b.short_name %>"><%= b.short_name %></a>
+        </li>
+      <% end %>
+    </div>
+  <% end %>
+</ul>
+
+
+
+      </div>
+    </div>
+
+    <div id="sectors">
+      <h4 class="mt-3">Filtrar por sectores</h4>
+      <input type="hidden" name="s" id="sector-filter">
+      <% new_sectors.each do |s| %>
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <label for="<%= s[:short_name] %>"><%= s[:short_name] %> - <%= s[:large_name] %></label>
+            <div class="form-check form-switch">
+              <input class="form-check-input filter-input" type="checkbox" id="<%= s[:short_name] %>" name="s" value="<%= s[:short_name] %>" <%= params[:s]&.include?(s[:short_name]) ? "checked" : "" %> data-short-name="<%= s[:short_name] %>">
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div id="sizes">
+      <h4 class="mt-4">Filtrar por tipo de proyectos</h4>
+      <input type="hidden" name="size" id="size-filter">
+      <% new_sizes.each do |s| %>
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <label for="<%= s[:short_name] %>"><%= s[:large_name].html_safe %></label>
+            <div class="form-check form-switch">
+              <input class="form-check-input filter-input" type="checkbox" id="<%= s[:short_name] %>" name="size" value="<%= s[:short_name] %>" <%= params[:size]&.include?(s[:short_name]) ? "checked" : "" %> data-short-name="<%= s[:short_name] %>">
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div id="status">
+      <h4 class="mt-4">Filtrar por evaluación de proyecto:</h4>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <label for="proyecto_ganador">Proyectos Ganadores</label>
+          <div class="form-check form-switch">
+            <input class="form-check-input status-cb filter-input" type="checkbox" name="status" value="w" id="proyecto_ganador" <%= params[:status]&.include?("w") ? "checked" : "" %>>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <label for="proyecto_no_ganador">Proyectos No Ganadores</label>
+          <div class="form-check form-switch">
+            <input class="form-check-input status-cb filter-input" type="checkbox" name="status" value="nw" id="proyecto_no_ganador" <%= params[:status]&.include?("nw") ? "checked" : "" %>>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <label for="proyecto_factible">Proyectos Factibles</label>
+          <div class="form-check form-switch">
+            <input class="form-check-input status-cb filter-input" type="checkbox" name="status" value="f" id="proyecto_factible" <%= params[:status]&.include?("f") ? "checked" : "" %>>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <label for="proyecto_no_factible">Proyectos No Factibles</label>
+          <div class="form-check form-switch">
+            <input class="form-check-input status-cb filter-input" type="checkbox" name="status" value="uf" id="proyecto_no_factible" <%= params[:status]&.include?("uf") ? "checked" : "" %>>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <button class="btn-black font-16 py-2 px-3" type="submit">Aplicar Filtros</button>
+    </div>
+
+  </div>
+</form>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+  .flex-container {
+    flex-wrap: wrap;
+  }
+  .flex-wrapper {
+    display: flex;
+    width: 100%;
+	margin-top:10px;
+  }
+  .flex-wrapper li {
+    flex: 1;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Update hidden input when sector checkbox is changed
+    document.querySelectorAll('#sectors .filter-input').forEach(function(input) {
+      input.addEventListener('change', function() {
+        updateFilterHiddenInputs('s', '#sectors .filter-input');
+      });
+    });
+
+    // Update hidden input when size checkbox is changed
+    document.querySelectorAll('#sizes .filter-input').forEach(function(input) {
+      input.addEventListener('change', function() {
+        updateFilterHiddenInputs('size', '#sizes .filter-input');
+      });
+    });
+
+    // Update hidden input when status checkbox is changed
+    document.querySelectorAll('#status .filter-input').forEach(function(input) {
+      input.addEventListener('change', function() {
+        updateFilterHiddenInputs('status', '#status .filter-input');
+      });
+    });
+
+    // Update hidden input for years
+    document.querySelectorAll('.content-periodo a').forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('ppy').value = event.target.getAttribute('data-periodo');
+        document.querySelectorAll('.content-periodo a').forEach(function(a) {
+          a.classList.remove('selected');
+        });
+        event.target.classList.add('selected');
+      });
+    });
+
+    function updateFilterHiddenInputs(name, selector) {
+      const selectedValues = Array.from(document.querySelectorAll(selector))
+        .filter(input => input.checked)
+        .map(input => input.getAttribute('value'));
+      document.querySelector(`input[name="${name}"]`).value = selectedValues.join(',');
+    }
+  });
+</script>
+
+<script>
+	window.onscroll = function() {scrollFunction()};
+
+	function scrollFunction() {
+		if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+			document.getElementById("btn-arriba").style.display = "block";
+		} else {
+			document.getElementById("btn-arriba").style.display = "none";
+		}
+	}
+
+	function irArriba() {
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+	}
+
+
+	document.addEventListener("DOMContentLoaded", function() {
+
+		// Obtener los elementos de los checkboxes
+		var checkboxes = $('.status-cb');
+
+		// Obtener el elemento del input oculto
+		var statusInput = $('input[name="status"]');
+
+		// Agregar el event listener a todos los checkboxes
+		checkboxes.on('change', function() {
+			// Desmarcar los demás checkboxes
+			checkboxes.not(this).prop('checked', false);
+
+			// Obtener el valor del checkbox seleccionado
+			var value = $(this).val();
+
+			// Establecer el valor del input oculto
+			statusInput.val(value);
+		});
+
+		// Quité temporalmente las categorías
+
+		$('.quit-filter').on('click', function(){
+			$("[name='periodo']").val('');
+			$('#select-periodo li a').removeClass('selected');
+
+			// $("[name='categorias']").val('');
+			// $('#select-categories li a').removeClass('selected');
+
+			$("input[type='checkbox']").each(function( index ) {
+				if ($(this).is(':checked')) {
+					$(this).prop('checked', false); 
+				}
+			});
+		});
+	
+		// $('#select-periodo li a').on('click', function(){
+		// 	var periodo = $(this).data('periodo');
+		
+		// 	$("[name='periodo']").val(periodo);
+		// 	$('#select-periodo li a').removeClass('selected');
+		// 	$(this).addClass('selected');
+
+		// });
+
+		// $('#select-categories li a').on('click', function(){
+		// 	var category = $(this).data('cat');
+		
+		// 	$("[name='categorias']").val(category);
+		// 	$('#select-categories li a').removeClass('selected');
+		// 	$(this).addClass('selected');
+		// });
+
+		const periodoInput = document.getElementById("ppy");
+		const links = document.querySelectorAll("a[data-periodo]");
+
+		function updateSelectedClass(target) {
+			links.forEach(link => {
+				if (link === target) {
+					link.classList.add("selected");
+				} else {
+					link.classList.remove("selected");
+				}
+			});
+		}
+
+		function updateSectorsVisibility() {
+			var sectors = $("#sectors");
+
+			if(periodoInput.value == '2019' || periodoInput.value == '2021')
+			{
+				$("input[type='checkbox']").each(function( index ) {
+					if ($(this).is(':checked')) {
+						$(this).prop('checked', false); 
+					}
+				});
+				
+				sectors.hide();
+			}
+			else
+			{
+				sectors.show();
+			}
+		}
+
+		function updateSizesVisibility() {
+			var sizes = $("#sizes");
+
+			if(periodoInput.value == '2019' || periodoInput.value == '2021' || periodoInput.value == '2022')
+			{
+				sizes.hide();
+			}
+			else
+			{
+				sizes.show();
+			}
+		}
+
+		function updateStatusVisibility() {
+			var status = $("#status");
+
+			if(periodoInput.value == '2019' || periodoInput.value == '2021' || periodoInput.value == '2022')
+			{
+				status.show();
+			}
+			else
+			{
+				status.hide();
+			}
+		}
+
+		links.forEach(link => {
+			link.addEventListener("click", (e) => {
+				e.preventDefault();
+				const periodo = e.target.getAttribute("data-periodo");
+				periodoInput.value = periodo;
+				updateSelectedClass(e.target);
+				updateSectorsVisibility();
+				updateSizesVisibility();
+				updateStatusVisibility();
+			});
+		});
+
+    	const sectorCheckboxes = document.querySelectorAll("#sectors .form-check .form-check-input");
+    	const sizesCheckboxes = document.querySelectorAll("#sizes .form-check .form-check-input");
+		const sectorInput = document.getElementById("sector-filter");
+		const sizeInput = document.getElementById("size-filter");
+
+		sectorCheckboxes.forEach(checkbox => {
+			checkbox.addEventListener("change", (e) => {
+				if (e.target.checked) {
+					sectorInput.value = e.target.getAttribute("data-short-name");
+				
+					sectorCheckboxes.forEach(otherCheckbox => {
+				
+						if (otherCheckbox !== e.target) {
+							otherCheckbox.checked = false;
+						}
+					});
+				}
+				else {
+          			sectorInput.value = "";
+        		}
+			});
+		});
+
+		sizesCheckboxes.forEach(checkbox => {
+			checkbox.addEventListener("change", (e) => {
+				if (e.target.checked) {
+					sizeInput.value = e.target.getAttribute("data-size");
+				
+					sizesCheckboxes.forEach(otherCheckbox => {
+				
+						if (otherCheckbox !== e.target) {
+							otherCheckbox.checked = false;
+						}
+					});
+				}
+				else {
+          			sizeInput.value = "";
+        		}
+			});
+		});
+	});
+
+	$(document).ready(function() {
+
+		// Obtener el elemento del formulario
+		var form = $('form');
+
+		// Agregar el event listener para antes del envío
+		form.on('submit', function(event) {
+		// Obtener todos los inputs en el formulario
+		var inputs = form.find('input[name]');
+
+		// Iterar sobre los inputs para eliminar los que tienen valor vacío
+		inputs.each(function() {
+			var value = $(this).val();
+
+			if (value === '') {
+			$(this).remove();
+			}
+		});
+		});
+
+  		var page = 2;
+  		var loading = false;
+
+		function loadMoreInvestments() {
+			if (!loading) {
+				loading = true;
+				$.ajax({
+					url: '<%= load_more_investments_path(current_budget.id, page: @investments.next_page, query: params[:query], s: params[:s], size: params[:size], ppy: params[:ppy], status: params[:status]) %>',
+					data: { page: page },
+					type: 'GET',
+					dataType: 'script',
+					success: function(response) {
+						loading = false;
+						page += 1;
+					},
+					error: function(xhr, status, error) {
+						console.log(error);
+					}
+				});
+			}
+		}
+
+		$(window).scroll(function() {
+			if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+				loadMoreInvestments();
+			}
+		});
+	});
+
+	$(document).ready(function() {
+		var map = L.map('map',  {scrollWheelZoom: false }).setView([25.657169, -100.397448], 13);
+
+		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+
+		var jsonString = <%= raw @all_investments_map.to_json %>;
+
+		var allInvestmentsMap = JSON.parse(jsonString);
+					console.log(allInvestmentsMap);
+
+		allInvestmentsMap.forEach(function(marker) {
+			if(marker.lat != null && marker.long != null){
+				
+				if(marker.size == "large"){
+					var markerIcon = L.divIcon({
+					className: 'map-marker',
+					iconSize:     [30, 30],
+					iconAnchor:   [15, 40],
+					html: '<div class="map-icon large"></div>'});
+				}else{
+					var markerIcon = L.divIcon({
+					className: 'map-marker',
+					iconSize:     [30, 30],
+					iconAnchor:   [15, 40],
+					html: '<div class="map-icon medium"></div>'});
+				}
+
+				let popupHtml = `
+					<div class='item-popup'>
+						<!--<div style="width: 40%;">
+							<img src="https://www.slntechnologies.com/wp-content/uploads/2017/08/ef3-placeholder-image.jpg" alt="Imagen Propuesta" style="width:100%; height:100%; object-fit:cover;">
+						</div>-->
+						<div style="position: relative; margin-left: 10px; width:100%">
+							<h2>${marker.title}</h2>
+							<p style="font-size:10px; margin-top:2px; font-weight:500;">${marker.author}</p>
+							<p style="color: darkgray; font-size:10px; margin-top:-12px;">${marker.sector}</p>
+							<a class="btn-folio font-12 py-1 px-2 float-end" href="/presupuestos/11/investments/${marker.investment_id}">#${marker.investment_id}</a>
+						</div>
+					</div>
+				`;
+
+				L.marker([marker.lat, marker.long], {icon: markerIcon }).addTo(map)
+				.setOpacity(50)
+				.bindPopup(popupHtml);
+			}
+		});
+	});
+</script>

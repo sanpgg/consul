@@ -1,4 +1,4 @@
-class CreateDebates < ActiveRecord::Migration[4.2]
+class CreateDebates < ActiveRecord::Migration
   def change
     create_table :debates do |t|
       t.string :title

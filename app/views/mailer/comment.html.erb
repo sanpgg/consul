@@ -9,12 +9,11 @@
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= sanitize(t("mailers.comment.new_comment_by", commenter: @comment.author.name)) %>
-    <%= link_to @commentable.title, commentable_url(@commentable), style: "color: #2895F1; text-decoration:none;" %>
+    <%= t("mailers.comment.new_comment_by_html", commenter: @comment.author.name) %> <%= link_to @commentable.title, commentable_url(@commentable), style: "color: #2895F1; text-decoration:none;" %>
   </p>
 
   <p style="border-left: 2px solid #DEE0E3;font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-style: italic;font-weight: normal;line-height: 24px;margin-left: 20px;padding: 10px;">
-    <%= sanitize_and_auto_link @comment.body %>
+    <%= text_with_links @comment.body %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 12px;font-weight: normal;line-height: 20px;">

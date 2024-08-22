@@ -1,4 +1,4 @@
-class RenameConfirmedOauthEmailToOauthEmail < ActiveRecord::Migration[4.2]
+class RenameConfirmedOauthEmailToOauthEmail < ActiveRecord::Migration
   def change
     rename_column :users, :confirmed_oauth_email, :oauth_email
   end

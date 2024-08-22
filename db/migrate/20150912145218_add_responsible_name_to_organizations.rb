@@ -1,4 +1,4 @@
-class AddResponsibleNameToOrganizations < ActiveRecord::Migration[4.2]
+class AddResponsibleNameToOrganizations < ActiveRecord::Migration
   def up
     add_column :organizations, :responsible_name, :string, limit: 60
 

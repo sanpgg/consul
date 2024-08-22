@@ -1,4 +1,4 @@
-class AddAuthorToRelatedContent < ActiveRecord::Migration[4.2]
+class AddAuthorToRelatedContent < ActiveRecord::Migration
   def change
     add_column :related_contents, :author_id, :integer
   end

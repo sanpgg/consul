@@ -1,6 +1,6 @@
-class AddPollIdAndStatsFieldsToPollVoter < ActiveRecord::Migration[4.2]
+class AddPollIdAndStatsFieldsToPollVoter < ActiveRecord::Migration
   def change
-    add_column :poll_voters, :poll_id, :integer, null: false
+    add_column :poll_voters, :poll_id, :integer,  null: false
 
     remove_column :poll_voters, :booth_assignment_id, :integer, null: false
     add_column :poll_voters, :booth_assignment_id, :integer

@@ -1,4 +1,4 @@
-class CreateWebSections < ActiveRecord::Migration[4.2]
+class CreateWebSections < ActiveRecord::Migration
   def change
     create_table :web_sections do |t|
       t.text :name

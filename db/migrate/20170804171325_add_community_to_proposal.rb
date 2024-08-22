@@ -1,4 +1,4 @@
-class AddCommunityToProposal < ActiveRecord::Migration[4.2]
+class AddCommunityToProposal < ActiveRecord::Migration
   def change
     add_reference :proposals, :community, index: true, foreign_key: true
   end

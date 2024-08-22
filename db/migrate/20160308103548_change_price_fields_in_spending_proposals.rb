@@ -1,4 +1,4 @@
-class ChangePriceFieldsInSpendingProposals < ActiveRecord::Migration[4.2]
+class ChangePriceFieldsInSpendingProposals < ActiveRecord::Migration
   def up
     change_column :spending_proposals, :price, :integer
     change_column :spending_proposals, :price_first_year, :integer

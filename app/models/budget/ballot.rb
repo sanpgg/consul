@@ -1,13 +1,12 @@
 class Budget
-  class Ballot < ApplicationRecord
+  class Ballot < ActiveRecord::Base
     belongs_to :user
     belongs_to :budget
-    belongs_to :poll_ballot, class_name: "Poll::Ballot"
 
     has_many :lines, dependent: :destroy
     has_many :investments, through: :lines
-    has_many :groups, -> { distinct }, through: :lines
-    has_many :headings, -> { distinct }, through: :groups
+    has_many :groups, -> { uniq }, through: :lines
+    has_many :headings, -> { uniq }, through: :groups
 
     def add_investment(investment)
       lines.create(investment: investment).persisted?
@@ -17,17 +16,37 @@ class Budget
       investments.sum(:price).to_i
     end
 
+    def amount_spent(heading)
+      investments.by_heading(heading.id).sum(:price).to_i unless Budget.find_by(id: budget_id).is_new?
+    end
+
+    def formatted_amount_spent(heading)
+      budget.formatted_amount(amount_spent(heading))
+    end
+
+    def amount_available(heading)
+      budget.heading_price(heading) - amount_spent(heading) unless Budget.find_by(id: budget_id).is_new?
+    end
+
+    def formatted_amount_available(heading)
+      budget.formatted_amount(amount_available(heading))
+    end
+
     def has_lines_in_group?(group)
       groups.include?(group)
     end
 
     def wrong_budget?(heading)
-      heading.budget_id != budget_id
+      unless Budget.find_by(id: budget_id).is_new?
+        heading.budget_id != budget_id
+      end
     end
 
     def different_heading_assigned?(heading)
-      other_heading_ids = heading.group.heading_ids - [heading.id]
-      lines.where(heading_id: other_heading_ids).exists?
+      unless Budget.find_by(id: budget_id).is_new?
+        other_heading_ids = heading.group.heading_ids - [heading.id]
+        lines.where(heading_id: other_heading_ids).exists?
+      end
     end
 
     def valid_heading?(heading)
@@ -52,27 +71,28 @@ class Budget
 
     def heading_for_group(group)
       return nil unless has_lines_in_group?(group)
-
-      investments.find_by(group: group).heading
+      investments.where(group: group).first.heading
     end
 
-    def casted_offline?
-      budget.poll&.voted_by?(user)
-    end
+    def remove
+      puts self.lines.inspect
 
-    def voting_style
-      @voting_style ||= voting_style_class.new(self)
-    end
-    delegate :amount_available, :amount_available_info, :amount_spent, :amount_spent_info, :amount_limit,
-             :amount_limit_info, :change_vote_info, :enough_resources?, :formatted_amount_available,
-             :formatted_amount_limit, :formatted_amount_spent, :not_enough_resources_error,
-             :percentage_spent, :reason_for_not_being_ballotable, :voted_info,
-             to: :voting_style
+      self.lines.each do |line|
+        puts "|Removing ballot| investment_id: #{line.investment_id}"
+        current_ballots = Investment.find_by(id: line.investment_id)&.ballot_lines_count
 
-    private
+        unless current_ballots.nil?
 
-      def voting_style_class
-        "Budget::VotingStyles::#{budget.voting_style.camelize}".constantize
+          puts "Before investment ballots count: #{current_ballots}"
+          Investment.find_by(id: line.investment_id)&.update_attributes!(ballot_lines_count: current_ballots - 1)
+          puts "After investment ballots count: #{Investment.find_by(id: line.investment_id)&.ballot_lines_count}"
+
+        end
       end
+
+      # update investment
+      self.destroy
+    end
+
   end
 end

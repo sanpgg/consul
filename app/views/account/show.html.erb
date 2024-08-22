@@ -1,145 +1,121 @@
-<div class="row account">
-  <div class="small-12 column">
-    <div class="float-right text-right">
-      <%= link_to t("account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow" %>
-      <br>
-      <%= link_to t("account.show.erase_account_link"), users_registrations_delete_form_path, class: "delete" %>
-    </div>
-
-    <%= avatar_image(@account, seed: @account.id, size: 100, class: "margin-bottom") %>
-
-    <h1 class="inline-block"><%= t("account.show.title") %></h1>
-
-    <%= form_for @account, as: :account, url: account_path do |f| %>
-      <%= render "shared/errors", resource: @account %>
-
-      <div class="row">
-        <div class="small-12 medium-7 column">
-
-          <h2><%= t("account.show.personal") %></h2>
-
-          <div class="small-12 medium-10">
-            <% if @account.organization? %>
-              <%= f.fields_for :organization do |fo| %>
-                <%= fo.text_field :name, autofocus: true, maxlength: Organization.name_max_length, placeholder: t("account.show.organization_name_label") %>
-                <%= fo.text_field :responsible_name, autofocus: true, maxlength: Organization.responsible_name_max_length, placeholder: t("account.show.organization_responsible_name_placeholder") %>
-              <% end %>
-              <%= f.text_field :phone_number, placeholder: t("account.show.phone_number_label") %>
-
-            <% else %>
-              <%= f.text_field :username, maxlength: User.username_max_length, placeholder: t("account.show.username_label") %>
-            <% end %>
-          </div>
-
-          <div>
-            <%= f.check_box :public_activity %>
-          </div>
-
-          <div>
-            <%= f.check_box :public_interests %>
-          </div>
-
-          <% if @account.email.present? %>
-            <h2><%= t("account.show.notifications") %></h2>
-
-            <div>
-              <%= f.check_box :email_on_comment %>
-            </div>
-
-            <div>
-              <%= f.check_box :email_on_comment_reply %>
-            </div>
-
-            <div>
-              <%= f.check_box :newsletter %>
-            </div>
-
-            <div>
-              <%= f.check_box :email_digest %>
-            </div>
-
-            <div>
-              <%= f.check_box :email_on_direct_message %>
-            </div>
-          <% end %>
-
-          <% if @account.official_level == 1 %>
-            <div>
-              <%= f.check_box :official_position_badge %>
-            </div>
-          <% end %>
-
-          <% if feature?("user.recommendations") %>
-            <h2><%= t("account.show.recommendations") %></h2>
-
-            <% if feature?("user.recommendations_on_debates") %>
-              <div>
-                <%= f.check_box :recommended_debates %>
-              </div>
-            <% end %>
-
-            <% if feature?("user.recommendations_on_proposals") %>
-              <div>
-                <%= f.check_box :recommended_proposals %>
-              </div>
-            <% end %>
-          <% end %>
-
-          <%= f.submit t("account.show.save_changes_submit"), class: "button margin-top" %>
-        </div>
-
-        <div class="user-permissions small-12 medium-5 column">
-          <h2><%= t("account.show.user_permission_title") %></h2>
-
-          <p><%= t("account.show.user_permission_info") %></p>
-
+<div class="container mb-5">
+  <div class="row mt-4">
+    <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7">
+      <div class="breadcrumbs">
           <ul>
-            <li><span class="icon-check"></span>&nbsp;<%= t("account.show.user_permission_debates") %></li>
-            <li><span class="icon-check"></span>&nbsp;<%= t("account.show.user_permission_proposal") %></li>
-            <li>
-              <% if current_user.level_two_or_three_verified? %>
-                <span class="icon-check"></span>
-              <% else %>
-                <span class="icon-x"></span>
-              <% end %>
-              <%= t("account.show.user_permission_support_proposal") %>
-            </li>
-            <li>
-              <% if current_user.level_three_verified? %>
-                <span class="icon-check"></span>
-              <% else %>
-                <span class="icon-x"></span>
-              <% end %>
-              <%= t("account.show.user_permission_votes") %>
-            </li>
+              <li>
+                  <a href="/">Inicio</a>
+              </li>
+              <li>
+                  <span>Perfil</span>
+              </li>
           </ul>
+      </div>
 
-          <p>
-            <span><%= t("account.show.user_permission_verify_info") %></span>
-          </p>
-          <p>
-            <%= t("account.show.user_permission_verify") %>
-          </p>
-
-          <% unless @account.organization? %>
-            <div>
-              <span class="verify-account">
-                <% if current_user.level_three_verified? %>
-                  <p class="already-verified">
-                    <span class="icon-check"></span>
-                    <%= t("account.show.verified_account") %>
-                  </p>
-                <% elsif current_user.level_two_verified? %>
-                  <%= link_to t("account.show.finish_verification"), verification_path, class: "button success" %>
-                <% else %>
-                  <%= link_to t("account.show.verify_my_account"), verification_path, class: "button success" %>
-                <% end %>
-              </span>
+      <% unless current_user.level_three_verified? %>
+        
+        <% if current_user.level_two_verified? %>
+          <div class="content-card box-shadow p-4 brd-radius-14">
+          <% unless current_user.is_minor? %>
+            <h1>¡Un paso más!</h1>
+            <p class="card-text">Ahora sólo falta la foto de tu identificación oficial INE ó licencia de conducir para que puedas proponer o votar por un proyecto participativo.</p>
+            <div style="margin-top: 25px;">
+              <%= link_to "Subir identificación", complete_profile_path, class: 'btn-black py-2 px-4' %>
+            </div>
+          <% else %>
+            <h1>¡Identifícate!</h1>
+            <p class="card-text">Ahora sólo falta la foto de tu acta de nacimiento o CURP y la identificación oficial INE o licencia de conducir de tu tutor(ra) para que puedas proponer o votar por un proyecto participativo.</p>
+                
+            <div style="margin-top: 25px;">
+              <%= link_to "Subir identificación", complete_profile_path, class: 'btn-black py-2 px-4' %>
             </div>
           <% end %>
+          </div>
+        <% elsif current_user.unverified? %>
+          <div class="content-card box-shadow p-4 brd-radius-14">
+            <h1>¡Perfil incompleto!</h1>
+            <p class="card-text">Hay algunos datos necesarios que debes completar.</p>
+              
+            <div style="margin-top: 25px;">
+              <%= link_to "Completar mis datos", profile_path, class: 'btn-black py-2 px-4' %>
+            </div>
+          </div>
+        <% end %>
+        
+      <% end %>
+    </div>
+  </div>
+
+  <div class="content-perfil">
+    <div class="content-cards-perfil">
+      <div class="row">
+        <div class="col-12 col-sm-10 col-md-10 offset-lg-2 col-lg-7 offset-xl-2 col-xl-7">
+          
+          <% if current_user.level_two_or_three_verified? %>
+            <h2 class="h2-style mt-4">Perfil</h2>
+            <div class="d-flex">
+              <div class="avatar">
+                <i class="fa-regular fa-face-smile fs-1"></i>
+                <%= avatar_image(@account, seed: @account.id, size: 100, class: "margin-bottom d-none", bg_color: "#071110", txt_color: "#071110") %>
+              </div>
+              <div class="data-user">
+                <% sector = new_sectors.select {|e| e[:short_name] == current_user.colonium.first.sector}.first %>
+                <p><%= current_user.born_names %>, perteneces al sector</p>
+                <p><strong><%= sector[:short_name] %> - <%= sector[:large_name] %></strong></p>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-info-perfil.png">
+                <h5><%= link_to "Información Personal", profile_path %></h5>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-ayuda.png">
+                <h5><a href="/#ayuda">Obtener ayuda</a></h5>
+              </div>
+            </div>
+            <div class="col-md-6" style="display:none;">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-guia.png">
+                <h5><a target="_blank" href="/docs/guia_pp22.pdf">Descarga la Guía 2023</a></h5>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-notificacion.png">
+                <h5><a href="/notifications">Notificaciones</a></h5>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="box-shadow p-4 mb-4">
+                <img src="images/img-info-perfil.png">
+                <h5>
+                  <%= layout_menu_link_to t("layouts.header.my_activity_link"),
+                  user_path(current_user),
+                  controller_name == 'users',
+                  rel: "nofollow",
+                  title: t("shared.go_to_page") +
+                        t("layouts.header.my_activity_link") %>
+                </h5>
+              </div>
+            </div>
+            <% if current_budget.balloting? %>
+              <div class="col-md-6">
+                <div class="box-shadow p-4 mb-4">
+                  <img src="images/img-votacion.png">
+                  <h5> <%= link_to "Mis votos", current_votes_path(current_budget) %></h5>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <a class="font-medium font-15 text-decoration-underline text-default" href="/users/registrations/delete_form">¿Necesitas desactivar tu cuenta?</a>
         </div>
       </div>
-    <% end %>
-
-  </div>
+    </div>
+  </div><!--.content-perfil-->
 </div>

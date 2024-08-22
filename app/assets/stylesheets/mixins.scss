@@ -3,7 +3,6 @@
 // 01. Logo
 // 02. Orbit bullets
 // 03. Direct uploads
-// 04. Admin layout
 // ------------------
 
 // 01. Logo
@@ -12,7 +11,7 @@
 @mixin logo {
   color: #fff;
   display: inline-block;
-  font-family: "Lato" !important;
+  font-family: 'Lato' !important;
   font-size: rem-calc(24);
   font-weight: lighter;
 
@@ -22,8 +21,8 @@
   }
 }
 
-// 02. Orbit bullets
-// -----------------
+// 02. Orbit bullet
+// ----------------
 
 @mixin orbit-bullets {
   @include disable-mouse-outline;
@@ -124,36 +123,5 @@
 
   .loading-bar.no-transition {
     transition: none;
-  }
-}
-
-// 04. Admin layout
-// ----------------
-
-@mixin admin-layout {
-  display: flex;
-  flex-direction: column;
-
-  > header {
-    margin-bottom: 0;
-  }
-
-  > .menu-and-content {
-    flex: 1;
-  }
-}
-
-@mixin has-fa-icon($icon, $style) {
-  @extend .fa-#{$icon};
-
-  &::before {
-    @extend %fa-icon;
-    font-family: "Font Awesome 5 Free";
-
-    @if $style == "r" {
-      font-weight: normal;
-    } @else {
-      font-weight: bold;
-    }
   }
 }

@@ -1,4 +1,4 @@
-class AddResidenceVerificationTriesToUsers < ActiveRecord::Migration[4.2]
+class AddResidenceVerificationTriesToUsers < ActiveRecord::Migration
   def change
     add_column :users, :residence_verification_tries, :integer, default: 0
   end

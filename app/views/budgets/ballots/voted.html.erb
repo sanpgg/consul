@@ -1,0 +1,16 @@
+<div class="container mt-5 pb-5">
+    <div class="budget-investment-new">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center confetti">
+          <%= image_tag '/images/investment_created.png', alt: 'Confetti' %>
+  
+          <h1>¡Tu voto ha sido registrado!</h1>
+          
+          <p class="mb-5 mt-5">Has votado por un proyecto sectorial y puedes cambiar tu voto por otro proyecto antes del cierre.</p>
+          <p class="mb-5">Continua votando por tus proyectos favoritos, recuerda que debes usar tus 2 votos para un proyecto sectorial y un proyecto comunitario.</p>
+
+          <%= link_to "Ver mis votos", current_votes_path(current_budget), class: 'btn-style-3 d-block py-3 mt-3 mb-5' %>
+  
+        </div>
+    </div>
+  </div>

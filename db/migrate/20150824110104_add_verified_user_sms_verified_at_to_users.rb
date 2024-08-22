@@ -1,4 +1,4 @@
-class AddVerifiedUserSmsVerifiedAtToUsers < ActiveRecord::Migration[4.2]
+class AddVerifiedUserSmsVerifiedAtToUsers < ActiveRecord::Migration
   def change
     add_column :users, :verified_user_sms_verified_at, :datetime
   end

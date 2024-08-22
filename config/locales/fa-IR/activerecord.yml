@@ -29,10 +29,10 @@ fa:
         one: "سردبیر"
         other: "سردبیرها"
       administrator:
-        one: "مدیران"
+        one: "مدیر"
         other: "مدیران"
       valuator:
-        one: "ارزیابی"
+        one: "ارزیاب"
         other: "ارزیاب ها"
       valuator_group:
         one: "گروه ارزيابي"
@@ -68,14 +68,14 @@ fa:
         one: محتوای بلوک سفارشی 
         other: محتوای بلوکهای سفارشی 
       legislation/process:
-        one: "فرآیند\n"
+        one: "روند\n"
         other: "روندها\n"
-      legislation/proposal:
-        one: "طرح های پیشنهادی"
-        other: "طرح های پیشنهادی"
       legislation/draft_versions:
         one: "نسخه پیش نویس"
         other: "نسخه های پیش نویس"
+      legislation/draft_texts:
+        one: " پیش نویس"
+        other: " پیش نویس ها"
       legislation/questions:
         one: "سوال"
         other: "سوالات"
@@ -114,7 +114,7 @@ fa:
         title: "عنوان"
         description: "توضیحات"
         external_url: "لینک به مدارک اضافی"
-        administrator_id: "مدیران"
+        administrator_id: "مدیر"
         location: "محل سکونت (اختیاری)"
         organization_name: "اگر شما به نام یک گروه / سازمان، یا از طرف افراد بیشتری پیشنهاد می کنید، نام آنها را بنویسید."
         image: "تصویر طرح توصیفی"
@@ -122,13 +122,8 @@ fa:
       milestone:
         title: "عنوان"
         publication_date: "تاریخ انتشار"
-      milestone/status:
-        name: "نام"
-      progress_bar:
-        kind: "نوع"
-        title: "عنوان"
       budget/heading:
-        name: "عنوان سرفصل"
+        name: "عنوان نام"
         price: "قیمت"
         population: "جمعیت"
       comment:
@@ -152,13 +147,19 @@ fa:
         password_confirmation: "تایید رمز عبور"
         password: "رمز عبور"
         current_password: "رمز ورود فعلی"
+        phone_number: "شماره تلفن"
         official_position: "موضع رسمی"
         official_level: "سطح رسمی"
-        phone_number: "شماره تلفن"
         redeemable_code: "کد تایید  از طریق ایمیل دریافت شد."
       organization:
         name: "نام سازمان"
         responsible_name: "شخص مسئول گروه"
+      spending_proposal:
+        association_name: "نام انجمن"
+        description: "توضیحات"
+        external_url: "لینک به مدارک اضافی"
+        geozone_id: "حوزه عملیات"
+        title: "عنوان"
       poll:
         name: "نام"
         starts_at: "تاریخ شروع\n"
@@ -166,17 +167,11 @@ fa:
         geozone_restricted: "محدود شده توسط geozone"
         summary: "خلاصه"
         description: "توضیحات"
-      poll/translation:
-        name: "نام"
-        summary: "خلاصه"
-        description: "توضیحات"
       poll/question:
         title: "سوال"
         summary: "خلاصه"
         description: "توضیحات"
         external_url: "لینک به مدارک اضافی"
-      poll/question/translation:
-        title: "سوال"
       signature_sheet:
         signable_type: "نوع امضاء"
         signable_id: "شناسه  امضاء"
@@ -186,16 +181,12 @@ fa:
         created_at: "ایجاد شده در\n"
         subtitle: "عنوان فرعی\n"
         slug: slug
-        status: وضعیت ها
+        status: وضعیت
         title: عنوان
         updated_at: "ایجاد شده در\n"
         more_info_flag: نمایش در صفحه راهنما
         print_content_flag: چاپ محتوا 
         locale: زبان
-      site_customization/page/translation:
-        title: عنوان
-        subtitle: "عنوان فرعی\n"
-        content: محتوا
       site_customization/image:
         name: نام
         image: تصویر
@@ -205,7 +196,6 @@ fa:
         body: بدنه
       legislation/process:
         title: عنوان فرآیند
-        summary: خلاصه
         description: توضیحات
         additional_info: اطلاعات اضافی
         start_date: "تاریخ شروع\n"
@@ -216,22 +206,12 @@ fa:
         allegations_start_date: ' تاریخ شروع ادعا'
         allegations_end_date: تاریخ پایان ادعا
         result_publication_date: تاریخ انتشار نهایی
-      legislation/process/translation:
-        title: عنوان فرآیند
-        summary: خلاصه
-        description: توضیحات
-        additional_info: اطلاعات اضافی
-        milestones_summary: خلاصه
       legislation/draft_version:
         title: عنوان نسخه
         body: متن
         changelog: تغییرات
         status: وضعیت ها
         final_version: "نسخه نهایی\n"
-      legislation/draft_version/translation:
-        title: عنوان نسخه
-        body: متن
-        changelog: تغییرات
       legislation/question:
         title: عنوان
         question_options: "گزینه ها\n"
@@ -241,14 +221,11 @@ fa:
         text: توضیح
       document:
         title: عنوان
-        attachment: "پیوست"
+        attachment: پیوست
       image:
         title: عنوان
-        attachment: "پیوست"
+        attachment: پیوست
       poll/question/answer:
-        title: پاسخ
-        description: توضیحات
-      poll/question/answer/translation:
         title: پاسخ
         description: توضیحات
       poll/question/answer/video:
@@ -259,25 +236,12 @@ fa:
         subject: "موضوع\n"
         from: "از \n"
         body: محتوای ایمیل
-      admin_notification:
-        segment_recipient: گیرندگان
-        title: عنوان
-        link: لینک
-        body: متن
-      admin_notification/translation:
-        title: عنوان
-        body: متن
       widget/card:
         label: برچسب (اختیاری)
         title: عنوان
         description: توضیحات
         link_text: لینک متن
         link_url: لینک آدرس
-      widget/card/translation:
-        label: برچسب (اختیاری)
-        title: عنوان
-        description: توضیحات
-        link_text: لینک متن
       widget/feed:
         limit: تعداد موارد
     errors:
@@ -303,10 +267,6 @@ fa:
           attributes:
             segment_recipient:
               invalid: "بخش دریافت کننده کاربر نامعتبر است."
-        admin_notification:
-          attributes:
-            segment_recipient:
-              invalid: "بخش دریافت کننده کاربر نامعتبر است."
         map_location:
           attributes:
             map:
@@ -315,6 +275,7 @@ fa:
           attributes:
             document_number:
               not_in_census: "سند در سرشماری نیست."
+              has_voted: "کاربر قبلا رای داده است"
         legislation/process:
           attributes:
             end_date:
@@ -338,8 +299,8 @@ fa:
         signature:
           attributes:
             document_number:
-              not_in_census: "توسط سرشماری تایید نشده است."
-              already_voted: "قبلا این پیشنهاد رای گیری شده است."
+              not_in_census: 'توسط سرشماری تایید نشده است.'
+              already_voted: 'قبلا این پیشنهاد رای گیری شده است.'
         site_customization/page:
           attributes:
             slug:
@@ -352,9 +313,9 @@ fa:
         comment:
           attributes:
             valuation:
-              cannot_comment_valuation: "شما نمیتوانید در ارزیابی اظهار نظر کنید."
+              cannot_comment_valuation: 'شما نمیتوانید در ارزیابی اظهار نظر کنید.'
       messages:
-        record_invalid: "تأیید اعتبار انجام نشد: %{errors}"
+        record_invalid: "تأیید اعتبار ناموفق بود:%{errors}"
         restrict_dependent_destroy:
           has_one: "نمیتوان رکورد را حذف کرد زیرا وابستگی%{record} وجود دارد."
           has_many: "نمیتوان رکورد را حذف کرد زیرا وابستگی%{record} وجود دارد."

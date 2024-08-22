@@ -1,5 +1,5 @@
-class RemoveSummaryFromPollQuestion < ActiveRecord::Migration[4.2]
+class RemoveSummaryFromPollQuestion < ActiveRecord::Migration
   def change
-    remove_column :poll_questions, :summary, :string
+    remove_column :poll_questions, :summary
   end
 end

@@ -1,4 +1,4 @@
-class AddUseNicknameToUsers < ActiveRecord::Migration[4.2]
+class AddUseNicknameToUsers < ActiveRecord::Migration
   def change
     add_column :users, :use_nickname, :boolean, null: false, default: false
   end

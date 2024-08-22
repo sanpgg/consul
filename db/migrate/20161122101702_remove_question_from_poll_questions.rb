@@ -1,5 +1,5 @@
-class RemoveQuestionFromPollQuestions < ActiveRecord::Migration[4.2]
+class RemoveQuestionFromPollQuestions < ActiveRecord::Migration
   def change
-    remove_column :poll_questions, :question, :string
+    remove_column :poll_questions, :question
   end
 end

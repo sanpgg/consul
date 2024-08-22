@@ -1,10 +1,11 @@
 module ActsAsParanoidAliases
+
   def self.included(base)
     base.extend(ClassMethods)
     class_eval do
+
       def hide
         return false if hidden?
-
         update_attribute(:hidden_at, Time.current)
         after_hide
       end
@@ -26,9 +27,8 @@ module ActsAsParanoidAliases
 
       def restore(opts = {})
         return false unless hidden?
-
         super(opts)
-        update_attribute(:confirmed_hide_at, nil) if self.class.column_names.include? "confirmed_hide_at"
+        update_attribute(:confirmed_hide_at, nil)
         after_restore
       end
 
@@ -56,13 +56,11 @@ module ActsAsParanoidAliases
 
     def hide_all(ids)
       return if ids.blank?
-
       where(id: ids).each(&:hide)
     end
 
     def restore_all(ids)
       return if ids.blank?
-
       only_hidden.where(id: ids).each(&:restore)
     end
   end

@@ -1,4 +1,4 @@
-class ActivateNewsletterByDefault < ActiveRecord::Migration[4.2]
+class ActivateNewsletterByDefault < ActiveRecord::Migration
   def change
     change_column :users, :newsletter, :boolean, default: true
   end

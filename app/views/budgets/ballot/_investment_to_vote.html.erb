@@ -1,0 +1,61 @@
+<div class="row justify-content-center mb-4">
+    <div class="col-md-12 col-lg-10 col-xl-8">
+        <span class="periodo d-none">PP<%= @budget.short_name %></span>
+        <% if investment.image.present? %>
+            <% image_source = investment.image_url(:large) %>
+        <% else %>
+            <% image_source = '/assets/budget_execution_no_image.jpg' %>
+        <% end %>
+
+        <div class="br-gray box-proyect-ballot">
+            <div class="row">
+                <div class="col-md-4">
+                    <div id="image" class="content-img-fig image-preview position-relative">
+                        <% if investment.new_voted_in_v2?(current_budget, current_user) %>
+                            <div class="content-triangle">
+                                <div class="triangle-<%= investment.size == 'large' ? "large" : "medium" %>"></div>
+                                <span>Proyecto votado</span>
+                            </div>
+                        <% end %>
+                        <%= link_to budget_investment_path(investment.budget_id, investment.id) do %>
+                            <figure>
+                                <img class="img-project" src="<%= image_source %>">
+                                <figcaption></figcaption>
+                            </figure>
+                        <% end %>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="p-3">
+                        <div class="title-content d-flex justify-content-between align-items-center">
+                            <%= link_to budget_investment_path(investment.budget_id, investment.id) do %>
+                                <h2><%= investment.title %></h2>
+                            <% end %>
+                            
+                            <%= link_to budget_investment_path(investment.budget_id, investment.id), class: "d-block py-1 px-1 mx-3"  do %>
+                               #<%= investment.id %>
+                            <% end %>
+                        </div>
+                        <div class="data-project d-flex">
+                            <div>
+                                <p><%= investment.author.name %></p>
+                                <% sector = new_sectors.select {|e| e[:short_name] == investment.author.colonium.first.sector}.first %>
+                                <span><%= investment.created_at.to_date %> ·  <%= investment.size.present? ? "#{sector[:short_name]} - #{sector[:large_name]}" : investment.heading.name %></span>
+
+                                <% if investment.size.present? %>
+                                    <span class="d-block tipo"><%= investment.size == 'large' ? "Proyecto sectorial 12.5 mdp" : "Proyecto comunitario 1 mdp" %></span>
+                                <% else %>
+
+                                <% end %>
+                                <p><%= truncate(ActionView::Base.full_sanitizer.sanitize(investment.description.html_safe), :length => 150,  :separator => ' ') %></p>
+                            </div>
+                            <%= link_to budget_investment_path(investment.budget_id, investment.id), class: "btn-project mx-3 align-self-end"  do %>
+                               <i class="fa-solid fa-arrow-right"></i>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-class AddTranslateMilestones < ActiveRecord::Migration[4.2]
+class AddTranslateMilestones < ActiveRecord::Migration
   def change
     create_table :budget_investment_milestone_translations do |t|
       t.integer    :budget_investment_milestone_id, null: false
@@ -6,6 +6,7 @@ class AddTranslateMilestones < ActiveRecord::Migration[4.2]
       t.timestamps                                  null: false
       t.string     :title
       t.text       :description
+
     end
 
     add_index :budget_investment_milestone_translations,

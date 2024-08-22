@@ -13,7 +13,6 @@ class Verification::Sms
 
   def save
     return false unless valid?
-
     update_user_phone_information
     send_sms
     Lock.increase_tries(user)

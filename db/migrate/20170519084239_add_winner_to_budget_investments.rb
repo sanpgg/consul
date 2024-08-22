@@ -1,4 +1,4 @@
-class AddWinnerToBudgetInvestments < ActiveRecord::Migration[4.2]
+class AddWinnerToBudgetInvestments < ActiveRecord::Migration
   def change
     add_column :budget_investments, :winner, :boolean, default: false
   end

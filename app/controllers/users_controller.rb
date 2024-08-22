@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  has_filters %w[proposals debates budget_investments comments follows], only: :show
+  has_filters %w{proposals debates budget_investments comments follows votes}, only: :show
 
   load_and_authorize_resource
   helper_method :author?
@@ -12,12 +12,14 @@ class UsersController < ApplicationController
   private
 
     def set_activity_counts
-      @activity_counts = ActiveSupport::HashWithIndifferentAccess.new(
-                          proposals: Proposal.where(author_id: @user.id).count,
-                          debates: (Setting["process.debates"] ? Debate.where(author_id: @user.id).count : 0),
-                          budget_investments: (Setting["process.budgets"] ? Budget::Investment.where(author_id: @user.id).count : 0),
-                          comments: only_active_commentables.count,
-                          follows: @user.follows.map(&:followable).compact.count)
+      @activity_counts = HashWithIndifferentAccess.new(
+        proposals: Proposal.where(author_id: @user.id).count,
+        debates: (Setting['feature.debates'] ? Debate.where(author_id: @user.id).count : 0),
+        budget_investments: (Setting['feature.budgets'] ? Budget::Investment.where(author_id: @user.id).count : 0),
+        comments: only_active_commentables.count,
+        follows: @user.follows.map(&:followable).compact.count,
+        votes: @user.ballots.size
+      )
     end
 
     def load_filtered_activity
@@ -28,6 +30,7 @@ class UsersController < ApplicationController
       when "budget_investments" then load_budget_investments
       when "comments" then load_comments
       when "follows" then load_follows
+      when "votes" then load_votes
       else load_available_activity
       end
     end
@@ -52,7 +55,7 @@ class UsersController < ApplicationController
     end
 
     def load_proposals
-      @proposals = Proposal.created_by(@user).order(created_at: :desc).page(params[:page])
+      @proposals = Proposal.where(author_id: @user.id).order(created_at: :desc).page(params[:page])
     end
 
     def load_debates
@@ -69,6 +72,10 @@ class UsersController < ApplicationController
 
     def load_follows
       @follows = @user.follows.group_by(&:followable_type)
+    end
+
+    def load_votes
+      @grouped_votes = @user.ballots.group_by(&:budget)
     end
 
     def valid_access?
@@ -93,12 +100,13 @@ class UsersController < ApplicationController
 
     def only_active_commentables
       disabled_commentables = []
-      disabled_commentables << "Debate" unless Setting["process.debates"]
-      disabled_commentables << "Budget::Investment" unless Setting["process.budgets"]
+      disabled_commentables << "Debate" unless Setting['feature.debates']
+      disabled_commentables << "Budget::Investment" unless Setting['feature.budgets']
       if disabled_commentables.present?
-        all_user_comments.where.not(commentable_type: disabled_commentables)
+        all_user_comments.where("commentable_type NOT IN (?)", disabled_commentables)
       else
         all_user_comments
       end
     end
+
 end

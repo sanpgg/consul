@@ -1,11 +1,10 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Comment do
+
   let(:comment) { build(:comment) }
 
   it_behaves_like "has_public_author"
-  it_behaves_like "globalizable", :comment
-  it_behaves_like "acts as paranoid", :comment
 
   it "is valid" do
     expect(comment).to be_valid
@@ -43,6 +42,7 @@ describe Comment do
   end
 
   describe "#confidence_score" do
+
     it "takes into account percentage of total votes and total_positive and total negative votes" do
       comment = create(:comment, :with_confidence_score, cached_votes_up: 100, cached_votes_total: 100)
       expect(comment.confidence_score).to eq(10000)
@@ -63,7 +63,7 @@ describe Comment do
       expect(comment.confidence_score).to eq(1)
     end
 
-    describe "actions which affect it" do
+    describe 'actions which affect it' do
       let(:comment) { create(:comment, :with_confidence_score) }
 
       it "increases with like" do
@@ -79,6 +79,7 @@ describe Comment do
         expect(previous).to be > comment.confidence_score
       end
     end
+
   end
 
   describe "cache" do
@@ -128,7 +129,8 @@ describe Comment do
       create(:comment, administrator_id: create(:administrator).id)
       create(:comment, moderator_id: create(:moderator).id)
 
-      expect(Comment.not_as_admin_or_moderator).to eq [comment1]
+      expect(described_class.not_as_admin_or_moderator.size).to eq(1)
+      expect(described_class.not_as_admin_or_moderator.first).to eq(comment1)
     end
   end
 
@@ -136,56 +138,60 @@ describe Comment do
     it "returns comments" do
       comment = create(:comment)
 
-      expect(Comment.public_for_api).to eq [comment]
+      expect(described_class.public_for_api).to include(comment)
     end
 
     it "does not return hidden comments" do
-      create(:comment, :hidden)
+      hidden_comment = create(:comment, :hidden)
 
-      expect(Comment.public_for_api).to be_empty
+      expect(described_class.public_for_api).not_to include(hidden_comment)
     end
 
     it "returns comments on debates" do
-      comment = create(:comment, commentable: create(:debate))
+      debate = create(:debate)
+      comment = create(:comment, commentable: debate)
 
-      expect(Comment.public_for_api).to eq [comment]
+      expect(described_class.public_for_api).to include(comment)
     end
 
     it "does not return comments on hidden debates" do
-      create(:comment, commentable: create(:debate, :hidden))
+      hidden_debate = create(:debate, :hidden)
+      comment = create(:comment, commentable: hidden_debate)
 
-      expect(Comment.public_for_api).to be_empty
+      expect(described_class.public_for_api).not_to include(comment)
     end
 
     it "returns comments on proposals" do
       proposal = create(:proposal)
       comment = create(:comment, commentable: proposal)
 
-      expect(Comment.public_for_api).to eq [comment]
+      expect(described_class.public_for_api).to include(comment)
     end
 
     it "does not return comments on hidden proposals" do
-      create(:comment, commentable: create(:proposal, :hidden))
+      hidden_proposal = create(:proposal, :hidden)
+      comment = create(:comment, commentable: hidden_proposal)
 
-      expect(Comment.public_for_api).to be_empty
+      expect(described_class.public_for_api).not_to include(comment)
     end
 
-    it "does not return comments on elements which are not debates or proposals" do
-      create(:comment, commentable: create(:budget_investment))
+    it 'does not return comments on elements which are not debates or proposals' do
+      budget_investment = create(:budget_investment)
+      comment = create(:comment, commentable: budget_investment)
 
-      expect(Comment.public_for_api).to be_empty
+      expect(described_class.public_for_api).not_to include(comment)
     end
 
-    it "does not return comments with no commentable" do
-      build(:comment, commentable: nil).save!(validate: false)
+    it 'does not return comments with no commentable' do
+      comment = build(:comment, commentable: nil).save!(validate: false)
 
-      expect(Comment.public_for_api).to be_empty
+      expect(described_class.public_for_api).not_to include(comment)
     end
 
     it "does not return internal valuation comments" do
-      create(:comment, :valuation)
+      valuation_comment = create(:comment, :valuation)
 
-      expect(Comment.public_for_api).to be_empty
+      expect(described_class.public_for_api).not_to include(valuation_comment)
     end
   end
 end

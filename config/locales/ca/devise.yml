@@ -1,4 +1,3 @@
-#Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 ca:
   devise:
     password_expired:
@@ -17,7 +16,6 @@ ca:
       invalid: "%{authentication_keys} o contrasenya invàlids."
       locked: "El teu compte ha sigut bloquejat."
       last_attempt: "Tens un últim intent abans que el teu compte siga bloquejat."
-      not_found_in_database: "%{authentication_keys} o contrasenya invàlids."
       timeout: "La teua sessió ha expirat, per favor inicia sessió novament per a continuar."
       unauthenticated: "Necessites iniciar sessió o registrar-te per a continuar."
       unconfirmed: "Per a continuar, per favor prem en l'enllaç de confirmació que hem enviat al teu compte de correu."
@@ -38,7 +36,6 @@ ca:
       updated: "La teua contrasenya ha canviat correctament. Has sigut identificat correctament."
       updated_not_active: "La teua contrasenya s'ha canviat correctament."
     registrations:
-      destroyed: "Adéu! El vostre compte s'ha cancel·lat. Esperem tornar-vos a veure aviat."
       signed_up: "Benvingut! Has sigut identificat."
       signed_up_but_inactive: "Te has registrado correctamente, pero no has podido iniciar sesión porque tu cuenta no ha sido activada."
       signed_up_but_locked: "T'has registrat correctament, però no has pogut iniciar sessió perquè el teu compte està bloquejat."
@@ -48,19 +45,7 @@ ca:
     sessions:
       signed_in: "Has iniciat sessió correctament."
       signed_out: "Has tancat la sessió correctament."
-      already_signed_out: "Has tancat la sessió correctament."
     unlocks:
       send_instructions: "Rebràs un correu electrònic en uns minuts amb instruccions sobre com desbloquejar el teu compte."
       send_paranoid_instructions: "Si el teu compte existeix, rebràs un correu electrònic en uns minuts amb instruccions sobre com desbloquejar el teu compte."
       unlocked: "El teu compte ha sigut desbloquejat. Per favor inicia sessió per a continuar."
-  errors:
-    messages:
-      already_confirmed: "Ja heu estat verificats; intenteu iniciar la sessió."
-      confirmation_period_expired: "Heu de ser verificat dins %{period}; feu una sol·licitud de repetició."
-      expired: "ha expirat; feu una sol·licitud de repetició."
-      not_found: "no trobat."
-      not_locked: "no estava bloquejat."
-      not_saved:
-        one: "S'ha impedit un error %{resource} de ser guardat Consulteu els camps marcats per saber-los corregir:"
-        other: "%{count} els errors ho van impedir %{resource} de ser guardat Consulteu els camps marcats per saber-los corregir:"
-      equal_to_current_password: "ha de ser diferent de la contrasenya actual."

@@ -1,0 +1,15 @@
+<h1>Nueva colonia</h1>
+
+<%= render 'shared/errors', resource: @colony %>
+
+<%= form_tag admin_colonies_path, method: :post do %>
+
+    <label>Nombre</label>
+    <%= text_field_tag :junta_nom, nil, placeholder: "Nombre", label: false %>
+
+    <label>Sector</label>
+    <%= select_tag(:sector, options_for_select(select_sector_options)) %>
+
+    <%= submit_tag("Agregar", class: "button") %>
+
+<% end %>

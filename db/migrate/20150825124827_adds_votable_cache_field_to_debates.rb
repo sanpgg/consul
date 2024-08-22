@@ -1,4 +1,4 @@
-class AddsVotableCacheFieldToDebates < ActiveRecord::Migration[4.2]
+class AddsVotableCacheFieldToDebates < ActiveRecord::Migration
   def change
     add_column :debates, :cached_votes_total, :integer, default: 0
     add_column :debates, :cached_votes_up, :integer, default: 0

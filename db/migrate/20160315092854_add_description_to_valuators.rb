@@ -1,4 +1,4 @@
-class AddDescriptionToValuators < ActiveRecord::Migration[4.2]
+class AddDescriptionToValuators < ActiveRecord::Migration
   def change
     add_column :valuators, :description, :string
   end

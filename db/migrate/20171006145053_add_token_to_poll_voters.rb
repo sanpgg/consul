@@ -1,4 +1,4 @@
-class AddTokenToPollVoters < ActiveRecord::Migration[4.2]
+class AddTokenToPollVoters < ActiveRecord::Migration
   def change
     add_column :poll_voters, :token, :string
   end

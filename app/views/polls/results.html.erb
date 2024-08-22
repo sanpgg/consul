@@ -10,21 +10,20 @@
       <p><strong><%= t("polls.show.results.title") %></strong></p>
       <ul class="menu vertical">
         <%- @poll.questions.each do |question| %>
-          <li><%= link_to question.title, "##{question.title.parameterize}" %></li>
+          <li><%=link_to question.title, "##{question.title.parameterize}" %></li>
         <% end %>
       </ul>
     </div>
 
     <div class="small-12 medium-9 column" data-equalizer-watch>
       <%- @poll.questions.each do |question| %>
-        <% most_voted_answer_id = question.most_voted_answer_id %>
         <h3 id="<%= question.title.parameterize %>"><%= question.title %></h3>
         <table id="question_<%= question.id %>_results_table">
           <thead>
             <tr>
               <%- question.question_answers.each do |answer| %>
-                <th scope="col" <%= answer.id == most_voted_answer_id ? "class=win" : "" %>>
-                  <% if answer.id == most_voted_answer_id %>
+                <th scope="col" <%= answer.most_voted? ? "class=win" : "" %>>
+                  <% if answer.most_voted %>
                     <span class="show-for-sr"><%= t("polls.show.results.most_voted_answer") %></span>
                   <% end %>
                   <%= answer.title %>
@@ -35,7 +34,7 @@
           <tbody>
             <tr>
               <%- question.question_answers.each do |answer| %>
-                <td id="answer_<%= answer.id %>_result" <%= answer.id == most_voted_answer_id ? "class=win" : "" %>>
+                <td id="answer_<%= answer.id %>_result" <%= answer.most_voted? ? "class=win" : "" %>>
                   <%= answer.total_votes %>
                   (<%= answer.total_votes_percentage.round(2) %>%)
                 </td>
@@ -44,6 +43,7 @@
           </tbody>
         </table>
       <% end %>
+
     </div>
   </div>
 </div>

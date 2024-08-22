@@ -1,4 +1,4 @@
-class ChangeSpendingProposalsFields < ActiveRecord::Migration[4.2]
+class ChangeSpendingProposalsFields < ActiveRecord::Migration
   def change
     remove_index :spending_proposals, column: :resolution
 

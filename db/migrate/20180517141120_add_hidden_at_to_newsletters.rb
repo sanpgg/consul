@@ -1,4 +1,4 @@
-class AddHiddenAtToNewsletters < ActiveRecord::Migration[4.2]
+class AddHiddenAtToNewsletters < ActiveRecord::Migration
   def change
     add_column :newsletters, :hidden_at, :datetime
   end

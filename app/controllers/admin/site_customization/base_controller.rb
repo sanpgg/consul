@@ -6,4 +6,5 @@ class Admin::SiteCustomization::BaseController < Admin::BaseController
     def namespace
       "admin"
     end
+
 end

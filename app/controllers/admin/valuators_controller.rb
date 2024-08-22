@@ -18,7 +18,7 @@ class Admin::ValuatorsController < Admin::BaseController
 
   def create
     @valuator = Valuator.new(valuator_params)
-    @valuator.save!
+    @valuator.save
 
     redirect_to admin_valuators_path
   end
@@ -39,15 +39,19 @@ class Admin::ValuatorsController < Admin::BaseController
   end
 
   def destroy
-    @valuator.destroy!
+    @valuator.destroy
     redirect_to admin_valuators_path
+  end
+
+  def summary
+    @valuators = Valuator.order(spending_proposals_count: :desc)
   end
 
   private
 
     def valuator_params
       params[:valuator][:description] = nil if params[:valuator][:description].blank?
-      params.require(:valuator).permit(:user_id, :description, :valuator_group_id,
-                                       :can_comment, :can_edit_dossier)
+      params.require(:valuator).permit(:user_id, :description, :valuator_group_id)
     end
+
 end

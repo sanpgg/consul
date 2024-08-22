@@ -1,4 +1,4 @@
-class AddUnfeasibleEmailSentAtToBudgetInvestments < ActiveRecord::Migration[4.2]
+class AddUnfeasibleEmailSentAtToBudgetInvestments < ActiveRecord::Migration
   def change
     add_column :budget_investments, :unfeasible_email_sent_at, :datetime
   end

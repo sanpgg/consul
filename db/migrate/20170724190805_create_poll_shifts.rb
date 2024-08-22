@@ -1,4 +1,4 @@
-class CreatePollShifts < ActiveRecord::Migration[4.2]
+class CreatePollShifts < ActiveRecord::Migration
   def change
     create_table :poll_shifts do |t|
       t.integer :booth_id

@@ -1,5 +1,8 @@
 class TagCloud
+
   attr_accessor :resource_model, :scope
+
+  #has_many :suggests
 
   def initialize(resource_model, scope = nil)
     @resource_model = resource_model
@@ -15,11 +18,11 @@ class TagCloud
   end
 
   def category_names
-    Tag.category_names.map(&:downcase)
+    ActsAsTaggableOn::Tag.category_names.map(&:downcase)
   end
 
   def geozone_names
-    Geozone.all.map { |geozone| geozone.name.downcase }
+    Geozone.all.map {|geozone| geozone.name.downcase }
   end
 
   def resource_model_scoped
@@ -27,10 +30,11 @@ class TagCloud
   end
 
   def default_blacklist
-    [""]
+    ['']
   end
 
   def table_name
-    resource_model.to_s.tableize.tr("/", "_")
+    resource_model.to_s.downcase.pluralize.gsub("::", "/")
   end
+
 end

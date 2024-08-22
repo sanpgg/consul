@@ -1,4 +1,4 @@
-require "graphql"
+require 'graphql'
 
 module GraphQL
   class ApiTypesCreator
@@ -8,18 +8,14 @@ module GraphQL
       float: GraphQL::FLOAT_TYPE,
       double: GraphQL::FLOAT_TYPE,
       string: GraphQL::STRING_TYPE
-    }.freeze
+    }
 
-    def self.create
+    def self.create(api_types_definitions)
       created_types = {}
       api_types_definitions.each do |model, info|
         create_type(model, info[:fields], created_types)
       end
       created_types
-    end
-
-    def self.api_types_definitions
-      @api_types_definitions ||= parse_api_config_file(YAML.load_file(Rails.root.join("config/api.yml")))
     end
 
     def self.type_kind(type)
@@ -33,7 +29,9 @@ module GraphQL
     end
 
     def self.create_type(model, fields, created_types)
+
       created_types[model] = GraphQL::ObjectType.define do
+
         name        model.graphql_type_name
         description model.graphql_type_description
 
@@ -56,6 +54,7 @@ module GraphQL
             end
           end
         end
+
       end
     end
 
@@ -66,7 +65,7 @@ module GraphQL
         model = api_type_model.constantize
         fields = {}
 
-        api_type_info["fields"].each do |field_name, field_type|
+        api_type_info['fields'].each do |field_name, field_type|
           if field_type.is_a?(Array) # paginated association
             fields[field_name.to_sym] = [field_type.first.constantize]
           elsif SCALAR_TYPES[field_type.to_sym]

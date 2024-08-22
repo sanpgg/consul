@@ -14,6 +14,9 @@ es:
         publish_comment: Publicar Comentario
       form:
         phase_not_open: Esta fase del proceso no está abierta
+        login_to_comment: Necesitas %{signin} o %{signup} para comentar.
+        signin: iniciar sesión
+        signup: registrarte
       index:
         title: Comentarios
         comments_about: Comentarios sobre
@@ -59,16 +62,18 @@ es:
         filter: Filtro
         filters:
           open: Procesos activos
+          next: Próximamente
           past: Terminados
         no_open_processes: No hay procesos activos
+        no_next_processes: No hay procesos planeados
         no_past_processes: No hay procesos terminados
         section_header:
-          icon_alt: Icono de legislación colaborativa
-          title: Legislación colaborativa
-          help: Ayuda sobre legislación colaborativa
+          icon_alt: Icono de Procesos reglamentarios
+          title: Procesos reglamentarios
+          help: Ayuda sobre Procesos reglamentarios
         section_footer:
-          title: Ayuda sobre Legislación colaborativa
-          description: Participa en los debates y procesos previos a la aprobación de nuevas normas o planes. Tu opinión será tenida en cuenta.
+          title: Ayuda sobre Procesos reglamentarios
+          description: Participa en los debates y procesos previos a la aprobación de una norma o de una actuación municipal. Tu opinión será tenida en cuenta por el Ayuntamiento.
       phase_not_open:
         not_open: Esta fase del proceso todavía no está abierta
       phase_empty:
@@ -77,8 +82,7 @@ es:
         see_latest_comments: Ver últimas aportaciones
         see_latest_comments_title: Aportar a este proceso
       shared:
-        key_dates: Fases de participación
-        homepage: Inicio
+        key_dates: Fechas clave
         debate_dates: Debate previo
         draft_publication_date: Publicación borrador
         allegations_dates: Comentarios
@@ -107,8 +111,11 @@ es:
       participation:
         phase_not_open: Esta fase no está abierta
         organizations: Las organizaciones no pueden participar en el debate
+        signin: iniciar sesión
+        signup: registrarte
         unauthenticated: Necesitas %{signin} o %{signup} para participar en el debate.
         verified_only: Solo los usuarios verificados pueden participar en el debate, %{verify_account}.
+        verify_account: verifica tu cuenta
         debate_phase_not_open: La fase de debate previo ya ha finalizado y en este momento no se aceptan respuestas
     shared:
       share: Compartir
@@ -116,34 +123,4 @@ es:
     proposals:
       form:
         tags_label: "Categorías"
-      not_verified: "Para votar propuestas %{verify_account}."
-      process_title: Proceso de legislación colaborativa
-    summary:
-      title: "Resumen"
-      votes:
-        zero: "%{count} votos"
-        one: "%{count} voto"
-        other: "%{count} votos"
-      debate_phase: "Fase de debate"
-      proposals_phase: "Fase de propuestas"
-      allegations_phase: "Fase de comentarios"
-      debates:
-        zero: "No hay debates"
-        one: "%{count} debate"
-        other: "%{count} debates"
-      proposals:
-        zero: "No hay propuestas"
-        one: "%{count} propuesta"
-        other: "%{count} propuestas"
-      comments:
-        zero: "No hay comentarios"
-        one: "%{count} comentario"
-        other: "%{count} comentarios"
-      download: "Descargar resumen"
-      top_comments:
-        zero: "No hay comentarios"
-        one: "%{count} comentario"
-        other: "Los más votados"
-      most_voted_comments: "Comentarios más votados"
-      no_allegation: "No hay comentarios"
-      process_empty: "Este proceso no ha tenido fases de participación"
+      not_verified: "Para decidir propuestas %{verify_account}."

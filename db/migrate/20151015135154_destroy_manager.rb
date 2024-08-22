@@ -1,4 +1,4 @@
-class DestroyManager < ActiveRecord::Migration[4.2]
+class DestroyManager < ActiveRecord::Migration
   def self.up
     drop_table :managers
   end

@@ -1,5 +1,5 @@
 class Moderation::BaseController < ApplicationController
-  layout "admin"
+  layout 'admin'
 
   before_action :authenticate_user!
   before_action :verify_moderator
@@ -9,6 +9,7 @@ class Moderation::BaseController < ApplicationController
   private
 
     def verify_moderator
-      raise CanCan::AccessDenied unless current_user&.moderator? || current_user&.administrator?
+      raise CanCan::AccessDenied unless current_user.try(:moderator?) || current_user.try(:administrator?)
     end
+
 end

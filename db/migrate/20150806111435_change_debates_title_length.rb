@@ -1,4 +1,4 @@
-class ChangeDebatesTitleLength < ActiveRecord::Migration[4.2]
+class ChangeDebatesTitleLength < ActiveRecord::Migration
   def change
     change_column :debates, :title, :string, limit: 80
   end

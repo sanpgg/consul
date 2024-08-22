@@ -1,5 +1,5 @@
 class Poll
-  class Shift < ApplicationRecord
+  class Shift < ActiveRecord::Base
     belongs_to :booth
     belongs_to :officer
 
@@ -10,6 +10,8 @@ class Poll
 
     enum task: { vote_collection: 0, recount_scrutiny: 1 }
 
+    scope :vote_collection,  -> { where(task: 'vote_collection') }
+    scope :recount_scrutiny, -> { where(task: 'recount_scrutiny') }
     scope :current, -> { where(date: Date.current) }
 
     before_create :persist_data
@@ -31,10 +33,6 @@ class Poll
         }
         Poll::OfficerAssignment.create!(attrs)
       end
-    end
-
-    def unable_to_destroy?
-      booth.booth_assignments.map(&:unable_to_destroy?).any?
     end
 
     def destroy_officer_assignments

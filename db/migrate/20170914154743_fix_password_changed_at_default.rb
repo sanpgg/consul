@@ -1,9 +1,10 @@
-class FixPasswordChangedAtDefault < ActiveRecord::Migration[4.2]
+class FixPasswordChangedAtDefault < ActiveRecord::Migration
   def up
-    change_column_default :users, :password_changed_at, Time.zone.local(2015, 1, 1, 1, 1, 1)
+    change_column_default :users, :password_changed_at, Time.new(2015, 1, 1,  1,  1,  1)
   end
 
   def down
-    change_column_default :users, :password_changed_at, Time.zone.now
+    change_column_default :users, :password_changed_at, Time.now
   end
+
 end

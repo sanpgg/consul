@@ -1,39 +1,49 @@
 <!DOCTYPE html>
-<html lang="<%= I18n.locale %>">
+<html lang="es">
   <head>
-    <%= render "layouts/common_head", default_title: setting["org_name"] %>
+    <%= render "layouts/common_head", default_title: "Presupuesto Participativo | San Pedro Garza García" %>
     <%= render "layouts/meta_tags" %>
-    <%= raw setting["html.per_page_code_head"] %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sidr/2.2.1/jquery.sidr.min.js" integrity="sha512-HvecYeVgMOaHjNBv7DnIvCpVb7ad5FPEhnU/PMhp41YTcgNymgOKfsVioe/9QaeCnadAeoL9ZxEhaHtWN8Sc9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <%= javascript_include_tag "utils.js" %>
   </head>
-
   <body class="auth-page">
-    <%= raw setting["html.per_page_code_body"] %>
-    <div class="wrapper">
-      <div class="auth-image small-12 medium-3 column">
-        <h1 class="logo margin">
-          <%= link_to root_path do %>
-            <%= image_tag(image_path_for("logo_header.png"), class: "float-left", alt: t("layouts.header.logo")) %>
-          <% end %>
-        </h1>
-      </div>
-
-      <div class="small-12 medium-9 column">
-        <div class="row">
-          <div class="small-12 medium-9 large-7 small-centered column">
-            <div class="auth-form margin">
-              <%= render "layouts/flash" %>
-
-              <%= yield %>
+    <header class="background-half">
+      <div class="top-header">
+        <div class="container-xxl">
+          <div class="row">
+            <div class="col-8 col-md-2 col-lg-4">
+              <div class="logo mt-4">
+                <a href="/" title="Decide San Pedro">
+                  <%= link_to root_path, accesskey: "0" do %>
+                    <%= image_tag(image_path_for('logo.png'), id: 'logo-sp', class:'hidden-xs', alt: "Decide San Pedro") %>
+                    <%= image_tag(image_path_for('logo-dark.png'), id: 'logo-sp', class:'hide-more-xs', alt: "Decide San Pedro") %>
+                  <% end %>
+                </a>
+              </div>
+            </div>
+            <div class="col-4 col-md-10 col-lg-8 pt-30 pb-50 text-end text-sm-end mtext-md-end">
+              <%= render partial:"shared/nav_menu", locals: { myclass: 'nav-color' } %>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="push"></div>
-    </div>
-
-    <div class="footer">
-      <%= render "layouts/footer" %>
-    </div>
+    </header>
+    <section class="background-half">
+        <div class="container min-vh-100 d-flex flex-column">
+          <div class="row">
+            <div class="offset-md-5 col-md-7">
+              <div class="row justify-content-md-center">
+                <div class="col-md-10">
+                  <%= render 'layouts/flash' %>
+                  <%= yield %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <footer>
+      <%= render 'layouts/footer' %>
+    </footer>
   </body>
 </html>

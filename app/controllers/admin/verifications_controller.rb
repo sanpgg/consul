@@ -1,4 +1,5 @@
 class Admin::VerificationsController < Admin::BaseController
+
   def index
     @users = User.incomplete_verification.page(params[:page])
   end
@@ -9,4 +10,5 @@ class Admin::VerificationsController < Admin::BaseController
                                          .for_render
     render :index
   end
+
 end
